@@ -1,0 +1,14 @@
+# ============================================================================
+#  _headers — Netlify reads this automatically on upload. Other hosts ignore it.
+#  It adds two small habits: your site is not allowed to be framed by another
+#  site, and the browser must not guess a file type. Nothing here changes how
+#  the site works.
+# ============================================================================
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# the icons and images never change name, so let browsers keep them a week
+/assets/*
+  Cache-Control: public, max-age=604800

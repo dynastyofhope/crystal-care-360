@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 96" width="520" height="96" role="img" aria-label="Dr. Syl4luv Relationship Therapy Center">
+  <defs>
+    <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6b6b"/><stop offset="0.5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+    </linearGradient>
+    <linearGradient id="hw" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff6b6b"/><stop offset="0.55" stop-color="#8e7cff"/><stop offset="1" stop-color="#37c8bb"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="10" width="72" height="54" rx="19" fill="url(#hg)"/>
+  <path d="M24 62 L24 84 L47 62 Z" fill="url(#hg)"/>
+  <path d="M42 55c-12.4-9.8-17-14.7-17-20.2 0-5 3.8-8.3 8.1-8.3 3.6 0 7 2.2 8.9 5.3 1.9-3.1 5.3-5.3 8.9-5.3 4.3 0 8.1 3.3 8.1 8.3 0 5.5-4.6 10.4-17 20.2z" fill="#fff"/>
+  <circle cx="70" cy="18" r="4.4" fill="#ffd93d"/>
+  <text x="100" y="50" font-family="DejaVu Sans, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1" fill="url(#hw)">Dr. Syl4luv</text>
+  <text x="102" y="76" font-family="DejaVu Sans, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" letter-spacing="3.1" fill="#6b5f8a">RELATIONSHIP THERAPY CENTER</text>
+</svg>

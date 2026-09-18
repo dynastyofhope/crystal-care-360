@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Income Statement — Dr. Syl4luv Relationship Therapy Center</title>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/png/icon-180.png">
+<!--
+  =====================================================================
+  DR. SYL4LUV RELATIONSHIP THERAPY CENTER — INCOME STATEMENT
+  Monthly view + Year-to-date view, printable on a single A4 page.
+  =====================================================================
+  WHAT THIS IS
+  End-of-month (and end-of-year) income summary Dr. Syl4luv can print,
+  save as PDF or export to Excel for record-keeping, bank/loan paperwork
+  or an accountant handover.
+
+  WHAT WORKS IN THIS DEMO
+  - Switch months (July / August / September 2026) or the "Year 2026" chip
+  - Every figure, chart and table recalculates for the chosen view
+  - FIT TO ONE PAGE: tick the box and the sheet is scaled so a full month
+    (or the whole year) prints on a single A4 sheet. The "Preview" button
+    shows exactly what will print before you commit paper.
+  - Print / Save as PDF (A4, chrome hidden, signature block kept)
+  - Export CSV of the current view (opens in Excel)
+  - Each confirmed transaction links to its printable receipt
+
+  REWIRING FOR REAL DATA
+  Replace the DATA object in the marked block at the top of the script.
+  Each month needs: label, tx[] and expenses[].
+    tx: {date, day, member, id, service, amount, method, ref, status}
+    status is 'confirmed' or 'pending'.
+  Everything else — monthly totals, the year-to-date roll-up, charts,
+  fit-to-page scaling and CSV — is computed from those records and is
+  never hard-coded.
+
+  SHARED DETAILS
+  Access Bank - 0032601495 - Adidi Sylvanus Osigbemeh - fee N5,000
+  Phone / WhatsApp 0703 382 8292  |  Email syl4luv@gmail.com
+  =====================================================================
+-->
+<style>
+:root{--coral:#ff6b6b;--pink:#ff8fc7;--teal:#37c8bb;--purple:#8e7cff;--sun:#ffd93d;
+  --ink:#2b1b4d;--ink-soft:#6b5f8a;--line:rgba(43,27,77,.12);--money:#128c7e}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);background:#fbfaff;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{margin:0 0 .4em;line-height:1.15;letter-spacing:-.02em}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{width:min(1180px,94vw);margin-inline:auto}
+.bg{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(900px 600px at 4% -5%,#e8f7ff 0%,rgba(232,247,255,0) 60%),
+  radial-gradient(900px 620px at 97% 0%,#eafcf6 0%,rgba(234,252,246,0) 62%),
+  linear-gradient(180deg,#f7fbff,#f8f7ff 55%,#f4fffb)}
+.topbar{background:linear-gradient(95deg,#128c7e,#25d366 40%,#37c8bb 72%,#8e7cff);color:#fff;font-size:.83rem}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;justify-content:space-between;padding:7px 0}
+.navbar .wrap{display:flex;align-items:center;gap:11px;padding:12px 0;flex-wrap:wrap}
+.logo-mark{width:46px;height:46px;flex:0 0 auto}
+.brand-name{display:block;font-size:1.16rem;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(95deg,var(--coral),var(--purple) 55%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{display:block;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+.hdr-actions{display:flex;gap:9px;margin-left:auto;flex-wrap:wrap;align-items:center}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:10px 18px;font-weight:700;font-size:.9rem;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s;white-space:nowrap}
+.btn-ghost{background:#fff;color:var(--ink);border:1.6px solid var(--line)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-primary{background:linear-gradient(100deg,var(--coral),var(--pink) 45%,var(--purple));color:#fff}
+.btn-money{background:linear-gradient(100deg,#25d366,#128c7e);color:#fff}
+.btn-csv{background:#eef7ff;color:#1d5fa8;border:1.6px solid #cfe4fb}
+.btn-sm{padding:7px 13px;font-size:.82rem}
+.badge-role{background:#e2f9e8;color:#0e7d72;border:1.4px solid #c8ece3;
+  font-size:.68rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+main{padding:22px 0 46px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.months{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{border:1.6px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:999px;
+  padding:9px 16px;font-weight:750;font-size:.86rem;cursor:pointer;transition:.16s}
+.chip:hover{border-color:var(--purple);color:var(--purple)}
+.chip[aria-pressed="true"]{background:linear-gradient(100deg,#25d366,#128c7e);color:#fff;border-color:transparent}
+.chip.year[aria-pressed="true"]{background:linear-gradient(100deg,#8e7cff,#5b3df0)}
+.arrow{border:1.6px solid var(--line);background:#fff;width:38px;height:38px;border-radius:50%;cursor:pointer;
+  font-size:1rem;font-weight:800;color:var(--ink-soft)}
+.arrow:hover{border-color:var(--purple);color:var(--purple)}
+.fitbox{display:flex;align-items:center;gap:9px;background:#fff;border:1.6px solid var(--line);
+  border-radius:999px;padding:8px 14px;font-size:.84rem;font-weight:650;color:var(--ink-soft)}
+.fitbox input{width:auto;accent-color:#128c7e}
+.statement{background:#fff;border:1.6px solid var(--line);border-radius:22px;padding:28px;position:relative;overflow:hidden;
+  box-shadow:0 26px 60px -40px rgba(43,27,77,.6)}
+.statement:before{content:"";position:absolute;top:0;left:0;right:0;height:7px;
+  background:linear-gradient(90deg,#128c7e,#37c8bb 40%,#8e7cff 75%,var(--coral))}
+.sheet-head{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between;
+  padding-bottom:16px;border-bottom:2px dashed var(--line);margin-bottom:18px}
+.sheet-head h1{font-size:1.28rem;margin-bottom:2px}
+.muted{color:var(--ink-soft);font-size:.85rem}
+.doc{text-align:right}
+.doc .period{font-weight:850;font-size:1.05rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:13px;margin:18px 0}
+.tile{border:1.6px solid var(--line);border-radius:16px;padding:14px 16px;background:#fcfdff;min-width:0}
+.tile span{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);font-weight:800}
+.tile b{display:block;font-size:1.42rem;letter-spacing:-.03em;margin:4px 0 2px}
+.tile em{font-style:normal;font-size:.78rem;color:var(--ink-soft)}
+.tile.hero{background:linear-gradient(120deg,#f0fff9,#f4f2ff);border-color:#c8ece3}
+.tile.warn{background:#fffcf0;border-color:#f3e3b8}
+.green{color:var(--money)}
+h3.sect{font-size:1rem;margin:22px 0 10px}
+#chart svg{display:block;max-height:220px}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:start}
+.two>*{min-width:0}
+.panels{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+.panels>*{min-width:0}
+.panelbox{border:1.6px solid var(--line);border-radius:16px;padding:16px;background:#fff;min-width:0}
+.bars{display:grid;gap:11px;margin-top:6px}
+.brow{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;font-size:.87rem}
+.brow .lbl{font-weight:650;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brow .val{font-weight:800;white-space:nowrap}
+.track{grid-column:1 / -1;height:10px;border-radius:999px;background:#f1edff;overflow:hidden}
+.track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#37c8bb,#8e7cff)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1.6px solid var(--line);border-radius:16px;overflow:hidden;font-size:.87rem}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px dashed var(--line);vertical-align:middle}
+th{background:#f6f9ff;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fbfdff}
+tfoot td{background:#f7fffb;font-weight:850;border-top:2px solid #c8ece3}
+.num{text-align:right;white-space:nowrap}
+.pilltag{font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;white-space:nowrap;display:inline-block}
+.s-ok{background:#dffbf7;color:#0e7d72}.s-warn{background:#fff3cd;color:#8a6100}
+.mini{font-size:.78rem;color:var(--ink-soft)}
+.signoff{display:flex;flex-wrap:wrap;gap:22px;justify-content:space-between;align-items:flex-end;
+  border-top:2px dashed var(--line);margin-top:20px;padding-top:16px}
+.sign{min-width:200px}
+.sign .line{border-bottom:1.8px solid var(--ink);height:32px;margin-bottom:6px}
+.sign small{color:var(--ink-soft);font-size:.78rem}
+.fine{font-size:.75rem;color:var(--ink-soft);margin-top:14px;text-align:center}
+.note{background:#fff;border:1.6px solid var(--line);border-left:6px solid var(--money);border-radius:14px;
+  padding:13px 15px;font-size:.85rem;color:#4a3f6b;margin-top:16px}
+.toast{position:fixed;left:50%;transform:translate(-50%,130%);bottom:24px;z-index:99;background:#12352b;color:#fff;
+  padding:14px 22px;border-radius:999px;font-weight:700;font-size:.89rem;transition:transform .3s ease;max-width:92vw;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+/* the one-page fit: applied by the checkbox, the Preview button and before printing */
+html.fit-print .statement{zoom:var(--fit-zoom,1)}
+html.fit-print .fit-flag{display:inline-flex}
+.fit-flag{display:none;align-items:center;gap:7px;background:#e2f9e8;color:#0e7d72;border-radius:999px;
+  padding:6px 12px;font-size:.8rem;font-weight:800}
+@media(max-width:900px){ .two{grid-template-columns:1fr} .doc{text-align:left} }
+@media(max-width:600px){
+  .topbar{display:none} .statement{padding:18px} .brand-sub{display:none}
+  th:nth-child(5),td:nth-child(5){display:none}
+}
+.statement.sheet-compact{font-size:11.5px}
+.statement.sheet-compact .sheet-head{padding-bottom:8px;margin-bottom:10px}
+.statement.sheet-compact .sheet-head h1{font-size:1rem}
+.statement.sheet-compact .logo-mark{width:38px;height:38px}
+.statement.sheet-compact .doc .period{font-size:.95rem}
+.statement.sheet-compact .tiles{grid-template-columns:repeat(6,1fr);gap:6px;margin:9px 0}
+.statement.sheet-compact .tile{padding:7px 8px;border-radius:10px}
+.statement.sheet-compact .tile b{font-size:.92rem;margin:1px 0}
+.statement.sheet-compact .tile span{font-size:.56rem}
+.statement.sheet-compact .tile em{font-size:.58rem}
+.statement.sheet-compact .panels{grid-template-columns:1.45fr .95fr .95fr .98fr;gap:9px}
+.statement.sheet-compact .panelbox{padding:9px 10px;border-radius:11px}
+.statement.sheet-compact h3.sect{font-size:.86rem;margin:12px 0 7px}
+.statement.sheet-compact table{font-size:.63rem;border-radius:10px}
+.statement.sheet-compact th,.statement.sheet-compact td{padding:3.4px 6px}
+.statement.sheet-compact .brow{font-size:.74rem;gap:4px 10px}
+.statement.sheet-compact .track{height:6px}
+.statement.sheet-compact #chart svg{height:92px;display:block}
+.statement.sheet-compact .panelbox .mini{font-size:.6rem;line-height:1.3}
+/* the status chip is what sets row height — shrink it so the table stays tight */
+.statement.sheet-compact .pilltag{padding:0 6px;font-size:.56rem;line-height:1.35}
+.statement.sheet-compact .tx-table thead{display:table-header-group}
+.statement.sheet-compact .tx-table tr{break-inside:avoid}
+.tx-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.tx-cols>*{min-width:0}
+.statement.sheet-compact .mini{font-size:.64rem}
+.statement.sheet-compact .sheet-head{padding-bottom:8px;margin-bottom:10px}
+.statement.sheet-compact .sheet-head h1{font-size:1rem}
+.statement.sheet-compact .muted{font-size:.68rem;line-height:1.35}
+.statement.sheet-compact .tiles{gap:7px;margin:10px 0}
+.statement.sheet-compact .tile{padding:8px 9px}
+.statement.sheet-compact .tile b{font-size:.95rem}
+.statement.sheet-compact .panels{grid-template-columns:1.5fr 1fr 1fr 1fr}
+/* service list flows into two columns so a long list can't stretch the sheet */
+.statement.sheet-compact .bars{display:block;columns:2;column-gap:16px}
+.statement.sheet-compact .brow{break-inside:avoid;margin-bottom:6px;grid-template-columns:1fr;gap:1px}
+.statement.sheet-compact .brow .lbl{white-space:normal;overflow:visible;font-size:.72rem;line-height:1.25}
+.statement.sheet-compact .brow .val{font-size:.74rem;white-space:normal}
+.statement.sheet-compact .track{grid-column:auto}
+/* the preview should match paper exactly — the demo note never prints */
+html.fit-print .note{display:none}
+/* one-line member + no method column, so a 20-row table stays compact */
+.statement.sheet-compact .tx-table th:nth-child(5),
+.statement.sheet-compact .tx-table td:nth-child(5){display:none}
+.statement.sheet-compact .tx-table td:nth-child(2) br{display:none}
+.statement.sheet-compact .tx-table td:nth-child(2) .mini:before{content:" · "}
+.statement.sheet-compact th,.statement.sheet-compact td{padding:2.1px 6px}
+.statement.sheet-compact h3.sect{font-size:.84rem;margin:11px 0 6px}
+.statement.sheet-compact .signoff{margin-top:6px;padding-top:5px;font-size:.66rem;gap:12px}
+.statement.sheet-compact .signoff>div[style]{max-width:36ch!important;font-size:.66rem}
+.statement.sheet-compact .sign{min-width:150px}
+.statement.sheet-compact .sign .line{height:15px}
+.statement.sheet-compact .sign small{color:#6b5f8a}
+.statement.sheet-compact .sign small{font-size:.68rem}
+.statement.sheet-compact .fine{font-size:.6rem;margin-top:6px}
+.statement.sheet-compact .signoff{margin-top:10px;padding-top:8px;gap:14px}
+.statement.sheet-compact .sign .line{height:24px}
+.statement.sheet-compact .fine{font-size:.62rem;margin-top:8px}
+.statement.sheet-compact .muted{font-size:.72rem}
+@media print{
+  @page{size:A4;margin:12mm}
+  /* the compact layout applies to EVERY print path, even before any script runs */
+  .statement{font-size:11.5px}
+  .statement .sheet-head{padding-bottom:8px;margin-bottom:10px}
+  .statement .sheet-head h1{font-size:1rem}
+  .statement .logo-mark{width:38px;height:38px}
+  .statement .doc .period{font-size:.95rem}
+  .statement .tiles{grid-template-columns:repeat(6,1fr);gap:6px;margin:9px 0}
+  .statement .tile{padding:7px 8px;border-radius:10px}
+  .statement .tile b{font-size:.92rem;margin:1px 0}
+  .statement .tile span{font-size:.56rem}
+  .statement .tile em{font-size:.58rem}
+  .statement .panels{grid-template-columns:1.45fr .95fr .95fr .98fr;gap:9px}
+  .statement .panelbox{padding:9px 10px;border-radius:11px}
+  .statement h3.sect{font-size:.86rem;margin:12px 0 7px}
+  .statement table{font-size:.63rem;border-radius:10px}
+  .statement th,.statement td{padding:3.4px 6px}
+  .statement .brow{font-size:.74rem;gap:4px 10px}
+  .statement .track{height:6px}
+  .statement #chart svg{height:92px;display:block}
+  .statement .panelbox .mini{font-size:.6rem;line-height:1.3}
+  .statement .pilltag{padding:0 6px;font-size:.56rem;line-height:1.35}
+  .statement .tx-table thead{display:table-header-group}
+  .statement .tx-table tr{break-inside:avoid}
+  .tx-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+  .tx-cols>*{min-width:0}
+  .statement .mini{font-size:.64rem}
+  .statement .sheet-head{padding-bottom:8px;margin-bottom:10px}
+  .statement .sheet-head h1{font-size:1rem}
+  .statement .muted{font-size:.68rem;line-height:1.35}
+  .statement .tiles{gap:7px;margin:10px 0}
+  .statement .tile{padding:8px 9px}
+  .statement .tile b{font-size:.95rem}
+  .statement .panels{grid-template-columns:1.5fr 1fr 1fr 1fr}
+  .statement .bars{display:block;columns:2;column-gap:16px}
+  .statement .brow{break-inside:avoid;margin-bottom:6px;grid-template-columns:1fr;gap:1px}
+  .statement .brow .lbl{white-space:normal;overflow:visible;font-size:.72rem;line-height:1.25}
+  .statement .brow .val{font-size:.74rem;white-space:normal}
+  .statement .track{grid-column:auto}
+  .statement .tx-table th:nth-child(5),
+  .statement .tx-table td:nth-child(5){display:none}
+  .statement .tx-table td:nth-child(2) br{display:none}
+  .statement .tx-table td:nth-child(2) .mini:before{content:" · "}
+  .statement th,.statement td{padding:2.1px 6px}
+  .statement h3.sect{font-size:.84rem;margin:11px 0 6px}
+  .statement .signoff{margin-top:6px;padding-top:5px;font-size:.66rem;gap:12px}
+  .statement .signoff>div[style]{max-width:36ch!important;font-size:.66rem}
+  .statement .sign{min-width:150px}
+  .statement .sign .line{height:15px}
+  .statement .sign small{color:#6b5f8a}
+  .statement .sign small{font-size:.68rem}
+  .statement .fine{font-size:.6rem;margin-top:6px}
+  .statement .signoff{margin-top:10px;padding-top:8px;gap:14px}
+  .statement .sign .line{height:24px}
+  .statement .fine{font-size:.62rem;margin-top:8px}
+  .statement .muted{font-size:.72rem}
+  .bg,.topbar,.navbar,.controls,.no-print,.note,.fit-flag{display:none!important}
+  body{background:#fff}
+  main{padding:0}
+  .statement{box-shadow:none;border:0;border-radius:0;padding:0}
+  .statement:before{height:5px}
+  .statement.sheet-compact .tile{background:#fff!important}
+  tbody tr:hover{background:transparent}
+  a[href]{color:#2b1b4d!important;text-decoration:none}
+  a[href]:after{content:""}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<header class="no-print">
+  <div class="topbar">
+    <div class="wrap">
+      <span>Income statement · Dr. Syl4luv Relationship Therapy Center</span>
+      <span>📞 0703 382 8292 · syl4luv@gmail.com</span>
+    </div>
+  </div>
+  <div class="navbar">
+    <div class="wrap">
+      <a href="syl4luv-admin-dashboard.html" style="display:flex;gap:11px;align-items:center">
+        <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+          </linearGradient></defs>
+          <rect x="5" y="7" width="54" height="40" rx="14" fill="url(#lg1)"/>
+          <path d="M19 44 L19 60 L34 44 Z" fill="url(#lg1)"/>
+          <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+        </svg>
+        <span><span class="brand-name">Dr. Syl4luv</span><span class="brand-sub">Income statement</span></span>
+      </a>
+      <span class="badge-role" style="margin-left:6px">Staff only</span>
+      <span class="fit-flag no-print" id="fitFlag">✓ Fits one A4 page</span>
+      <div class="hdr-actions">
+        <a class="btn btn-ghost btn-sm" href="syl4luv-admin-dashboard.html">← Therapist console</a>
+        <button class="btn btn-money btn-sm" id="printBtn">🖨 Print / Save as PDF</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <div class="controls no-print">
+      <div class="months">
+        <button class="arrow" id="prevMonth" aria-label="Previous period">‹</button>
+        <span id="chips" style="display:flex;gap:8px;flex-wrap:wrap"></span>
+        <button class="arrow" id="nextMonth" aria-label="Next period">›</button>
+      </div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+        <label class="fitbox" title="Scale the sheet so everything prints on one A4 page">
+          <input type="checkbox" id="fitPage" checked> Fit to one page
+        </label>
+        <button class="btn btn-ghost btn-sm" id="previewBtn">🔍 Preview 1-page</button>
+        <button class="btn btn-csv btn-sm" id="csvBtn">⬇ Export CSV (Excel)</button>
+        <button class="btn btn-ghost btn-sm" id="printBtn2">🖨 Print</button>
+      </div>
+    </div>
+
+    <section class="statement" id="statement">
+      <div class="sheet-head">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+            <defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+            </linearGradient></defs>
+            <rect x="5" y="7" width="54" height="40" rx="14" fill="url(#lg2)"/>
+            <path d="M19 44 L19 60 L34 44 Z" fill="url(#lg2)"/>
+            <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+          </svg>
+          <div>
+            <h1>Dr. Syl4luv Relationship Therapy Center</h1>
+            <div class="muted">
+              Counselling • Mental health • Motivation &amp; inspiration<br>
+              📞 0703 382 8292 &nbsp;·&nbsp; ✉ syl4luv@gmail.com<br>
+              Payments: Access Bank 0032601495 — Adidi Sylvanus Osigbemeh
+            </div>
+          </div>
+        </div>
+        <div class="doc">
+          <div class="muted" style="letter-spacing:.14em;text-transform:uppercase;font-weight:800" id="docKind">Monthly income statement</div>
+          <div class="period" id="periodLabel">—</div>
+          <div class="muted">Generated <span id="generated">—</span></div>
+        </div>
+      </div>
+
+      <div class="tiles">
+        <div class="tile hero"><span>Gross income confirmed</span><b class="green" id="tGross">₦0</b><em id="tGrossNote">—</em></div>
+        <div class="tile warn"><span>Pending / unconfirmed</span><b id="tPending">₦0</b><em id="tPendingNote">—</em></div>
+        <div class="tile"><span>Sessions delivered</span><b id="tSessions">0</b><em id="tSessionsNote">paid consultations</em></div>
+        <div class="tile"><span>Average per session</span><b id="tAvg">₦0</b><em>confirmed fees only</em></div>
+        <div class="tile"><span>Running costs</span><b id="tExpenses">₦0</b><em id="tExpNote">—</em></div>
+        <div class="tile"><span>Net position</span><b class="green" id="tNet">₦0</b><em>income less costs</em></div>
+      </div>
+
+      <div class="panels">
+        <div class="panelbox chart">
+          <h3 class="sect" style="margin-top:0" id="chartTitle">Income by week</h3>
+          <div id="chart"></div>
+          <div class="mini" style="margin-top:6px">Confirmed payments only. Pending amounts are excluded until verified.</div>
+        </div>
+        <div class="panelbox">
+          <h3 class="sect" style="margin-top:0" id="mixTitle">Service mix</h3>
+          <div class="bars" id="serviceBars"></div>
+        </div>
+
+        <div class="panelbox">
+          <h3 class="sect" style="margin-top:0">Payment channels</h3>
+          <div class="bars" id="channelBars"></div>
+        </div>
+        <div class="panelbox">
+          <h3 class="sect" style="margin-top:0" id="costTitle">Running costs</h3>
+          <table style="border:0"><tbody id="expRows"></tbody>
+            <tfoot><tr><td>Total costs</td><td class="num" id="expTotal">₦0</td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <h3 class="sect" id="tableTitle">All transactions</h3>
+      <div id="tableWrap"></div>
+
+      <div class="note no-print" style="margin-top:16px">
+        <strong>Demo data:</strong> every figure is calculated from the sample transactions in the script block — swap that for your API or Supabase query and the monthly totals, the year-to-date roll-up, the charts and the CSV all update automatically.
+      </div>
+
+      <div class="signoff">
+        <div class="sign"><div class="line"></div><small>Prepared and certified by — Dr. Syl4luv</small></div>
+        <div style="font-size:.84rem;color:var(--ink-soft);max-width:40ch">
+          Consultations are billed at <strong>₦5,000 per session</strong>. Confirmed payments are those verified against Access Bank account 0032601495; pending amounts are members' claims awaiting confirmation.
+        </div>
+        <div class="sign" style="text-align:right"><div class="line"></div><small>Date</small></div>
+      </div>
+
+      <p class="fine">Computer-generated statement from the Dr. Syl4luv therapist console · valid without a handwritten signature when printed · enquiries 0703 382 8292 · syl4luv@gmail.com</p>
+    </section>
+  </div>
+</main>
+
+<!-- ===== follow & share — screen only, never on the printed statement ===== -->
+<style>@media print{ .sylsocial-strip{display:none !important} }</style>
+<div class="sylsocial-strip" style="max-width:1080px;margin:0 auto;padding:10px 22px 34px;
+     --ss-bg:#fff;--ss-line:rgba(43,27,77,.14);--ss-fg:#2b1b4d;--ss-hover:#c1121f;color:#2b1b4d">
+<div class="sylsocial" data-sylsocial></div>
+
+<style>
+/* everything below is self-contained — no external stylesheet, no fonts */
+.sylsocial{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  display:flex;flex-direction:column;gap:14px;color:inherit}
+.sylsocial .ss-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.sylsocial .ss-label{font-size:.74rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.72}
+.sylsocial a.ss-icon,.sylsocial button.ss-icon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ss-bg,rgba(255,255,255,.10));border:1.5px solid var(--ss-line,rgba(255,255,255,.25));
+  color:var(--ss-fg,currentColor);cursor:pointer;transition:transform .16s,background .16s,border-color .16s;text-decoration:none}
+.sylsocial a.ss-icon:hover,.sylsocial button.ss-icon:hover{transform:translateY(-2px);
+  background:var(--ss-hover,var(--coral,#c1121f));border-color:var(--ss-hover,var(--coral,#c1121f));color:#fff}
+.sylsocial a.ss-icon svg,.sylsocial button.ss-icon svg{width:19px;height:19px;display:block}
+.sylsocial a.ss-share,.sylsocial button.ss-share{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 15px;
+  font-size:.85rem;font-family:inherit;font-weight:800;text-decoration:none;cursor:pointer;appearance:none;-webkit-appearance:none;
+  border:1.5px solid var(--ss-line,rgba(255,255,255,.25));background:var(--ss-bg,rgba(255,255,255,.10));
+  color:var(--ss-fg,currentColor);transition:transform .16s,filter .16s}
+.sylsocial .ss-share:focus-visible,.sylsocial .ss-icon:focus-visible{outline:3px solid var(--ss-hover,var(--coral,#c1121f));outline-offset:2px}
+.sylsocial a.ss-share:hover,button.ss-share:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.sylsocial a.ss-share svg,button.ss-share svg{width:17px;height:17px}
+.sylsocial .ss-wa{background:#25d366;border-color:#25d366;color:#fff}       /* WhatsApp keeps its own green */
+.sylsocial .ss-copy{background:transparent}
+/* every other button borrows the host page's colours, so this plug-in never
+   injects a colour the page did not choose. Want Facebook blue and X black
+   instead? Add: .ss-fb{background:#1877f2;border-color:#1877f2;color:#fff}
+                .ss-x{background:#111;border-color:#111;color:#fff}            */
+.sylsocial .ss-note{font-size:.8rem;opacity:.8;margin:0}
+</style>
+
+<script>
+(function () {
+  /* ------------------------------------------------------------------ EDIT ME */
+  var SOCIAL = {
+    whatsapp:  '2347033828292',                 /* 0703 382 8292 without the leading 0 */
+    facebook:  'https://facebook.com/drsyl4luv',
+    instagram: 'https://instagram.com/drsyl4luv',
+    x:         'https://x.com/drsyl4luv',
+    tiktok:    'https://tiktok.com/@drsyl4luv',
+    youtube:   '',                              /* not created yet — no icon shows */
+    linkedin:  ''
+  };
+  var SHARE_TEXT = 'Dr. Syl4luv Relationship Therapy Center — counselling, mental health support and a confidential private chat room.';
+  /* --------------------------------------------------------------------------- */
+
+  var host = document.querySelector('[data-sylsocial]');
+  if (!host) return;
+
+  var ICONS = {
+    whatsapp: '<path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z"/><path d="M8.7 8.4c.2-.5.9-.5 1.1-.1l.6 1.2c.1.3 0 .5-.2.7l-.5.4c.5 1 1.3 1.8 2.3 2.3l.4-.5c.2-.2.4-.3.7-.2l1.2.6c.4.2.4.9-.1 1.1-1.6.7-3.4-.2-4.6-1.4-1.2-1.2-2.1-3-1.4-4.6z"/>',
+    facebook: '<path d="M14.5 8.5H17V5.3h-2.6c-2.2 0-3.6 1.5-3.6 3.8v1.6H8.5v3.2h2.3V21h3.3v-7.1h2.4l.4-3.2h-2.8V9.4c0-.6.3-.9.9-.9z"/>',
+    instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor"/>',
+    x: '<path d="M4 4l7.2 9.3L4.4 20h2.3l5.6-5.6L16.6 20H20l-7.4-9.6L19.4 4h-2.3l-5.1 5.1L8 4H4z"/>',
+    tiktok: '<path d="M14 4v9.2a3.2 3.2 0 1 1-3.2-3.2c.3 0 .6 0 .9.1V7.8a6 6 0 1 0 5.6 6V9.4c1 .7 2.2 1.1 3.5 1.1V8.2c-1.8 0-3.2-1.4-3.2-3.2H14z"/>',
+    youtube: '<rect x="3" y="6" width="18" height="12" rx="4"/><path d="M11 9.8l4 2.2-4 2.2V9.8z" fill="currentColor"/>',
+    linkedin: '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M7.5 10v7M7.5 7.4v.1M11.5 17v-4a2 2 0 0 1 4 0v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+    copy: '<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M6 15H5.5A1.5 1.5 0 0 1 4 13.5V5.5A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>'
+  };
+  var NAMES = { whatsapp: 'WhatsApp', facebook: 'Facebook', instagram: 'Instagram', x: 'X (Twitter)',
+                tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn' };
+
+  function svg(name, solid) {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" ' +
+      (solid ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"') +
+      '>' + ICONS[name] + '</svg>';
+  }
+  function href(name) {
+    var v = SOCIAL[name];
+    if (!v) return '';
+    if (name === 'whatsapp') return 'https://wa.me/' + v;
+    return v;
+  }
+
+  var url = location.href.split('#')[0];
+  var text = encodeURIComponent(SHARE_TEXT) + ' ' + encodeURIComponent(url);
+
+  var follow = '';
+  Object.keys(NAMES).forEach(function (k) {
+    var h = href(k);
+    if (!h) return;
+    var solid = (k === 'whatsapp' || k === 'facebook' || k === 'x' || k === 'tiktok');
+    follow += '<a class="ss-icon ss-' + k + '" href="' + h + '" target="_blank" rel="noopener" ' +
+      'title="' + NAMES[k] + '" aria-label="' + NAMES[k] + '">' + svg(k, solid) + '</a>';
+  });
+
+  host.innerHTML =
+    '<div><span class="ss-label">Follow the centre</span>' +
+      '<div class="ss-row" style="margin-top:8px">' + follow + '</div></div>' +
+    '<div><span class="ss-label">Share this page</span>' +
+      '<div class="ss-row" style="margin-top:8px">' +
+        '<a class="ss-share ss-wa" href="https://wa.me/?text=' + text + '" target="_blank" rel="noopener">' + svg('whatsapp', true) + 'WhatsApp</a>' +
+        '<a class="ss-share ss-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) + '" target="_blank" rel="noopener">' + svg('facebook', true) + 'Facebook</a>' +
+        '<a class="ss-share ss-x" href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + encodeURIComponent(url) + '" target="_blank" rel="noopener">' + svg('x', true) + 'X</a>' +
+        '<button class="ss-share ss-copy" type="button" data-ss-copy>' + svg('copy', false) + '<span>Copy link</span></button>' +
+      '</div>' +
+      '<p class="ss-note" data-ss-note></p></div>';
+
+  var copy = host.querySelector('[data-ss-copy]');
+  var note = host.querySelector('[data-ss-note]');
+  if (copy) {
+    copy.addEventListener('click', function () {
+      var done = function () { if (note) { note.textContent = 'Link copied — paste it anywhere.'; setTimeout(function () { note.textContent = ''; }, 4000); } };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () { if (note) note.textContent = url; });
+      } else if (note) { note.textContent = url; }
+    });
+  }
+})();
+</script>
+</div>
+
+
+<div class="toast" id="toast">Done ✅</div>
+
+<script>
+/* =====================================================================
+   >>> REWIRE THIS BLOCK FOR REAL DATA <<<
+   Keep the shape: months keyed YYYY-MM, each with label, tx[] and
+   expenses[]. tx.status is 'confirmed' or 'pending'; tx.day is 1-31.
+   The monthly view, the year-to-date view, the charts, the fit-to-page
+   scaling and every export are all derived from this data.
+   ===================================================================== */
+var DATA = {
+  '2026-09': {
+    label:'September 2026',
+    tx:[
+      {date:'02 Sept', day:2,  member:'Tunde K.',   id:'SLV-1033', service:'Mental health support',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8871', status:'confirmed'},
+      {date:'03 Sept', day:3,  member:'Amina N.',   id:'SLV-1041', service:'Pre-marital guidance',               amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8874', status:'confirmed'},
+      {date:'05 Sept', day:5,  member:'Grace A.',   id:'SLV-1060', service:'Motivation & inspiration',           amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8877', status:'confirmed'},
+      {date:'06 Sept', day:6,  member:'Emeka U.',   id:'SLV-1071', service:'Relationship & marriage counselling',amount:5000,  method:'Card (Paystack)',ref:'SLV-PAY-8880', status:'confirmed'},
+      {date:'08 Sept', day:8,  member:'Amaka O.',   id:'SLV-1027', service:'Programme deposit — 4 sessions',     amount:20000, method:'Bank transfer', ref:'SLV-PAY-8891', status:'confirmed'},
+      {date:'08 Sept', day:8,  member:'Fatima A.',  id:'SLV-1078', service:'Individual therapy',                 amount:5000,  method:'Cash at center',ref:'SLV-PAY-8892', status:'confirmed'},
+      {date:'09 Sept', day:9,  member:'Chidi M.',   id:'SLV-1052', service:'Individual therapy',                 amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8895', status:'confirmed'},
+      {date:'10 Sept', day:10, member:'Blessing E.',id:'SLV-1064', service:'Family & parenting',                 amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8898', status:'confirmed'},
+      {date:'11 Sept', day:11, member:'Ngozi I.',   id:'SLV-1081', service:'Relationship & marriage counselling',amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8900', status:'confirmed'},
+      {date:'12 Sept', day:12, member:'Tunde K.',   id:'SLV-1033', service:'Mental health support',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8902', status:'confirmed'},
+      {date:'13 Sept', day:13, member:'Amaka O.',   id:'SLV-1027', service:'Session fee — couples session',      amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8904', status:'confirmed'},
+      {date:'13 Sept', day:13, member:'Yusuf B.',   id:'SLV-1088', service:'Group session contribution',         amount:2500,  method:'Bank transfer', ref:'SLV-PAY-8905', status:'confirmed'},
+      {date:'14 Sept', day:14, member:'Amaka O.',   id:'SLV-1027', service:'Session fee — 20 Sept',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8907', status:'confirmed'},
+      {date:'15 Sept', day:15, member:'Chidi M.',   id:'SLV-1052', service:'Session fee — 27 Sept',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8916', status:'pending'},
+      {date:'16 Sept', day:16, member:'Tunde K.',   id:'SLV-1033', service:'Session fee — 20 Sept',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8912', status:'pending'},
+      {date:'17 Sept', day:17, member:'Blessing E.',id:'SLV-1064', service:'Session fee — 21 Sept',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8921', status:'pending'},
+      {date:'17 Sept', day:17, member:'Grace A.',   id:'SLV-1060', service:'Motivation & inspiration',           amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8922', status:'confirmed'},
+      {date:'18 Sept', day:18, member:'Emeka U.',   id:'SLV-1071', service:'Follow-up review',                   amount:3000,  method:'Card (Paystack)',ref:'SLV-PAY-8925', status:'confirmed'},
+      {date:'19 Sept', day:19, member:'Ngozi I.',   id:'SLV-1081', service:'Group session contribution',         amount:2500,  method:'Bank transfer', ref:'SLV-PAY-8930', status:'confirmed'},
+      {date:'20 Sept', day:20, member:'Fatima A.',  id:'SLV-1078', service:'Relationship & marriage counselling',amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8933', status:'confirmed'}
+    ],
+    expenses:[
+      {item:'SMS credits (Termii) — 200 units', amount:2000},
+      {item:'Data & airtime for member support', amount:1500},
+      {item:'Card processing fees (Paystack)',   amount:250}
+    ]
+  },
+  '2026-08': {
+    label:'August 2026',
+    tx:[
+      {date:'03 Aug', day:3,  member:'Amaka O.',   id:'SLV-1027', service:'Mental health support',              amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8601', status:'confirmed'},
+      {date:'05 Aug', day:5,  member:'Tunde K.',   id:'SLV-1033', service:'Individual therapy',                 amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8607', status:'confirmed'},
+      {date:'08 Aug', day:8,  member:'Grace A.',   id:'SLV-1060', service:'Motivation & inspiration',           amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8612', status:'confirmed'},
+      {date:'12 Aug', day:12, member:'Chidi M.',   id:'SLV-1052', service:'Pre-marital guidance',               amount:5000,  method:'Cash at center',ref:'SLV-PAY-8618', status:'confirmed'},
+      {date:'15 Aug', day:15, member:'Amina N.',   id:'SLV-1041', service:'Relationship & marriage counselling',amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8623', status:'confirmed'},
+      {date:'19 Aug', day:19, member:'Emeka U.',   id:'SLV-1071', service:'Family & parenting',                 amount:5000,  method:'Bank transfer', ref:'SLV-PAY-8631', status:'confirmed'},
+      {date:'22 Aug', day:22, member:'Amaka O.',   id:'SLV-1027', service:'Programme deposit — 4 sessions',     amount:20000, method:'Bank transfer', ref:'SLV-PAY-8640', status:'confirmed'},
+      {date:'26 Aug', day:26, member:'Yusuf B.',   id:'SLV-1088', service:'Group session contribution',         amount:2500,  method:'Bank transfer', ref:'SLV-PAY-8648', status:'confirmed'}
+    ],
+    expenses:[
+      {item:'SMS credits (Termii) — 150 units', amount:1500},
+      {item:'Data & airtime for member support', amount:1500},
+      {item:'Card processing fees (Paystack)',   amount:180}
+    ]
+  },
+  '2026-07': {
+    label:'July 2026',
+    tx:[
+      {date:'04 Jul', day:4,  member:'Tunde K.',   id:'SLV-1033', service:'Mental health support',              amount:5000, method:'Bank transfer', ref:'SLV-PAY-8410', status:'confirmed'},
+      {date:'09 Jul', day:9,  member:'Grace A.',   id:'SLV-1060', service:'Motivation & inspiration',           amount:5000, method:'Bank transfer', ref:'SLV-PAY-8418', status:'confirmed'},
+      {date:'14 Jul', day:14, member:'Amaka O.',   id:'SLV-1027', service:'Relationship & marriage counselling',amount:5000, method:'Bank transfer', ref:'SLV-PAY-8426', status:'confirmed'},
+      {date:'18 Jul', day:18, member:'Fatima A.',  id:'SLV-1078', service:'Individual therapy',                 amount:5000, method:'Bank transfer', ref:'SLV-PAY-8433', status:'confirmed'},
+      {date:'23 Jul', day:23, member:'Emeka U.',   id:'SLV-1071', service:'Relationship & marriage counselling',amount:5000, method:'Bank transfer', ref:'SLV-PAY-8439', status:'confirmed'},
+      {date:'28 Jul', day:28, member:'Amina N.',   id:'SLV-1041', service:'Pre-marital guidance',               amount:5000, method:'Bank transfer', ref:'SLV-PAY-8447', status:'confirmed'},
+      {date:'30 Jul', day:30, member:'Blessing E.',id:'SLV-1064', service:'Group session contribution',         amount:2500, method:'Bank transfer', ref:'SLV-PAY-8452', status:'confirmed'}
+    ],
+    expenses:[
+      {item:'SMS credits (Termii) — 120 units', amount:1200},
+      {item:'Data & airtime for member support', amount:1200},
+      {item:'Card processing fees (Paystack)',   amount:120}
+    ]
+  }
+};
+
+(function(){
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var order  = Object.keys(DATA).sort();                 /* oldest → newest */
+  var years  = [];
+  order.forEach(function(k){ var y = k.slice(0,4); if(years.indexOf(y) === -1) years.push(y); });
+  var view   = { type:'month', key: order[order.length - 1] };
+  var A4_H   = 1010;                                     /* usable A4 height in CSS px */
+
+  var money = function(n){ return '₦' + Math.round(n).toLocaleString('en-NG'); };
+  var esc   = function(s){ return String(s).replace(/&amp;/g,'&'); };
+  var toast = document.getElementById('toast'), tTimer;
+  function say(m){ toast.textContent = m; toast.classList.add('show'); clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ toast.classList.remove('show'); }, 3400); }
+
+  /* ---------- aggregates ---------- */
+  function summarise(tx, expenses){
+    var confirmed = tx.filter(function(r){ return r.status === 'confirmed'; });
+    var pending   = tx.filter(function(r){ return r.status !== 'confirmed'; });
+    var gross     = confirmed.reduce(function(a,r){ return a + r.amount; }, 0);
+    var pendSum   = pending.reduce(function(a,r){ return a + r.amount; }, 0);
+    var deposits  = confirmed.filter(function(r){ return /deposit/i.test(r.service); })
+                             .reduce(function(a,r){ return a + r.amount; }, 0);
+    var depositN  = confirmed.filter(function(r){ return /deposit/i.test(r.service); }).length;
+    var sessions  = confirmed.length - depositN;
+    var costs     = expenses.reduce(function(a,e){ return a + e.amount; }, 0);
+    return {confirmed:confirmed, pending:pending, gross:gross, pendSum:pendSum, deposits:deposits,
+            sessions:sessions, costs:costs, feeIncome:gross - deposits,
+            avg:(sessions ? (gross - deposits)/sessions : 0)};
+  }
+  function groupBy(rows, keyFn){
+    var map = {};
+    rows.forEach(function(r){ map[keyFn(r)] = (map[keyFn(r)] || 0) + r.amount; });
+    return Object.keys(map).map(function(k){ return {k:k, v:map[k]}; }).sort(function(a,b){ return b.v - a.v; });
+  }
+  function barsHTML(items, totalForPct){
+    if(!items.length) return '<div class="mini">No confirmed payments in this period.</div>';
+    var max = items[0].v;
+    return items.map(function(s){
+      var pct = totalForPct ? ' <span class="mini">(' + Math.round((s.v/totalForPct)*100) + '%)</span>' : '';
+      return '<div class="brow"><span class="lbl">' + esc(s.k) + '</span><span class="val">' + money(s.v) + pct + '</span>' +
+             '<span class="track"><i style="width:' + Math.round((s.v/max)*100) + '%"></i></span></div>';
+    }).join('');
+  }
+  function chartHTML(items){
+    var max = Math.max.apply(null, items.map(function(i){ return i.v; }).concat([1]));
+    var BAR = items.length > 8 ? 34 : 52, GAP = items.length > 8 ? 20 : 30, H = 150;
+    var W = items.length * (BAR + GAP) + 40;
+    var g = items.map(function(it, i){
+      var h = Math.round((it.v/max) * H), x = 20 + i * (BAR + GAP), y = H - h + 16;
+      return '<g><rect x="' + x + '" y="' + y + '" width="' + BAR + '" height="' + Math.max(h,2) + '" rx="8" fill="url(#barGrad)"></rect>' +
+        '<text x="' + (x + BAR/2) + '" y="' + (y - 6) + '" text-anchor="middle" font-size="' + (it.v ? 11 : 10) + '" font-weight="700" fill="#2b1b4d">' + (it.v ? money(it.v) : '—') + '</text>' +
+        '<text x="' + (x + BAR/2) + '" y="' + (H + 34) + '" text-anchor="middle" font-size="10.5" fill="#6b5f8a">' + it.label + '</text></g>';
+    }).join('');
+    return '<svg viewBox="0 0 ' + W + ' ' + (H + 48) + '" width="100%" role="img" aria-label="Income chart">' +
+      '<defs><linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="#37c8bb"/><stop offset="1" stop-color="#8e7cff"/></linearGradient></defs>' +
+      '<line x1="14" y1="' + (H + 16) + '" x2="' + (W - 10) + '" y2="' + (H + 16) + '" stroke="rgba(43,27,77,.14)" stroke-width="1.5"/>' +
+      g + '</svg>';
+  }
+
+  /* ---------- month view ---------- */
+  function renderMonth(key){
+    view = {type:'month', key:key};
+    var M = DATA[key], s = summarise(M.tx, M.expenses);
+
+    document.getElementById('docKind').textContent = 'Monthly income statement';
+    document.getElementById('periodLabel').textContent = M.label;
+    document.getElementById('chartTitle').textContent = 'Income by week';
+    document.getElementById('mixTitle').textContent = 'Service mix';
+    document.getElementById('costTitle').textContent = 'Running costs this month';
+    document.getElementById('tableTitle').textContent = 'All transactions — ' + M.label;
+
+    fillTiles(s, s.confirmed.length + ' confirmed payments',
+                 s.pending.length ? s.pending.length + ' awaiting confirmation' : 'nothing outstanding',
+                 M.expenses.length + ' items');
+
+    var weeks = [{},{},{},{},{}];
+    s.confirmed.forEach(function(r){
+      var w = Math.min(5, Math.max(1, Math.ceil(r.day/7))) - 1;
+      weeks[w].total = (weeks[w].total || 0) + r.amount; weeks[w].n = (weeks[w].n || 0) + 1;
+    });
+    document.getElementById('chart').innerHTML = chartHTML(weeks.map(function(w,i){
+      return {label:'Week ' + (i+1), v: w.total || 0};
+    }));
+    document.getElementById('serviceBars').innerHTML = barsHTML(groupBy(s.confirmed, function(r){ return r.service; }), 0);
+    document.getElementById('channelBars').innerHTML = barsHTML(groupBy(s.confirmed, function(r){ return r.method; }), s.gross);
+    document.getElementById('expRows').innerHTML = M.expenses.map(function(e){
+      return '<tr><td>' + e.item + '</td><td class="num">' + money(e.amount) + '</td></tr>';
+    }).join('');
+    document.getElementById('expTotal').textContent = money(s.costs);
+
+    document.getElementById('tableWrap').innerHTML = txTableHTML(M.tx, s);
+    markChips();
+    document.title = 'Income statement — ' + M.label + ' — Dr. Syl4luv Relationship Therapy Center';
+    if(typeof updateHint === 'function') updateHint();
+  }
+  function txTableHTML(tx, s){
+    var body = tx.slice().sort(function(a,b){ return a.day - b.day; }).map(function(r){
+      var chip = r.status === 'confirmed' ? '<span class="pilltag s-ok">Confirmed</span>' : '<span class="pilltag s-warn">Pending</span>';
+      var ref  = r.status === 'confirmed'
+        ? '<a href="syl4luv-receipt.html?ref=' + r.ref + '" style="color:#5a45c9;font-weight:800">' + r.ref + '</a>'
+        : '<span class="mini">' + r.ref + ' · not issued</span>';
+      return '<tr><td>' + r.date + '</td><td>' + r.member + '<br><span class="mini">' + r.id + '</span></td>' +
+             '<td>' + esc(r.service) + '</td><td class="num">' + money(r.amount) + '</td>' +
+             '<td><span class="mini">' + r.method + '</span></td><td class="hide-sm">' + ref + '</td><td>' + chip + '</td></tr>';
+    }).join('');
+    return '<table id="exportTable" class="tx-table"><thead><tr><th>Date</th><th>Member</th><th>Service</th><th class="num">Amount</th>' +
+           '<th>Method</th><th class="hide-sm">Reference</th><th>Status</th></tr></thead><tbody>' + body + '</tbody>' +
+           '<tfoot><tr><td colspan="3">Confirmed income</td><td class="num green">' + money(s.gross) + '</td><td colspan="3"></td></tr>' +
+           '<tr><td colspan="3">Pending (not counted above)</td><td class="num">' + money(s.pendSum) + '</td><td colspan="3"></td></tr></tfoot></table>';
+  }
+
+  /* ---------- year view ---------- */
+  function renderYear(year){
+    view = {type:'year', year:year};
+    var keys = order.filter(function(k){ return k.slice(0,4) === year; });
+    var allTx = [], allExp = [], perMonth = keys.map(function(k){
+      var s = summarise(DATA[k].tx, DATA[k].expenses);
+      allTx = allTx.concat(DATA[k].tx); allExp = allExp.concat(DATA[k].expenses);
+      return {key:k, label:DATA[k].label, s:s};
+    });
+    var s = summarise(allTx, allExp);
+
+    document.getElementById('docKind').textContent = 'Year-to-date income statement';
+    document.getElementById('periodLabel').textContent = 'Year ' + year + ' (year to date)';
+    document.getElementById('chartTitle').textContent = 'Income by month — ' + year;
+    document.getElementById('mixTitle').textContent = 'Service mix (year to date)';
+    document.getElementById('costTitle').textContent = 'Running costs by month';
+    document.getElementById('tableTitle').textContent = 'Month-by-month summary — ' + year;
+
+    fillTiles(s, s.confirmed.length + ' confirmed payments across ' + perMonth.length + ' month' + (perMonth.length === 1 ? '' : 's'),
+                 s.pending.length ? s.pending.length + ' awaiting confirmation' : 'nothing outstanding',
+                 perMonth.length + ' months of costs');
+
+    var monthly = MONTHS.map(function(m, i){
+      var hit = perMonth.filter(function(p){ return parseInt(p.key.slice(5,7), 10) === i + 1; })[0];
+      return {label:m, v: hit ? hit.s.gross : 0, s: hit ? hit.s : null};
+    });
+    document.getElementById('chart').innerHTML = chartHTML(monthly);
+    document.getElementById('serviceBars').innerHTML = barsHTML(groupBy(s.confirmed, function(r){ return r.service; }), 0);
+    document.getElementById('channelBars').innerHTML = barsHTML(groupBy(s.confirmed, function(r){ return r.method; }), s.gross);
+    document.getElementById('expRows').innerHTML = perMonth.map(function(p){
+      return '<tr><td>' + p.label + '</td><td class="num">' + money(p.s.costs) + '</td></tr>';
+    }).join('');
+    document.getElementById('expTotal').textContent = money(s.costs);
+
+    var rows = perMonth.map(function(p){
+      return '<tr><td><b>' + p.label + '</b></td><td class="num">' + p.s.confirmed.length + '</td>' +
+             '<td class="num">' + p.s.sessions + '</td><td class="num green">' + money(p.s.gross) + '</td>' +
+             '<td class="num">' + money(p.s.pendSum) + '</td><td class="num">' + money(p.s.costs) + '</td>' +
+             '<td class="num"><b>' + money(p.s.gross - p.s.costs) + '</b></td></tr>';
+    }).join('');
+    document.getElementById('tableWrap').innerHTML =
+      '<table id="exportTable" class="tx-table"><thead><tr><th>Month</th><th class="num">Payments</th><th class="num">Sessions</th>' +
+      '<th class="num">Income</th><th class="num">Pending</th><th class="num">Costs</th><th class="num">Net</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody>' +
+      '<tfoot><tr><td>Year to date</td><td class="num">' + s.confirmed.length + '</td><td class="num">' + s.sessions + '</td>' +
+      '<td class="num green">' + money(s.gross) + '</td><td class="num">' + money(s.pendSum) + '</td>' +
+      '<td class="num">' + money(s.costs) + '</td><td class="num">' + money(s.gross - s.costs) + '</td></tr></tfoot></table>';
+
+    markChips();
+    document.title = 'Income statement — Year ' + year + ' — Dr. Syl4luv Relationship Therapy Center';
+    if(typeof updateHint === 'function') updateHint();
+  }
+  function fillTiles(s, grossNote, pendNote, expNote){
+    document.getElementById('generated').textContent = new Date().toLocaleString('en-NG');
+    document.getElementById('tGross').textContent = money(s.gross);
+    document.getElementById('tGrossNote').textContent = grossNote;
+    document.getElementById('tPending').textContent = money(s.pendSum);
+    document.getElementById('tPendingNote').textContent = pendNote;
+    document.getElementById('tSessions').textContent = s.sessions;
+    document.getElementById('tAvg').textContent = money(s.avg);
+    document.getElementById('tExpenses').textContent = money(s.costs);
+    document.getElementById('tExpNote').textContent = expNote;
+    document.getElementById('tNet').textContent = money(s.gross - s.costs);
+  }
+
+  /* ---------- period chips ---------- */
+  var chips = document.getElementById('chips');
+  function buildChips(){
+    chips.innerHTML = '';
+    order.forEach(function(key){
+      var b = document.createElement('button');
+      b.className = 'chip'; b.type = 'button'; b.setAttribute('data-month', key);
+      b.textContent = DATA[key].label.replace(' 20', ' ’');
+      b.addEventListener('click', function(){ renderMonth(key); });
+      chips.appendChild(b);
+    });
+    years.forEach(function(y){
+      var b = document.createElement('button');
+      b.className = 'chip year'; b.type = 'button'; b.setAttribute('data-year', y);
+      b.textContent = 'Year ' + y;
+      b.addEventListener('click', function(){ renderYear(y); });
+      chips.appendChild(b);
+    });
+  }
+  buildChips();
+  function markChips(){
+    document.querySelectorAll('#chips .chip').forEach(function(b){
+      var on = (view.type === 'month' && b.getAttribute('data-month') === view.key) ||
+               (view.type === 'year'  && b.getAttribute('data-year')  === view.year);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  function step(delta){
+    var list = order.concat(years.map(function(y){ return 'Y:' + y; }));
+    var idx  = view.type === 'month' ? list.indexOf(view.key) : list.indexOf('Y:' + view.year);
+    var next = list[Math.min(list.length - 1, Math.max(0, idx + delta))];
+    if(!next || next === list[idx]) return;
+    if(next.indexOf('Y:') === 0) renderYear(next.slice(2)); else renderMonth(next);
+  }
+  document.getElementById('prevMonth').addEventListener('click', function(){ step(-1); });
+  document.getElementById('nextMonth').addEventListener('click', function(){ step(1); });
+
+  /* ---------- fit to one A4 page ----------
+     The measurement deliberately applies the compact ("print") styling first,
+     because that is what the printer will actually lay out. Zoom is only
+     applied for the preview and for printing — never to the on-screen view. */
+  var statement = document.getElementById('statement');
+  var fitBox    = document.getElementById('fitPage');
+  var fitFlag   = document.getElementById('fitFlag');
+  var fitLabel  = document.querySelector('.fitbox');
+  var MIN_ZOOM  = 0.72;                     /* below this the print stops being readable */
+
+  /* when a busy month still won't fit, the transaction table is laid out in two
+     side-by-side columns (same rows, same data) and the sheet is re-measured */
+  function splitTx(on){
+    var wrap = document.getElementById('tableWrap');
+    if(!wrap) return false;
+    var table = wrap.querySelector('.tx-table');
+    if(!table) return false;
+    var cols = wrap.querySelector('.tx-cols');
+    if(on){
+      if(cols || !table.id) return !!cols;
+      var rows = Array.prototype.slice.call(table.querySelectorAll('tbody tr'));
+      if(rows.length < 8) return false;
+      var half = Math.ceil(rows.length / 2);
+      function build(list, withFoot){
+        var t = document.createElement('table');
+        t.className = 'tx-table';
+        t.appendChild(table.querySelector('thead').cloneNode(true));
+        var tb = document.createElement('tbody');
+        list.forEach(function(r){ tb.appendChild(r.cloneNode(true)); });
+        t.appendChild(tb);
+        if(withFoot){ var tf = table.querySelector('tfoot'); if(tf) t.appendChild(tf.cloneNode(true)); }
+        return t;
+      }
+      var box = document.createElement('div');
+      box.className = 'tx-cols';
+      box.appendChild(build(rows.slice(0, half), false));
+      box.appendChild(build(rows.slice(half), true));
+      table.style.display = 'none';
+      wrap.appendChild(box);
+      return true;
+    }
+    if(cols) cols.remove();
+    table.style.display = '';
+    return false;
+  }
+
+  function measure(){
+    var wasCompact = statement.classList.contains('sheet-compact');
+    var wasFit     = document.documentElement.classList.contains('fit-print');
+    statement.classList.remove('sheet-compact');
+    document.documentElement.classList.remove('fit-print');
+    statement.style.removeProperty('--fit-zoom');
+
+    var screenH = statement.scrollHeight;
+    statement.classList.add('sheet-compact');
+    var printH  = statement.scrollHeight;
+    var usedSplit = false;
+    if(printH > A4_H){ usedSplit = splitTx(true); printH = statement.scrollHeight; }
+
+    splitTx(false);
+    if(!wasCompact) statement.classList.remove('sheet-compact');
+    if(wasFit) document.documentElement.classList.add('fit-print');
+
+    var zoom  = printH > A4_H ? Math.max(MIN_ZOOM, (A4_H - 6) / printH) : 1;
+    var pages = Math.round((printH * zoom) / A4_H * 100) / 100;
+    return {screenH:screenH, printH:printH, zoom:Math.round(zoom*100)/100, pages:pages,
+            fitsAtFull: printH <= A4_H, split:usedSplit};
+  }
+
+  function updateHint(){
+    var r = measure();
+    var how = r.split ? ' (transactions in two columns)' : '';
+    var msg;
+    if(r.fitsAtFull) msg = '✓ Prints on one A4 page' + how;
+    else if(r.pages <= 1) msg = '✓ Fit to one page · ' + Math.round(r.zoom*100) + '%' + how;
+    else msg = '⚠ ' + r.pages + ' pages at ' + Math.round(r.zoom*100) + '%' + how;
+    msg += ' — click Preview to see it';
+    fitBox.parentElement.setAttribute('data-hint', msg);
+    fitLabel.childNodes[fitLabel.childNodes.length - 1].nodeValue = ' ' + msg;
+    return r;
+  }
+
+  function applyFit(){
+    var r = measure();
+    if(!fitBox.checked){ unapply(); return r; }
+    statement.classList.add('sheet-compact');
+    if(r.split) splitTx(true);
+    if(r.zoom < 1){
+      statement.style.setProperty('--fit-zoom', r.zoom);
+      document.documentElement.classList.add('fit-print');
+    } else {
+      statement.style.removeProperty('--fit-zoom');
+      document.documentElement.classList.remove('fit-print');
+    }
+    fitFlag.style.display = 'inline-flex';
+    fitFlag.textContent = (r.pages <= 1 ? '✓ One A4 page · ' + Math.round(r.zoom*100) + '% scale'
+                                        : '⚠ ' + r.pages + ' pages at ' + Math.round(r.zoom*100) + '% scale')
+                          + (r.split ? ' · 2-col table' : '');
+    return r;
+  }
+  function unapply(){
+    document.documentElement.classList.remove('fit-print');
+    statement.classList.remove('sheet-compact');
+    statement.style.removeProperty('--fit-zoom');
+    splitTx(false);
+    fitFlag.style.display = 'none';
+  }
+
+  window.addEventListener('beforeprint', function(){
+    statement.classList.add('sheet-compact');
+    if(fitBox.checked){ applyFit(); }
+    else { var m = measure(); if(m.split) splitTx(true); }
+  });
+  window.addEventListener('afterprint', function(){ unapply(); });
+  fitBox.addEventListener('change', function(){
+    if(fitBox.checked){
+      var r = updateHint();
+      say(r.fitsAtFull ? 'Fit to one page is on — this view already prints on one A4 sheet at full size.'
+                       : 'Fit to one page is on — printing at ' + Math.round(r.zoom*100) + '%.');
+    } else {
+      unapply(); say('Fit to one page is off — printing at full size (may run over two pages).');
+    }
+  });
+  document.getElementById('previewBtn').addEventListener('click', function(){
+    if(document.documentElement.classList.contains('fit-print') || statement.classList.contains('sheet-compact')){
+      unapply(); updateHint(); say('Preview closed — back to the normal screen view.');
+      return;
+    }
+    var r = applyFit();
+    say(r.pages <= 1 ? 'Preview: this is exactly what prints — one A4 page' +
+                       (r.zoom < 1 ? ' (scaled to ' + Math.round(r.zoom*100) + '%).' : ' at full size.')
+                     : 'Preview: ' + r.pages + ' pages at ' + Math.round(r.zoom*100) + '% — the readable minimum has been reached.');
+  });
+
+  /* ---------- print ---------- */
+  function doPrint(){
+    statement.classList.add('sheet-compact');
+    if(fitBox.checked){ applyFit(); }
+    else { var m = measure(); if(m.split) splitTx(true); }
+    setTimeout(function(){ window.print(); }, 90);
+  }
+  document.getElementById('printBtn').addEventListener('click', doPrint);
+  document.getElementById('printBtn2').addEventListener('click', doPrint);
+
+  /* ---------- CSV export ---------- */
+  document.getElementById('csvBtn').addEventListener('click', function(){
+    var name = view.type === 'month' ? 'income-statement-' + view.key : 'income-statement-' + view.year + '-year';
+    var sub  = view.type === 'month' ? 'Monthly income statement — ' + DATA[view.key].label
+                                     : 'Year-to-date income statement — ' + view.year;
+    if(exportTableToCSV('.tx-table', name, {subtitle: sub})){
+      say('Downloaded ' + name + '.csv — open it in Excel or Google Sheets.');
+    } else { say('Nothing to export for this period.'); }
+  });
+
+  /* ---------- live data hook ----------
+     supabase/syl4luv-staff-live.js calls this with data built from the real
+     payments and expenses. Without it (demo mode) nothing changes. */
+  window.SYL_INCOME = {
+    load: function(newData, forceYear){
+      if(!newData || !Object.keys(newData).length) return false;
+      DATA = newData;
+      order = Object.keys(DATA).sort();
+      years = [];
+      order.forEach(function(k){ var y = k.slice(0,4); if(years.indexOf(y) === -1) years.push(y); });
+      buildChips();
+      if(forceYear) renderYear(String(forceYear)); else renderMonth(order[order.length - 1]);
+      updateHint();
+      return true;
+    },
+    months: function(){ return order.slice(); },
+    tap: function(){ return DATA; }
+  };
+
+  renderMonth(view.key);
+  updateHint();
+})();
+</script>
+
+<script>
+/* ================= EXPORT TABLE TO CSV (opens in Excel) ================= */
+function csvClean(clone){
+  clone.querySelectorAll('br').forEach(function(br){ br.replaceWith(document.createTextNode(' ')); });
+  clone.querySelectorAll('button, .mini-av, .av-sm, .avatar, a.btn, .btn, .copybtn, svg').forEach(function(el){ el.remove(); });
+  return clone;
+}
+function csvCell(td){
+  var txt = (td.innerText || td.textContent || '').replace(/\s+/g, ' ').trim();
+  return (/[",]/.test(txt)) ? '"' + txt.replace(/"/g, '""') + '"' : txt;
+}
+function csvDownload(headerLines, rows, filenameBase){
+  var csv = headerLines.join('\r\n') + '\r\n' + rows.map(function(r){ return r.join(','); }).join('\r\n') + '\r\n';
+  var blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filenameBase + '-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+}
+function exportTableToCSV(tableSelector, filenameBase, opts){
+  opts = opts || {};
+  var table = document.querySelector(tableSelector);
+  if(!table) return false;
+  var clone = csvClean(table.cloneNode(true));
+  var rows = Array.prototype.slice.call(clone.querySelectorAll('tr'));
+  if(!rows.length) return false;
+  var body = rows.map(function(tr){ return Array.prototype.map.call(tr.children, csvCell); });
+  var head = ['Dr. Syl4luv Relationship Therapy Center'];
+  if(opts.subtitle) head.push(opts.subtitle);
+  head.push('Exported ' + new Date().toLocaleString('en-NG'));
+  head.push('Phone 0703 382 8292 | Email syl4luv@gmail.com | Access Bank 0032601495 (Adidi Sylvanus Osigbemeh) | Fee N5,000 per session');
+  head.push('');
+  csvDownload(head, body, filenameBase);
+  return true;
+}
+</script>
+<!-- ===== real data + staff login (does nothing until supabase-config.js has keys) ===== -->
+<script src="supabase/supabase-config.js"></script>
+<script src="supabase/syl4luv-db.js"></script>
+<script src="supabase/syl4luv-staff-live.js"></script>
+</body>
+</html>

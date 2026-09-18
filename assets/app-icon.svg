@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Dr. Syl4luv app icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6b6b"/>
+      <stop offset="0.42" stop-color="#ff8fc7"/>
+      <stop offset="0.76" stop-color="#8e7cff"/>
+      <stop offset="1" stop-color="#37c8bb"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="hr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6b6b"/>
+      <stop offset="0.55" stop-color="#ff8fc7"/>
+      <stop offset="1" stop-color="#8e7cff"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#2b1b4d" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- app tile -->
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="116" fill="url(#gloss)"/>
+
+  <!-- decorative confetti -->
+  <circle cx="404" cy="112" r="26" fill="#ffd93d" opacity="0.95"/>
+  <circle cx="104" cy="408" r="18" fill="#ffffff" opacity="0.35"/>
+  <path d="M412 372l9 22 22 9-22 9-9 22-9-22-22-9 22-9z" fill="#ffffff" opacity="0.5"/>
+
+  <!-- chat bubble with heart -->
+  <g filter="url(#soft)">
+    <path d="M256 108c-79.5 0-144 51.3-144 114.6 0 36 21.4 68 55.3 88.7-3.4 25.6-13.5 51.2-31.4 71.2-3.3 3.7-.6 9.8 4.3 9.3 44-4.7 79.3-24.3 101.6-46.8 4.5-4.5 11.6-6.4 17.8-6.4H256c79.5 0 144-51.3 144-114.6S335.5 108 256 108z" fill="#ffffff"/>
+  </g>
+  <path d="M256 292.5c-43.4-34.4-59.6-51.7-59.6-71.2 0-17.6 13.4-29 28.5-29 12.7 0 24.3 7.7 31.1 18.6 6.8-10.9 18.4-18.6 31.1-18.6 15.1 0 28.5 11.4 28.5 29 0 19.5-16.2 36.8-59.6 71.2z" fill="url(#hr)"/>
+</svg>

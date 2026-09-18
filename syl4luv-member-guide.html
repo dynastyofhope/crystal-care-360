@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How to use the chat app — Dr. Syl4luv Relationship Therapy Center</title>
+<meta name="description" content="A one-page guide for members of Dr. Syl4luv Relationship Therapy Center: how to create your account, pay the ₦5,000 consultation fee, and write in your private room." />
+<link rel="icon" href="assets/favicon.svg" />
+<style>
+  :root{
+    --red:#c1121f; --red-dark:#8f0d18; --ink:#1f2430; --muted:#5b6472;
+    --line:#e8e3e6; --card:#ffffff; --soft:#fff6f7;
+    --grad:linear-gradient(135deg,#ff6b6b 0%,#ff8fc7 50%,#8e7cff 100%);
+    --wa:#25d366;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); line-height:1.55;
+    background:
+      radial-gradient(1100px 520px at 8% -8%, #ffe3ea 0%, rgba(255,227,234,0) 62%),
+      radial-gradient(900px 500px at 96% 4%, #e8e4ff 0%, rgba(232,228,255,0) 60%),
+      radial-gradient(800px 520px at 50% 104%, #dff7f2 0%, rgba(223,247,242,0) 62%),
+      #fdfbfc;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:22px 18px 60px}
+
+  /* ---------------------------------------------------------------- top bar */
+  .topbar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--grad);color:#fff;border-radius:18px;
+    padding:14px 18px;box-shadow:0 10px 26px rgba(143,13,24,.18);
+  }
+  .topbar .mark{width:46px;height:46px;flex:0 0 auto}
+  .topbar h1{font-size:1.06rem;margin:0;letter-spacing:.2px}
+  .topbar p{margin:2px 0 0;font-size:.84rem;opacity:.95}
+  .topbar .contacts{margin-left:auto;text-align:right;font-size:.86rem}
+  .topbar .contacts a{color:#fff;text-decoration:none;font-weight:700}
+
+  /* ------------------------------------------------------------------ intro */
+  .lead{
+    background:var(--card);border:1px solid var(--line);border-left:5px solid var(--red);
+    border-radius:16px;padding:16px 18px;margin-top:16px;
+    box-shadow:0 6px 18px rgba(31,36,48,.06);
+  }
+  .lead h2{margin:0 0 6px;font-size:1.18rem}
+  .lead p{margin:0;color:#39404d}
+
+  h3.section{
+    font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--red-dark);margin:30px 0 10px;font-weight:800;
+  }
+
+  /* --------------------------------------------------------------- the cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:16px 16px 14px;position:relative;
+    box-shadow:0 6px 16px rgba(31,36,48,.05);
+  }
+  .card .num{
+    width:30px;height:30px;border-radius:50%;background:var(--grad);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;
+    box-shadow:0 4px 10px rgba(143,13,24,.22);
+  }
+  .card h4{margin:10px 0 4px;font-size:1.02rem}
+  .card p{margin:0;color:#454c59;font-size:.93rem}
+  .card .tip{margin-top:8px;font-size:.85rem;color:var(--muted)}
+  .card .tip b{color:var(--red-dark)}
+
+  /* ---------------------------------------------------------------- payment */
+  .pay{
+    background:var(--soft);border:1.6px solid #f3d4d9;border-radius:16px;
+    padding:16px 18px;margin-top:14px;
+  }
+  .pay h4{margin:0 0 8px;font-size:1.04rem}
+  .pay table{border-collapse:collapse;width:100%;font-size:.96rem}
+  .pay td{padding:5px 0;vertical-align:top}
+  .pay td:first-child{color:var(--muted);width:42%}
+  .pay td:last-child{font-weight:700}
+  .acct{font-size:1.16rem;letter-spacing:.06em}
+  .btnrow{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;
+    background:var(--red);color:#fff;text-decoration:none;
+    font:inherit;font-weight:700;font-size:.92rem;
+    padding:10px 15px;border-radius:11px;
+  }
+  .btn.ghost{background:#fff;color:var(--red);border:1.6px solid #f0c8ce}
+  .btn.wa{background:var(--wa);color:#08310f}
+  .btn[disabled]{opacity:.75;cursor:default}
+
+  /* ---------------------------------------------------------------- promise */
+  .promise{
+    background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:14px;
+  }
+  .promise ul{margin:8px 0 0;padding-left:20px}
+  .promise li{margin:5px 0;color:#40474f}
+  .promise b{color:var(--red-dark)}
+
+  /* ----------------------------------------------------------------- langs */
+  .langs{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:10px}
+  .lang{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+  .lang h5{margin:0 0 6px;font-size:.95rem;color:var(--red-dark)}
+  .lang ul{margin:0;padding-left:18px;font-size:.9rem;color:#3d444f}
+  .lang li{margin:4px 0}
+
+  /* ---------------------------------------------------------------- footer */
+  footer{
+    margin-top:26px;border-top:1px solid var(--line);padding-top:14px;
+    color:var(--muted);font-size:.88rem;display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+  }
+  footer a{color:var(--red-dark);font-weight:700;text-decoration:none}
+  footer .spacer{margin-left:auto}
+
+  /* ----------------------------------------------------------------- print */
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0 6mm}
+    .topbar{box-shadow:none;border-radius:12px}
+    .card,.lead,.pay,.promise,.lang{box-shadow:none;break-inside:avoid}
+    .grid,.langs{grid-template-columns:1fr 1fr}
+    .btn,footer .spacer,.noprint{display:none !important}
+    h3.section{margin:16px 0 8px}
+    a[href^="tel:"],a[href*="wa.me"]{color:#000;text-decoration:none}
+    @page{size:A4;margin:12mm}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ------------------------------------------------------------------ top -->
+  <header class="topbar">
+    <svg class="mark" viewBox="0 0 64 64" role="img" aria-label="Dr. Syl4luv Relationship Therapy Center">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="6" width="56" height="42" rx="15" fill="url(#g)"/>
+      <path d="M18 45 L18 61 L35 45 Z" fill="url(#g)"/>
+      <path d="M32 39c-9.6-7.6-13.2-11.4-13.2-15.7 0-3.9 3-6.4 6.3-6.4 2.8 0 5.4 1.7 6.9 4.1 1.5-2.4 4.1-4.1 6.9-4.1 3.3 0 6.3 2.5 6.3 6.4 0 4.3-3.6 8.1-13.2 15.7z" fill="#fff"/>
+      <circle cx="51.5" cy="13" r="3.4" fill="#ffd93d"/>
+    </svg>
+    <div>
+      <h1>How to use the chat app</h1>
+      <p>Dr. Syl4luv Relationship Therapy Center — counselling, mental health and a private room for you</p>
+    </div>
+    <div class="contacts">
+      <a href="tel:07033828292">0703 382 8292</a><br />
+      <a href="mailto:syl4luv@gmail.com">syl4luv@gmail.com</a>
+    </div>
+  </header>
+
+  <div class="lead">
+    <h2>Welcome — you are not alone ❤️</h2>
+    <p>This page tells you everything: how to create your account, how to pay the ₦5,000
+       consultation, and how to write to Dr. Syl4luv in your own private room. Keep it, print it,
+       or forward it on WhatsApp to anyone who needs it. Anything you write in your private room stays between you and Dr. Syl4luv.</p>
+  </div>
+
+  <!-- ------------------------------------------------------------ four steps -->
+  <h3 class="section">The four things you can do</h3>
+  <div class="grid">
+    <div class="card">
+      <div class="num">1</div>
+      <h4>Create your account</h4>
+      <p>Open the chat page and press <b>Sign up</b>. Use your email and a password only you know.
+         You are then asked for your ₦5,000 consultation registration.</p>
+      <p class="tip"><b>Already registered?</b> Press <b>Log in</b> instead.</p>
+    </div>
+    <div class="card">
+      <div class="num">2</div>
+      <h4>Pay the ₦5,000 consultation</h4>
+      <p>Pay into the account below, then write the reference you are given in the app.
+         You can upload the receipt or show it to the front desk.</p>
+      <p class="tip">The fee is a <b>one-off registration</b> for consultation.</p>
+    </div>
+    <div class="card">
+      <div class="num">3</div>
+      <h4>Write in your private room</h4>
+      <p>Your room — <b>Private room with Dr. Syl4luv</b> — is for you alone. Only you and
+         Dr. Syl4luv can read it. Press <b>+ New</b> to open extra boxes for different matters.</p>
+      <p class="tip"><b>Nothing to say yet?</b> That is fine. You can also wait — Dr. Syl4luv may
+         write to you first.</p>
+    </div>
+    <div class="card">
+      <div class="num">4</div>
+      <h4>Join the general forum</h4>
+      <p>The forum is where everybody shares information: announcements, session recaps and
+         questions that help other members. Your private room stays private — the forum is the
+         only place others can read.</p>
+    </div>
+  </div>
+
+  <!-- --------------------------------------------------------------- payment -->
+  <h3 class="section">Paying the ₦5,000 consultation</h3>
+  <div class="pay">
+    <h4>Bank transfer</h4>
+    <table>
+      <tr><td>Account number</td><td class="acct" id="acct">0032601495</td></tr>
+      <tr><td>Bank</td><td>Access Bank</td></tr>
+      <tr><td>Account name</td><td>Adidi Sylvanus Osigbemeh</td></tr>
+      <tr><td>Amount</td><td>₦5,000 — consultation registration</td></tr>
+    </table>
+    <div class="btnrow noprint">
+      <button class="btn" type="button" id="copybtn">Copy the account number</button>
+      <a class="btn ghost" href="tel:07033828292">Call 0703 382 8292</a>
+    </div>
+    <p style="margin:10px 0 0;font-size:.88rem;color:#5b6472">
+      After paying, send the proof to <a href="mailto:syl4luv@gmail.com" style="color:#8f0d18;font-weight:700">syl4luv@gmail.com</a>
+      or on WhatsApp, and it is confirmed in the app.
+    </p>
+  </div>
+
+  <!-- --------------------------------------------------------------- promise -->
+  <h3 class="section">What you are promised</h3>
+  <div class="promise">
+    <ul>
+      <li><b>Private means private.</b> Your room can only be read by you and Dr. Syl4luv. Even other
+          members cannot open it — the database itself refuses, not just the page.</li>
+      <li><b>An answer from a person.</b> Messages are read from <b>8am to 9pm</b> and usually answered
+          within a few hours. Written after 9pm? It is answered in the morning — it is already stored.</li>
+      <li><b>If it cannot wait, phone.</b> Call <a href="tel:07033828292" style="color:#8f0d18;font-weight:700">0703 382 8292</a>.
+          For emergencies, please also call the emergency services.</li>
+      <li><b>Your own words, kept.</b> Messages stay in your account — open the app tomorrow, on your
+          phone or your laptop, and they are still there.</li>
+      <li><b>Live, no refresh.</b> When Dr. Syl4luv replies, the message appears on your page by itself.</li>
+    </ul>
+  </div>
+
+  <!-- ----------------------------------------------------------------- langs -->
+  <h3 class="section">In three languages</h3>
+  <div class="langs">
+    <div class="lang" lang="en">
+      <h5>English</h5>
+      <ul>
+        <li>Press <b>Sign up</b> with your email and a password.</li>
+        <li>Pay ₦5,000: Access Bank <b>0032601495</b>, Adidi Sylvanus Osigbemeh.</li>
+        <li>Your private room: only you and Dr. Syl4luv can read it.</li>
+        <li>If it cannot wait, call <b>0703 382 8292</b>.</li>
+      </ul>
+    </div>
+    <div class="lang" lang="pcm">
+      <h5>Pidgin</h5>
+      <ul>
+        <li>Press <b>Sign up</b>, put your email and password — you don join.</li>
+        <li>Pay ₦5,000: Access Bank <b>0032601495</b>, name na Adidi Sylvanus Osigbemeh.</li>
+        <li>Your private room: na only you and Dr. Syl4luv go read am. Your secret safe.</li>
+        <li>If e no fit wait, call <b>0703 382 8292</b>.</li>
+      </ul>
+    </div>
+    <div class="lang" lang="ha">
+      <h5>Hausa</h5>
+      <ul>
+        <li>Danna <b>Sign up</b>, sannan ka sa email da kalmar sirri.</li>
+        <li>Biyan ₦5,000: Access Bank <b>0032601495</b>, sunan asusu Adidi Sylvanus Osigbemeh.</li>
+        <li>Ɗakin sirri naka: kai da Dr. Syl4luv kaɗai za su iya gani.</li>
+        <li>Idan gaggawa ce, ka kira <b>0703 382 8292</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ---------------------------------------------------------------- footer -->
+  <footer>
+    <span>Dr. Syl4luv Relationship Therapy Center</span>
+    <span>·</span>
+    <a href="tel:07033828292">0703 382 8292</a>
+    <span>·</span>
+    <a href="mailto:syl4luv@gmail.com">syl4luv@gmail.com</a>
+    <span class="spacer"></span>
+    <a class="btn wa noprint" href="https://wa.me/2347033828292" target="_blank" rel="noopener">WhatsApp us</a>
+    <button class="btn ghost noprint" type="button" id="printbtn">Print this page</button>
+  </footer>
+
+</div>
+
+<script>
+  /* Two small comforts — copying the account number and printing. Both work
+     with no network at all, which matters when the page is opened on a phone
+     in a place with poor data. */
+  (function () {
+    var copy = document.getElementById('copybtn');
+    if (copy) {
+      copy.addEventListener('click', function () {
+        var text = (document.getElementById('acct') || {}).textContent || '0032601495';
+        text = text.trim();
+        function done(ok) {
+          copy.textContent = ok ? '✓ Copied — 0032601495' : 'Account: 0032601495';
+          setTimeout(function () { copy.textContent = 'Copy the account number'; }, 2600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+        } else {
+          var t = document.createElement('textarea');
+          t.value = text; document.body.appendChild(t); t.select();
+          try { done(document.execCommand('copy')); } catch (e) { done(false); }
+          document.body.removeChild(t);
+        }
+      });
+    }
+    var print = document.getElementById('printbtn');
+    if (print) print.addEventListener('click', function () { window.print(); });
+  })();
+</script>
+</body>
+</html>

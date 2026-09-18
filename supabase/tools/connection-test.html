@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supabase connection test — Dr. Syl4luv Relationship Therapy Center</title>
+<style>
+  :root{--p:#7c3aed;--p2:#db2777;--ink:#241a3d;--soft:#5c5473;--ok:#0f8a5f;--warn:#b45309;--bad:#b91c1c;--line:#e6e2f2}
+  *{box-sizing:border-box}
+  body{margin:0;padding:26px 18px 60px;font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);
+    background:radial-gradient(900px 460px at 6% -6%,rgba(124,58,237,.20),transparent 60%),
+               radial-gradient(760px 420px at 98% 4%,rgba(219,39,119,.18),transparent 58%),
+               linear-gradient(170deg,#fff7fd,#f6f4ff 55%,#f1fbff)}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:1.4rem;margin:0 0 4px}
+  .sub{color:var(--soft);margin:0 0 20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 10px 30px rgba(36,26,61,.07)}
+  h2{font-size:1rem;margin:0 0 10px;letter-spacing:.01em}
+  .row{display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border-bottom:0}
+  .dot{width:22px;height:22px;border-radius:50%;flex:0 0 22px;display:grid;place-items:center;font-size:.78rem;color:#fff;font-weight:800;background:#c9c4d8}
+  .dot.ok{background:var(--ok)}.dot.bad{background:var(--bad)}.dot.warn{background:var(--warn)}.dot.run{background:#8b8b9c}
+  .txt{flex:1;min-width:0}
+  .txt b{display:block;font-size:.93rem}
+  .txt small{color:var(--soft);display:block;word-break:break-word}
+  button{font:inherit;font-weight:750;padding:11px 16px;border-radius:12px;border:0;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;cursor:pointer}
+  button.ghost{background:#fff;color:var(--p);border:1.6px solid rgba(124,58,237,.3)}
+  button:disabled{opacity:.55;cursor:default}
+  label{display:block;font-size:.82rem;font-weight:750;margin:10px 0 4px}
+  input{width:100%;padding:11px 13px;border:1.6px solid var(--line);border-radius:12px;font:inherit}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .verdict{padding:14px 16px;border-radius:14px;font-weight:700}
+  .verdict.ok{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}
+  .verdict.bad{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+  .verdict.warn{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+  code{background:#f4f1ff;padding:1px 6px;border-radius:6px;font-size:.85em}
+  .foot{color:var(--soft);font-size:.85rem;margin-top:18px}
+  @media(max-width:620px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Supabase connection test</h1>
+  <p class="sub">Run this after you paste your Project URL and anon key into <code>supabase/supabase-config.js</code> and upload the site. It checks the things that actually go wrong — wrong key, tables missing, security rules not on.</p>
+
+  <div class="card">
+    <h2>1 &nbsp;Configuration</h2>
+    <div class="row"><span class="dot" id="d0">•</span><span class="txt"><b>Keys found</b><small id="m0">checking…</small></span></div>
+    <div class="row"><span class="dot" id="d1">•</span><span class="txt"><b>Project reachable</b><small id="m1">waiting</small></span></div>
+    <div class="row"><span class="dot" id="d2">•</span><span class="txt"><b>All seven tables exist</b><small id="m2">waiting</small></span></div>
+    <div class="row"><span class="dot" id="d3">•</span><span class="txt"><b>Public forum readable by visitors</b><small id="m3">waiting</small></span></div>
+    <div class="row"><span class="dot" id="d4">•</span><span class="txt"><b>Member data is NOT readable by visitors</b><small id="m4">waiting</small></span></div>
+    <div class="row"><span class="dot" id="d5">•</span><span class="txt"><b>Signing in sticks</b><small id="m5">waiting</small></span></div>
+  </div>
+
+  <div class="card">
+    <h2>2 &nbsp;Create a test account (optional, but it proves the whole chain)</h2>
+    <p class="sub" style="margin:0 0 6px">Use a throwaway address such as <code>test.yourname@gmail.com</code>. It becomes a real account you can delete later in the Supabase dashboard → Authentication → Users.</p>
+    <div class="grid2">
+      <div><label for="tname">Full name</label><input id="tname" value="Setup Test" autocomplete="off"></div>
+      <div><label for="temail">Email</label><input id="temail" type="email" placeholder="test.you@example.com" autocomplete="off"></div>
+    </div>
+    <div class="grid2">
+      <div><label for="tphone">Phone</label><input id="tphone" value="0703 382 8292" autocomplete="off"></div>
+      <div><label for="tpw">Password</label><input id="tpw" type="password" value="test-123456" autocomplete="off"></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button id="runSignup">Create the test account</button>
+      <button id="runBooking" class="ghost" disabled>Then book a ₦5,000 consultation</button>
+      <button id="runChat" class="ghost" disabled>Then send a private message</button>
+    </div>
+    <div id="signupOut" style="margin-top:12px"></div>
+  </div>
+
+  <div class="card">
+    <h2>Result</h2>
+    <div id="verdict" class="verdict warn">Running the checks…</div>
+    <p class="foot">Nothing here is stored in the page. Your anon key is designed to be public — the row-level security rules in <code>schema.sql</code> are what protect your members, and check 5 above is the one that verifies them.</p>
+  </div>
+</div>
+
+<script src="../supabase-config.js"></script>
+<script src="../syl4luv-db.js"></script>
+<script>
+(function(){
+  var DB = window.SYL4LUV_DB;
+  var problems = [], warnings = [];
+
+  function mark(n, state, msg){
+    var d = document.getElementById('d'+n), m = document.getElementById('m'+n);
+    d.className = 'dot ' + (state === 'ok' ? 'ok' : state === 'bad' ? 'bad' : state === 'warn' ? 'warn' : 'run');
+    d.textContent = state === 'ok' ? '✓' : state === 'bad' ? '✕' : state === 'warn' ? '!' : '•';
+    m.textContent = msg;
+  }
+  function ready(){ return DB.init(); }
+  function verdict(kind, msg){ var v = document.getElementById('verdict'); v.className = 'verdict ' + kind; v.innerHTML = msg; }
+
+  /* ---- 1. keys ---- */
+  var cfg = DB.config();
+  ready().then(function(){                       /* restores a saved login */
+    var u = DB.user();
+    if (DB.isLive()) mark(5, u ? 'ok' : 'warn', u
+      ? 'Already signed in as ' + (u.email || DB.name()) + ' — your login was remembered on this device.'
+      : 'Nobody is signed in yet — create the test account below and reload this page; you should still be signed in.');
+  });
+  if (!DB.isLive()) {
+    mark(0, 'bad', 'No keys in supabase/supabase-config.js — the pages are in demo mode.');
+    mark(1, 'bad', 'skipped'); mark(2, 'bad', 'skipped'); mark(3, 'bad', 'skipped'); mark(4, 'bad', 'skipped');
+    verdict('bad', '❌ Supabase is not configured yet. Open <code>supabase/supabase-config.js</code>, paste your Project URL and anon key, upload the site again, then reload this page.');
+    return;
+  }
+  mark(0, 'ok', cfg.url + ' · key ends …' + String(window.SYL4LUV_CONFIG.supabaseAnonKey).slice(-6));
+
+  var TABLES = ['profiles','bookings','payments','messages','forum_posts','announcements','expenses'];
+  var publicish = ['forum_posts','announcements'];
+
+  fetch(cfg.url + '/rest/v1/announcements?select=id&limit=1', { headers: { apikey: window.SYL4LUV_CONFIG.supabaseAnonKey } })
+    .then(function(r){
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + (r.status === 401 ? '— the anon key looks wrong' : r.status === 404 ? '— the schema has not been run yet' : ''));
+      mark(1, 'ok', 'The project answered with HTTP ' + r.status + '.');
+      return Promise.all(TABLES.map(function(t){
+        return fetch(cfg.url + '/rest/v1/' + t + '?select=*&limit=0', { headers: { apikey: window.SYL4LUV_CONFIG.supabaseAnonKey } })
+          .then(function(x){ return { t: t, ok: x.ok, status: x.status }; });
+      }));
+    })
+    .then(function(res){
+      var missing = res.filter(function(x){ return !x.ok; }).map(function(x){ return x.t; });
+      if (missing.length) {
+        problems.push('missing tables');
+        mark(2, 'bad', 'Not found: ' + missing.join(', ') + '. Run supabase/schema.sql in the SQL Editor.');
+      } else {
+        mark(2, 'ok', 'profiles · bookings · payments · messages · forum_posts · announcements · expenses');
+      }
+      /* public read */
+      return fetch(cfg.url + '/rest/v1/forum_posts?select=id,title&limit=3', { headers: { apikey: window.SYL4LUV_CONFIG.supabaseAnonKey } });
+    })
+    .then(function(r){ return r.json().catch(function(){ return null; }).then(function(rows){
+      if (!r.ok) { warnings.push('forum not publicly readable'); mark(3, 'warn', 'The forum is not readable by logged-out visitors — members will see an empty forum until they log in. That is allowed, but for "information dissemination" it is usually better open.'); }
+      else mark(3, 'ok', 'Read ' + (rows ? rows.length : 0) + ' topic(s) without logging in — visitors can read the forum.');
+    }); })
+    .then(function(){
+      /* the security check that matters: can a stranger read member data? */
+      return fetch(cfg.url + '/rest/v1/bookings?select=id,full_name,phone&limit=1', { headers: { apikey: window.SYL4LUV_CONFIG.supabaseAnonKey } })
+        .then(function(r){ return r.json().catch(function(){ return []; }).then(function(rows){
+          if (r.ok && Array.isArray(rows) && rows.length > 0) {
+            problems.push('no RLS');
+            mark(4, 'bad', 'A logged-out visitor just read ' + rows.length + ' booking row(s) including names and phone numbers. Row-level security is NOT protecting the table — do not put real members in it. Re-run schema.sql.');
+          } else {
+            mark(4, 'ok', 'A logged-out visitor was correctly refused (' + (r.ok ? 'empty result' : 'HTTP ' + r.status) + ').');
+          }
+        }); });
+    })
+    .then(function(){
+      if (problems.length) verdict('bad', '❌ ' + problems.length + ' problem(s) above need fixing before real members use this site.');
+      else if (warnings.length) verdict('warn', '⚠️ Working, with ' + warnings.length + ' thing(s) worth a look above.');
+      else verdict('ok', '✅ Everything checks out — accounts, database and security rules are all in place. Sign up in the app to try it for real.');
+    })
+    .catch(function(e){
+      mark(1, 'bad', DB.friendly(e));
+      verdict('bad', '❌ Could not reach the project. ' + DB.friendly(e));
+    });
+
+  /* ---- 2. end-to-end: account → booking → message ---- */
+  function out(html, kind){
+    document.getElementById('signupOut').innerHTML = html;
+  }
+  var created = null;
+  document.getElementById('runSignup').addEventListener('click', function(){
+    var btn = this; btn.disabled = true; out('Creating the account…');
+    DB.signUp({ fullName: document.getElementById('tname').value,
+                email: document.getElementById('temail').value,
+                phone: document.getElementById('tphone').value,
+                password: document.getElementById('tpw').value })
+      .then(function(res){
+        created = res;
+        if (res.confirmed) {
+          out('<div class="verdict ok">✓ Account created and signed in automatically. Now press “Then book a ₦5,000 consultation”.</div>');
+          document.getElementById('runBooking').disabled = false;
+        } else {
+          out('<div class="verdict warn">✓ Account created, but Supabase is set to require email confirmation. Open the email and click the link, <em>or</em> for a smoother start turn OFF “Confirm email” in Supabase → Authentication → Sign In / Providers → Email.</div>');
+          document.getElementById('runBooking').disabled = false;
+        }
+      })
+      .catch(function(e){ out('<div class="verdict bad">✕ ' + e.message + '</div>'); btn.disabled = false; });
+  });
+
+  document.getElementById('runBooking').addEventListener('click', function(){
+    var btn = this; btn.disabled = true; out('Booking a consultation…');
+    DB.api.createBooking({ service: 'Individual therapy', notes: 'Connection test row — safe to delete.' })
+      .then(function(row){
+        return DB.api.myBookings().then(function(mine){
+          out('<div class="verdict ok">✓ Booking saved with reference <code>' + row.reference + '</code>' +
+              (mine.length ? ' and it came back in your own list (' + mine.length + ' booking' + (mine.length === 1 ? '' : 's') + ').' : ' — but it did not come back in your own list, which means the select policy is wrong.') +
+              ' Press “Then send a private message”.</div>');
+          document.getElementById('runChat').disabled = false;
+        });
+      })
+      .catch(function(e){ out('<div class="verdict bad">✕ ' + e.message + '</div>'); btn.disabled = false; });
+  });
+
+  document.getElementById('runChat').addEventListener('click', function(){
+    var btn = this; btn.disabled = true; out('Sending a private message…');
+    DB.api.sendMessage('Connection test message — safe to delete.', 'private')
+      .then(function(){ return DB.api.roomMessages({ room: 'private' }); })
+      .then(function(msgs){
+        out('<div class="verdict ok">✓ Message stored and read back (' + msgs.length + ' in the room). <strong>Everything works end to end.</strong></div>');
+      })
+      .catch(function(e){ out('<div class="verdict bad">✕ ' + e.message + '</div>'); btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

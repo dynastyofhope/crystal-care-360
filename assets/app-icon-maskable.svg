@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Dr. Syl4luv maskable app icon">
+  <defs>
+    <linearGradient id="bgm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6b6b"/><stop offset="0.42" stop-color="#ff8fc7"/>
+      <stop offset="0.76" stop-color="#8e7cff"/><stop offset="1" stop-color="#37c8bb"/>
+    </linearGradient>
+    <linearGradient id="hrm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff6b6b"/><stop offset="0.55" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bgm)"/>
+  <circle cx="404" cy="112" r="22" fill="#ffd93d" opacity="0.9"/>
+  <g transform="translate(256 256) scale(0.66) translate(-256 -256)">
+    <path d="M256 108c-79.5 0-144 51.3-144 114.6 0 36 21.4 68 55.3 88.7-3.4 25.6-13.5 51.2-31.4 71.2-3.3 3.7-.6 9.8 4.3 9.3 44-4.7 79.3-24.3 101.6-46.8 4.5-4.5 11.6-6.4 17.8-6.4H256c79.5 0 144-51.3 144-114.6S335.5 108 256 108z" fill="#fff"/>
+    <path d="M256 292.5c-43.4-34.4-59.6-51.7-59.6-71.2 0-17.6 13.4-29 28.5-29 12.7 0 24.3 7.7 31.1 18.6 6.8-10.9 18.4-18.6 31.1-18.6 15.1 0 28.5 11.4 28.5 29 0 19.5-16.2 36.8-59.6 71.2z" fill="url(#hrm)"/>
+  </g>
+</svg>

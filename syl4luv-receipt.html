@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session Receipt — Dr. Syl4luv Relationship Therapy Center</title>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/png/icon-180.png">
+<!--
+  =====================================================================
+  DR. SYL4LUV RELATIONSHIP THERAPY CENTER — PRINTABLE SESSION RECEIPT
+  =====================================================================
+  WHAT THIS IS
+  A member-facing receipt they can print, or save as a PDF, after paying
+  the ₦5,000 consultation fee. Pick a receipt on the left (or link
+  straight to one with ?ref=SLV-PAY-8907) and the sheet updates.
+
+  HOW MEMBERS USE IT
+  1. Button "Print / Save as PDF" opens the browser print dialog.
+  2. In that dialog choose "Save as PDF" as the printer to keep a copy.
+  3. Everything except the receipt sheet is hidden when printing.
+
+  LINKING STRAIGHT TO ONE RECEIPT
+  syl4luv-receipt.html?ref=SLV-PAY-8907
+  syl4luv-receipt.html?ref=recent   (opens the newest paid receipt)
+
+  HOW TO USE ON YOUR SITE
+  Copy the <style> into <head> and the markup from "STEP 1" into the body.
+  The receipts list is demo data in the marked RECEIPTS array — replace it
+  with your own API/Supabase/Firebase records, keeping the same keys:
+  ref, member, id, date, session, amount, method, bank, account, holder,
+  confirmedBy.
+
+  SHARED DETAILS
+  Access Bank - 0032601495 - Adidi Sylvanus Osigbemeh - fee N5,000
+  Phone / WhatsApp 0703 382 8292  |  Email syl4luv@gmail.com
+  =====================================================================
+-->
+<style>
+:root{--coral:#ff6b6b;--pink:#ff8fc7;--teal:#37c8bb;--purple:#8e7cff;--sun:#ffd93d;
+  --ink:#2b1b4d;--ink-soft:#6b5f8a;--line:rgba(43,27,77,.12)}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
+  background:#fffaf4;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0 0 .4em;line-height:1.15;letter-spacing:-.02em}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{width:min(1180px,94vw);margin-inline:auto}
+.bg{position:fixed;inset:0;z-index:-1;background:
+  radial-gradient(900px 600px at 6% -5%,#ffe9c9 0%,rgba(255,233,201,0) 60%),
+  radial-gradient(900px 620px at 96% 0%,#ffe0ef 0%,rgba(255,224,239,0) 62%),
+  linear-gradient(180deg,#fffaf4,#f7f5ff 60%,#f2fbfa)}
+.topbar{background:linear-gradient(95deg,var(--coral),var(--pink) 32%,var(--purple) 66%,var(--teal));color:#fff;font-size:.83rem}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;justify-content:space-between;padding:7px 0}
+.navbar .wrap{display:flex;align-items:center;gap:11px;padding:12px 0}
+.logo-mark{width:46px;height:46px;flex:0 0 auto}
+.brand-name{display:block;font-size:1.18rem;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(95deg,var(--coral),var(--purple) 55%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.brand-sub{display:block;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+.hdr-actions{display:flex;gap:9px;margin-left:auto;flex-wrap:wrap}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:10px 18px;font-weight:700;font-size:.9rem;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s}
+.btn-ghost{background:#fff;color:var(--ink);border:1.6px solid var(--line)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-primary{background:linear-gradient(100deg,var(--coral),var(--pink) 45%,var(--purple));color:#fff;box-shadow:0 14px 28px -16px rgba(255,107,107,.85)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-teal{background:linear-gradient(100deg,var(--teal),#63d8ff);color:#093b37}
+.btn-wa{background:linear-gradient(100deg,#25d366,#128c7e);color:#fff}
+.btn-sm{padding:7px 13px;font-size:.82rem}
+.btn-block{width:100%}
+
+main{padding:24px 0 50px}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.card{background:#fff;border:1.6px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 16px 40px -34px rgba(43,27,77,.9)}
+.eyebrow{font-size:.73rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--coral)}
+.rlist{display:grid;gap:9px;margin-top:10px}
+.ritem{display:flex;gap:11px;align-items:center;border:1.6px solid var(--line);border-radius:14px;padding:11px;cursor:pointer;background:#fff;transition:.16s;text-align:left;width:100%}
+.ritem:hover{border-color:#cfc4ff;background:#fdfcff}
+.ritem.on{border-color:var(--purple);background:#f7f4ff;box-shadow:0 10px 22px -18px rgba(142,124,255,.9)}
+.ritem b{display:block;font-size:.9rem}
+.ritem small{color:var(--ink-soft);font-size:.76rem}
+.tick{width:32px;height:32px;border-radius:50%;background:#dffbf7;color:#0e7d72;display:grid;place-items:center;font-weight:900;flex:0 0 auto}
+.note{background:#fff;border:1.6px solid var(--line);border-left:6px solid var(--teal);border-radius:14px;padding:13px 15px;font-size:.86rem;color:#4a3f6b}
+
+/* ============ the printable sheet ============ */
+.sheet{background:#fff;border:1.6px solid var(--line);border-radius:22px;padding:32px;position:relative;overflow:hidden;
+  box-shadow:0 26px 60px -34px rgba(43,27,77,.55)}
+.sheet:before{content:"";position:absolute;top:0;left:0;right:0;height:7px;
+  background:linear-gradient(90deg,var(--coral),var(--pink) 30%,var(--purple) 65%,var(--teal))}
+.sheet-head{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start;justify-content:space-between;
+  padding-bottom:16px;border-bottom:2px dashed var(--line);margin-bottom:18px}
+.sheet-head .who{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.sheet-head h1{font-size:1.3rem;margin-bottom:2px}
+.sheet-head .muted{color:var(--ink-soft);font-size:.85rem}
+.doc{text-align:right}
+.doc .stamp{display:inline-block;border:2.4px solid #0e7d72;color:#0e7d72;border-radius:12px;padding:7px 13px;font-weight:900;
+  letter-spacing:.14em;font-size:.8rem;text-transform:uppercase;transform:rotate(-2deg)}
+.doc .refbig{font-size:1rem;font-weight:850;letter-spacing:.02em;margin-top:8px}
+.rows{display:grid;gap:2px;margin-bottom:18px}
+.row{display:flex;justify-content:space-between;gap:16px;padding:10px 2px;border-bottom:1px dashed var(--line);font-size:.93rem}
+.row:last-child{border-bottom:0}
+.row span{color:var(--ink-soft);font-weight:600}
+.row b{text-align:right}
+.amount{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  background:linear-gradient(100deg,#f2fffb,#f6f2ff);border:1.6px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:18px}
+.amount .big{font-size:clamp(1.5rem,4vw,2rem);font-weight:850;letter-spacing:-.03em}
+.amount .words{font-size:.84rem;color:var(--ink-soft)}
+.sheet-foot{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-end;
+  border-top:2px dashed var(--line);padding-top:16px}
+.sign{min-width:200px}
+.sign .line{border-bottom:1.8px solid var(--ink);height:34px;margin-bottom:6px}
+.sign small{color:var(--ink-soft);font-size:.8rem}
+.thanks{background:#fff8ec;border:1.6px solid var(--line);border-radius:14px;padding:12px 14px;font-size:.86rem;margin-top:16px}
+.fine{font-size:.76rem;color:var(--ink-soft);margin-top:14px;text-align:center}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+
+@media(max-width:900px){ .layout{grid-template-columns:1fr} .doc{text-align:left} }
+@media(max-width:560px){ .sheet{padding:20px} .brand-sub{display:none} .topbar{display:none} }
+
+/* ============ print ============ */
+@page{size:A4;margin:14mm}
+@media print{
+  .bg,.topbar,.navbar,.no-print,.actions,.rlist,.card.no-print{display:none!important}
+  body{background:#fff}
+  main{padding:0}
+  .layout{display:block}
+  .sheet{box-shadow:none;border:0;border-radius:0;padding:0}
+  .sheet:before{height:5px}
+  a[href]:after{content:""}          /* don't print URLs after links */
+}
+
+/* ============ SEND RECEIPT (SMS / EMAIL / WHATSAPP) ============ */
+.sendcard{margin-top:18px;background:#fff;border:1.6px solid var(--line);border-radius:20px;padding:20px;
+  box-shadow:0 16px 40px -34px rgba(43,27,77,.9)}
+.sendcard.flash{animation:sendflash 1.6s ease 2}
+@keyframes sendflash{0%,100%{box-shadow:0 16px 40px -34px rgba(43,27,77,.9)}50%{box-shadow:0 0 0 6px rgba(37,211,102,.22)}}
+.sendtabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 14px}
+.sendtab{border:1.6px solid var(--line);background:#fff;border-radius:999px;padding:9px 15px;font-weight:750;
+  font-size:.85rem;color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.sendtab:hover{border-color:#25d366;color:#128c7e}
+.sendtab[aria-selected="true"]{background:linear-gradient(100deg,#25d366,#128c7e);color:#fff;border-color:transparent}
+.sendpane{display:none}
+.sendpane.on{display:block;animation:fadein .3s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.fieldrow>*{min-width:0}
+.sendcard label{display:block;font-size:.79rem;font-weight:750;margin-bottom:5px}
+.sendcard input[type=email],.sendcard input[type=tel],.sendcard textarea{width:100%;max-width:100%;font-family:inherit;
+  font-size:.9rem;color:var(--ink);border:1.6px solid var(--line);border-radius:13px;padding:11px 13px;background:#fdfcff;outline:0}
+.sendcard textarea{resize:vertical;line-height:1.5}
+.sendcard input:focus,.sendcard textarea:focus{border-color:#25d366;background:#fff;box-shadow:0 0 0 4px rgba(37,211,102,.15)}
+.sendbtns{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.preview{background:#f3fff8;border:1.6px solid #cdf0da;border-radius:14px;padding:13px 15px;font-size:.86rem;
+  white-space:pre-line;color:#25514a;margin-bottom:4px}
+.delivnote{font-size:.79rem;color:#6b5f8a;margin-top:10px}
+@media(max-width:640px){ .fieldrow{grid-template-columns:1fr} }
+/* printing: the delivery card is screen-only */
+@media print{ .sendcard{display:none!important} }
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<!-- ===== STEP 1a — header (hidden when printing) ===== -->
+<header class="no-print">
+  <div class="topbar">
+    <div class="wrap">
+      <span>Official session receipt · Dr. Syl4luv Relationship Therapy Center</span>
+      <span>📞 0703 382 8292 · syl4luv@gmail.com</span>
+    </div>
+  </div>
+  <div class="navbar">
+    <div class="wrap">
+      <a class="brand" href="syl4luv-chat-app.html" style="display:flex;gap:11px;align-items:center">
+        <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+          </linearGradient></defs>
+          <rect x="5" y="7" width="54" height="40" rx="14" fill="url(#lg1)"/>
+          <path d="M19 44 L19 60 L34 44 Z" fill="url(#lg1)"/>
+          <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+        </svg>
+        <span><span class="brand-name">Dr. Syl4luv</span><span class="brand-sub">Relationship Therapy Center</span></span>
+      </a>
+      <div class="hdr-actions">
+        <a class="btn btn-ghost btn-sm" href="syl4luv-members-dashboard.html">← Member dashboard</a>
+        <button class="btn btn-primary btn-sm" id="printTop">🖨 Print / Save as PDF</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap layout">
+
+    <!-- ===== STEP 1b — receipt picker (hidden when printing) ===== -->
+    <aside class="card no-print">
+      <div class="eyebrow">Your receipts</div>
+      <h3 style="font-size:1.05rem">Paid sessions</h3>
+      <p style="font-size:.85rem;color:var(--ink-soft);margin-bottom:4px">Tap one to load it, then print or save as PDF.</p>
+      <div class="rlist" id="rlist"></div>
+      <div class="note" style="margin-top:14px">
+        Need a receipt corrected? Call <strong>0703 382 8292</strong> or email <strong>syl4luv@gmail.com</strong> — support will reissue it the same day.
+      </div>
+    </aside>
+
+    <!-- ===== STEP 1c — the printable receipt ===== -->
+    <section>
+      <article class="sheet" id="sheet">
+        <div class="sheet-head">
+          <div class="who">
+            <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+              <defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+              </linearGradient></defs>
+              <rect x="5" y="7" width="54" height="40" rx="14" fill="url(#lg2)"/>
+              <path d="M19 44 L19 60 L34 44 Z" fill="url(#lg2)"/>
+              <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+            </svg>
+            <div>
+              <h1>Dr. Syl4luv Relationship Therapy Center</h1>
+              <div class="muted">
+                Counselling • Mental health • Motivation &amp; inspiration<br>
+                📞 0703 382 8292 &nbsp;·&nbsp; ✉ syl4luv@gmail.com
+              </div>
+            </div>
+          </div>
+          <div class="doc">
+            <span class="stamp" id="statusStamp">Paid</span>
+            <div class="refbig" id="docRef">SLV-PAY-8907</div>
+            <div class="muted" id="docDate">14 September 2026</div>
+          </div>
+        </div>
+
+        <h3 style="font-size:1.05rem;letter-spacing:.02em">OFFICIAL SESSION RECEIPT</h3>
+        <p style="font-size:.88rem;color:var(--ink-soft)">Issued to the member named below for a consultation with Dr. Syl4luv.</p>
+
+        <div class="rows">
+          <div class="row"><span>Member name</span><b id="fMember">Amaka O.</b></div>
+          <div class="row"><span>Member ID</span><b id="fId">SLV-1027</b></div>
+          <div class="row"><span>Session type</span><b id="fSession">Relationship &amp; marriage counselling</b></div>
+          <div class="row"><span>Session date</span><b id="fSessionDate">Saturday, 20 September 2026 · 7:00 PM</b></div>
+          <div class="row"><span>Payment method</span><b id="fMethod">Bank transfer — Access Bank</b></div>
+          <div class="row"><span>Account paid to</span><b id="fAccount">0032601495 · Adidi Sylvanus Osigbemeh</b></div>
+          <div class="row"><span>Payment reference</span><b id="fRef">SLV-PAY-8907</b></div>
+          <div class="row"><span>Confirmed by</span><b id="fBy">Dr. Syl4luv, Relationship Therapy Center</b></div>
+        </div>
+
+        <div class="amount">
+          <div>
+            <div style="font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:800">Amount paid</div>
+            <div class="big" id="fAmount">₦5,000</div>
+            <div class="words" id="fWords">Five thousand naira only</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:800">Status</div>
+            <div style="font-weight:850;color:#0e7d72" id="fStatus">Fully paid — no balance</div>
+          </div>
+        </div>
+
+        <div class="sheet-foot">
+          <div class="sign">
+            <div class="line"></div>
+            <small>Authorised signature — Dr. Syl4luv</small>
+          </div>
+          <div style="font-size:.85rem;color:var(--ink-soft);max-width:34ch">
+            This receipt covers one consultation session. Sessions are confidential; nothing discussed is shared with anyone else.
+          </div>
+          <div class="sign" style="text-align:right">
+            <div class="line"></div>
+            <small>Member signature</small>
+          </div>
+        </div>
+
+        <div class="thanks">
+          <strong>Thank you for trusting us with your story. 💜</strong><br>
+          Keep this receipt for your records. To book again, call <strong>0703 382 8292</strong> or register on the member app — the fee remains <strong>₦5,000</strong> per session.
+        </div>
+
+        <p class="fine">Issued by Dr. Syl4luv Relationship Therapy Center · Payments to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh) · This document is computer-generated and valid without a handwritten signature when printed from the member app.</p>
+      </article>
+
+      <!-- ===== STEP 1d — actions (hidden when printing) ===== -->
+      <div class="actions no-print">
+        <button class="btn btn-primary" id="printBtn">🖨 Print / Save as PDF</button>
+        <button class="btn btn-ghost" id="copyRef">📋 Copy reference</button>
+        <a class="btn btn-teal" id="waShare" href="https://wa.me/2347033828292" target="_blank" rel="noopener">💬 Ask support on WhatsApp</a>
+        <a class="btn btn-ghost" href="syl4luv-members-dashboard.html">Back to dashboard</a>
+      </div>
+
+      <!-- ===== SEND THIS RECEIPT: SMS / EMAIL / WHATSAPP ===== -->
+      <section class="sendcard no-print" id="sendcard">
+        <div class="eyebrow">Deliver this receipt</div>
+        <h3 style="font-size:1.08rem;margin:2px 0 0">Send it to the member</h3>
+        <p style="font-size:.87rem;color:#6b5f8a;margin:4px 0 0">Pick a channel — the message is written for you and can be edited before sending.</p>
+
+        <div class="sendtabs" role="tablist" aria-label="Delivery channel">
+          <button class="sendtab" role="tab" aria-selected="true"  data-pane="pane-email">✉ Email</button>
+          <button class="sendtab" role="tab" aria-selected="false" data-pane="pane-sms">📱 SMS</button>
+          <button class="sendtab" role="tab" aria-selected="false" data-pane="pane-wa">💬 WhatsApp</button>
+        </div>
+
+        <div class="pane-wrap">
+          <div class="fieldrow">
+            <div>
+              <label for="toEmail">Member email</label>
+              <input type="email" id="toEmail" autocomplete="email">
+            </div>
+            <div>
+              <label for="toPhone">Member phone (SMS / WhatsApp)</label>
+              <input type="tel" id="toPhone" autocomplete="tel">
+            </div>
+          </div>
+
+          <label for="msgBody">Message</label>
+          <textarea id="msgBody" rows="7"></textarea>
+
+          <div class="sendpane on" id="pane-email">
+            <div class="sendbtns">
+              <a class="btn btn-primary btn-sm" id="mailBtn" href="#">✉ Open email app</a>
+              <a class="btn btn-ghost btn-sm" href="mailto:?subject=Receipt%20copy%20request">Email a copy to the center</a>
+            </div>
+            <p class="delivnote">Opens Gmail, Outlook or Mail with the subject and message already filled in. Add the printed PDF as an attachment if the member needs a stamped copy.</p>
+          </div>
+
+          <div class="sendpane" id="pane-sms">
+            <div class="sendbtns">
+              <a class="btn btn-money btn-sm" id="smsBtn" href="#" style="background:linear-gradient(100deg,#25d366,#128c7e);color:#fff">📱 Open SMS app</a>
+              <button class="btn btn-ghost btn-sm" id="copySms">📋 Copy SMS text</button>
+            </div>
+            <p class="delivnote">Best on a phone — opens the SMS app with the number and text ready. On desktop, use <strong>Copy SMS text</strong> and paste into your bulk-SMS dashboard (Termii, Africa’s Talking, Bulk SMS Nigeria). Keep it under 160 characters to send as one SMS.</p>
+            <div class="mini" style="font-size:.78rem;color:#6b5f8a" id="smsMeter"></div>
+          </div>
+
+          <div class="sendpane" id="pane-wa">
+            <div class="sendbtns">
+              <a class="btn btn-sm" id="waMember" href="#" target="_blank" rel="noopener" style="background:linear-gradient(100deg,#25d366,#128c7e);color:#fff">💬 Send on WhatsApp</a>
+              <button class="btn btn-ghost btn-sm" id="copyWa">📋 Copy message</button>
+            </div>
+            <p class="delivnote">Opens WhatsApp chat with this member — the receipt details are already typed.</p>
+          </div>
+
+          <div class="sendbtns" style="margin-top:14px;border-top:1px dashed rgba(43,27,77,.12);padding-top:14px">
+            <button class="btn btn-ghost btn-sm" id="resetMsg">↺ Reset message</button>
+            <span class="delivnote" style="margin:0;align-self:center">Receipt PDF: press <strong>Print / Save as PDF</strong> above, then attach it to the email.</span>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top:16px">
+          <strong>Automatic sending (go-live):</strong> for hands-off delivery, call a small serverless function from the <em>Send</em> buttons —
+          email via <strong>EmailJS</strong> (no backend), <strong>Resend</strong> or <strong>SendGrid</strong>; SMS via <strong>Termii</strong>, <strong>Africa’s Talking</strong>, <strong>Bulk SMS Nigeria</strong> or <strong>Twilio</strong>.
+          Never put API keys in this page — keep them in the function’s environment variables. Sample code is in <code>README.md</code>.
+        </div>
+      </section>
+    </section>
+  </div>
+</main>
+
+<div class="toast" id="toast" style="position:fixed;left:50%;transform:translate(-50%,130%);bottom:24px;z-index:99;background:#221540;color:#fff;padding:14px 22px;border-radius:999px;font-weight:700;font-size:.89rem;transition:transform .3s ease">Done ✅</div>
+
+<script>
+/* =====================================================================
+   RECEIPTS — replace this array with your API / Supabase / Firebase data.
+   Each record feeds the printed sheet; keep the same keys.
+   ===================================================================== */
+var RECEIPTS = [
+  {
+    ref:'SLV-PAY-8907', email:'amaka.o@example.com', phone:'+2348031000001', member:'Amaka O.', id:'SLV-1027',
+    date:'14 September 2026', session:'Relationship &amp; marriage counselling',
+    sessionDate:'Saturday, 20 September 2026 · 7:00 PM',
+    amount:5000, words:'Five thousand naira only',
+    method:'Bank transfer — Access Bank', account:'0032601495 · Adidi Sylvanus Osigbemeh',
+    by:'Dr. Syl4luv, Relationship Therapy Center', status:'Paid'
+  },
+  {
+    ref:'SLV-PAY-8904', email:'amaka.o@example.com', phone:'+2348031000001', member:'Amaka O.', id:'SLV-1027',
+    date:'13 September 2026', session:'Mental health support',
+    sessionDate:'Saturday, 12 September 2026 · 7:00 PM',
+    amount:5000, words:'Five thousand naira only',
+    method:'Bank transfer — Access Bank', account:'0032601495 · Adidi Sylvanus Osigbemeh',
+    by:'Dr. Syl4luv, Relationship Therapy Center', status:'Paid'
+  },
+  {
+    ref:'SLV-PAY-8891', email:'amaka.o@example.com', phone:'+2348031000001', member:'Amaka O.', id:'SLV-1027',
+    date:'8 September 2026', session:'Confirmation deposit — 4 sessions',
+    sessionDate:'Programme deposit, applied across four sessions',
+    amount:20000, words:'Twenty thousand naira only',
+    method:'Bank transfer — Access Bank', account:'0032601495 · Adidi Sylvanus Osigbemeh',
+    by:'Dr. Syl4luv, Relationship Therapy Center', status:'Paid'
+  }
+];
+
+(function(){
+  var toast = document.getElementById('toast'), tTimer;
+  function say(msg){
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(tTimer); tTimer = setTimeout(function(){ toast.classList.remove('show'); }, 3000);
+  }
+  function naira(n){ return '₦' + n.toLocaleString('en-NG'); }
+
+  var current = RECEIPTS[0];
+
+  function render(r){
+    current = r;
+    document.getElementById('docRef').textContent      = r.ref;
+    document.getElementById('docDate').textContent     = r.date;
+    document.getElementById('fMember').textContent     = r.member;
+    document.getElementById('fId').textContent         = r.id;
+    document.getElementById('fSession').innerHTML      = r.session;
+    document.getElementById('fSessionDate').textContent= r.sessionDate;
+    document.getElementById('fMethod').textContent     = r.method;
+    document.getElementById('fAccount').textContent    = r.account;
+    document.getElementById('fRef').textContent        = r.ref;
+    document.getElementById('fBy').textContent         = r.by;
+    document.getElementById('fAmount').textContent     = naira(r.amount);
+    document.getElementById('fWords').textContent      = r.words;
+    document.getElementById('fStatus').textContent     = 'Fully paid — no balance';
+    document.getElementById('statusStamp').textContent = r.status;
+    /* keep the WhatsApp share friendly and specific */
+    var msg = 'Hello Dr. Syl4luv, a question about my receipt ' + r.ref + ' (' + naira(r.amount) + ', ' + r.date + '): ';
+    document.getElementById('waShare').href = 'https://wa.me/2347033828292?text=' + encodeURIComponent(msg);
+    /* highlight the chosen row */
+    document.querySelectorAll('#rlist .ritem').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-ref') === r.ref);
+    });
+    document.title = 'Receipt ' + r.ref + ' — Dr. Syl4luv Relationship Therapy Center';
+    if(typeof fillSendPanel === 'function') fillSendPanel(r);
+  }
+
+  /* build the picker — (rebuilt by the live layer when the database is connected) */
+  var list = document.getElementById('rlist');
+  function buildList(){
+    list.innerHTML = '';
+    RECEIPTS.forEach(function(r){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'ritem';
+    b.setAttribute('data-ref', r.ref);
+    b.innerHTML = '<span class="tick">✔</span><span><b>' + naira(r.amount) + ' · ' + r.date + '</b>' +
+                  '<small>' + r.ref + ' — ' + r.session.replace('&amp;','&') + '</small></span>';
+      b.addEventListener('click', function(){ render(r); say('Loaded receipt ' + r.ref); });
+      list.appendChild(b);
+    });
+  }
+  buildList();
+
+  /* deep link: syl4luv-receipt.html?ref=SLV-PAY-8904  (or ?ref=recent) */
+  var want = null;
+  try { want = new URLSearchParams(window.location.search).get('ref'); } catch(e){}
+  var start = RECEIPTS[0];
+  if(want){
+    if(want === 'recent'){ start = RECEIPTS[0]; }
+    else {
+      var found = RECEIPTS.filter(function(r){ return r.ref.toLowerCase() === want.toLowerCase(); })[0];
+      if(found) start = found; else say('No receipt found for "' + want + '" — showing the most recent one.');
+    }
+  }
+  render(start);
+
+  /* ---------- live data hook ----------
+     supabase/syl4luv-receipt-live.js replaces the sample receipts with real ones
+     from the database and re-renders. Nothing here runs in demo mode. */
+  window.SYL_RECEIPT = {
+    load: function(newList, wantRef){
+      if(!newList || !newList.length) return false;
+      RECEIPTS = newList;
+      buildList();
+      var pick = RECEIPTS[0];
+      if(wantRef){
+        var f = RECEIPTS.filter(function(r){ return String(r.ref).toLowerCase() === String(wantRef).toLowerCase(); })[0];
+        if(f) pick = f;
+      }
+      render(pick);
+      if(sendMode){
+        var c2 = document.getElementById('sendcard');
+        if(c2){ c2.classList.add('flash'); c2.scrollIntoView({behavior:'smooth', block:'center'}); }
+      }
+      return true;
+    },
+    notFound: function(ref){ say('No receipt found for \'' + ref + '\' — showing the most recent one.'); },
+    empty: function(){
+      RECEIPTS = [];
+      buildList();
+      var l = document.getElementById('rlist');
+      if(l) l.innerHTML = '<p style="padding:14px;color:#6b6480;font-size:.88rem">No receipts yet. ' +
+        'Confirmed payments appear here automatically.</p>';
+      ['docRef','docDate','fMember','fId','fSessionDate','fMethod','fAccount','fRef','fBy','fAmount','fWords','fStatus'].forEach(function(id){
+        var el = document.getElementById(id); if(el) el.textContent = '—';
+      });
+      var ss = document.getElementById('statusStamp'); if(ss) ss.textContent = 'NO RECEIPT';
+      var fs = document.getElementById('fSession'); if(fs) fs.textContent = '—';
+    }
+  };
+
+  /* ?send=1 opens straight into the delivery panel (used by the console) */
+  var sendMode = false;
+  try { sendMode = new URLSearchParams(window.location.search).get('send') === '1'; } catch(e){}
+  if(sendMode){
+    var card = document.getElementById('sendcard');
+    if(card){
+      card.classList.add('flash');
+      setTimeout(function(){ card.scrollIntoView({behavior:'smooth', block:'center'}); }, 350);
+      say('Ready to send receipt ' + current.ref + ' — choose email, SMS or WhatsApp.');
+    }
+  }
+
+  /* print / save as PDF */
+  function doPrint(){ window.print(); }
+  document.getElementById('printBtn').addEventListener('click', doPrint);
+  document.getElementById('printTop').addEventListener('click', doPrint);
+
+  /* copy the reference */
+  /* ===================== SEND RECEIPT: SMS / EMAIL / WHATSAPP ===================== */
+  /* look elements up lazily — the panel is filled during the first render,
+     which can happen before this block runs */
+  function el(id){ return document.getElementById(id); }
+
+  function buildMessage(r, channel){
+    var session = r.session.replace(/&amp;/g, '&');
+    if(channel === 'sms'){
+      /* short version — one SMS segment */
+      return 'Dr Syl4luv Therapy: payment of ' + naira(r.amount) + ' on ' + r.date + ' confirmed. Receipt ' + r.ref +
+             '. Call/WhatsApp 0703 382 8292. Thank you!';
+    }
+    return 'Hello ' + r.member + ',\n\n' +
+      'Thank you — your payment of ' + naira(r.amount) + ' on ' + r.date + ' has been confirmed.\n\n' +
+      'Receipt number: ' + r.ref + '\n' +
+      'Service: ' + session + '\n' +
+      'Session: ' + r.sessionDate + '\n' +
+      'Paid to: ' + r.account + ' (Access Bank)\n\n' +
+      'Keep this message as your receipt. To book again, call or WhatsApp 0703 382 8292, or reply to this message.\n\n' +
+      'Dr. Syl4luv Relationship Therapy Center — counselling, mental health, motivation and inspiration.\n' +
+      'Everything you share with us stays private.';
+  }
+
+  function refreshLinks(){
+    var r = current;
+    var toEmail = el('toEmail'), toPhone = el('toPhone'), msgBody = el('msgBody');
+    var mailBtn = el('mailBtn'), smsBtn = el('smsBtn'), waMember = el('waMember');
+    if(!toEmail || !toPhone || !msgBody || !mailBtn || !smsBtn || !waMember) return;
+    var subject = 'Your receipt ' + r.ref + ' — Dr. Syl4luv Relationship Therapy Center';
+    mailBtn.href =
+      'mailto:' + encodeURIComponent(toEmail.value.trim()) + '?subject=' + encodeURIComponent(subject) +
+      '&body=' + encodeURIComponent(msgBody.value);
+    smsBtn.href =
+      'sms:' + (toPhone.value.trim() || '') + '?body=' + encodeURIComponent(buildMessage(r, 'sms'));
+    waMember.href =
+      'https://wa.me/' + (toPhone.value.trim() || '').replace(/[^0-9]/g, '') + '?text=' + encodeURIComponent(msgBody.value);
+    /* SMS length meter (160 characters = one segment) */
+    var smsText = buildMessage(r, 'sms');
+    var segs = Math.ceil(smsText.length / 160) || 1;
+    var meter = el('smsMeter');
+    if(meter){
+      meter.textContent = smsText.length + ' characters · ' + segs + ' SMS segment' + (segs > 1 ? 's' : '') +
+        (segs > 1 ? ' — trim it to fit one' : ' — fits one SMS');
+      meter.style.color = segs > 1 ? '#b8860b' : '#128c7e';
+    }
+  }
+
+  function fillSendPanel(r){
+    var toEmail = el('toEmail'), toPhone = el('toPhone'), msgBody = el('msgBody');
+    if(toEmail) toEmail.value = r.email || '';
+    if(toPhone) toPhone.value = r.phone || '';
+    if(msgBody) msgBody.value = buildMessage(r, 'email');
+    refreshLinks();
+  }
+  ['toEmail','toPhone','msgBody'].forEach(function(id){
+    var node = el(id);
+    if(node) node.addEventListener('input', refreshLinks);
+  });
+
+  document.querySelectorAll('.sendtab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.sendtab').forEach(function(t){ t.setAttribute('aria-selected', 'false'); });
+      document.querySelectorAll('.sendpane').forEach(function(p){ p.classList.remove('on'); });
+      tab.setAttribute('aria-selected', 'true');
+      var pane = el(tab.getAttribute('data-pane'));
+      if(pane) pane.classList.add('on');
+    });
+  });
+  function copyText(text, label){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ say(label + ' copied ✅'); },
+                                             function(){ say('Copy is blocked in this browser — select the text and copy manually.'); });
+    } else { say('Copy is blocked in this browser — select the text and copy manually.'); }
+  }
+  var cs = el('copySms');
+  if(cs) cs.addEventListener('click', function(){ copyText(buildMessage(current, 'sms'), 'SMS text'); });
+  var cw = el('copyWa');
+  if(cw) cw.addEventListener('click', function(){ copyText(msgBody.value, 'Message'); });
+  var rm = el('resetMsg');
+  if(rm) rm.addEventListener('click', function(){ msgBody.value = buildMessage(current, 'email'); refreshLinks(); say('Message reset to the standard wording.'); });
+
+  document.getElementById('copyRef').addEventListener('click', function(){
+    var ref = current.ref;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ref).then(function(){ say('Reference ' + ref + ' copied ✅'); },
+                                              function(){ say('Reference: ' + ref); });
+    } else { say('Reference: ' + ref); }
+  });
+})();
+</script>
+<!-- ===== real data (does nothing until supabase-config.js has keys) ===== -->
+<script src="supabase/supabase-config.js"></script>
+<script src="supabase/syl4luv-db.js"></script>
+<script src="supabase/syl4luv-receipt-live.js"></script>
+</body>
+</html>

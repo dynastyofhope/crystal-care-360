@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Console — Dr. Syl4luv Relationship Therapy Center</title>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/png/icon-180.png">
+<!--
+  =====================================================================
+  DR. SYL4LUV RELATIONSHIP THERAPY CENTER — ADMIN / THERAPIST CONSOLE
+  =====================================================================
+  WHAT THIS IS
+  Dr. Syl4luv's own view: today's appointments, payment confirmations,
+  the member list, private-room messages and availability settings.
+
+  LOG IN POINT
+  In production, put this page behind your admin login (or a password
+  prompt) — it shows member phone numbers and payment records.
+
+  INTERACTIONS THAT WORK IN THIS DEMO
+  - Search/filter the appointment table and the member list
+  - Confirm or decline a payment: the queue row and the money tiles update
+  - Mark a session complete
+  - Open a message (clears its unread badge) and send a reply
+  - Toggle availability per day, then Save schedule
+  - WhatsApp links per member open wa.me with a pre-typed message
+
+  DEMO DATA
+  Member names, phones and payment references are samples. The marked
+  block at the top of the script is the only place to rewire for real
+  data from Supabase / Firebase / your API.
+
+  SHARED DETAILS
+  Access Bank - 0032601495 - Adidi Sylvanus Osigbemeh - fee N5,000
+  Phone / WhatsApp 0703 382 8292  |  Email syl4luv@gmail.com
+  =====================================================================
+-->
+<style>
+:root{
+  --coral:#ff6b6b;--pink:#ff8fc7;--sun:#ffd93d;--teal:#37c8bb;--purple:#8e7cff;
+  --ink:#2b1b4d;--ink-soft:#6b5f8a;--cream:#fffaf4;--card:#fff;--line:rgba(43,27,77,.10);
+  --shadow:0 18px 45px -18px rgba(43,27,77,.35);--wa:#25d366;--radius:20px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);
+  background:var(--cream);line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0 0 .4em;line-height:1.15;letter-spacing:-.02em}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{width:min(1240px,94vw);margin-inline:auto}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+  radial-gradient(1000px 650px at 4% -5%,#ffe9c9 0%,rgba(255,233,201,0) 60%),
+  radial-gradient(900px 620px at 97% 0%,#e6e0ff 0%,rgba(230,224,255,0) 62%),
+  radial-gradient(1000px 800px at 50% 112%,#dcf7f3 0%,rgba(220,247,243,0) 60%),
+  linear-gradient(180deg,#fffaf4 0%,#faf8ff 45%,#f4fbff 100%)}
+.blob{position:absolute;border-radius:50%;filter:blur(48px);opacity:.42;animation:float 18s ease-in-out infinite}
+.b1{width:380px;height:380px;background:#cfc4ff;top:-80px;left:-90px}
+.b2{width:340px;height:340px;background:#b9f1ea;top:200px;right:-120px;animation-delay:-4s}
+.b3{width:320px;height:320px;background:#ffe08a;bottom:80px;left:-120px;animation-delay:-8s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(24px,-28px) scale(1.06)}66%{transform:translate(-20px,18px) scale(.95)}}
+.grain{position:absolute;inset:0;background-image:radial-gradient(rgba(43,27,77,.06) 1px,transparent 1px);background-size:22px 22px;opacity:.4}
+
+/* header */
+header.app-header{position:sticky;top:0;z-index:60;backdrop-filter:blur(16px);background:rgba(255,255,255,.8);border-bottom:1px solid var(--line);box-shadow:0 10px 30px -24px rgba(43,27,77,.6)}
+.topbar{background:linear-gradient(95deg,#128c7e,#25d366 45%,#37c8bb 78%,#8e7cff);color:#fff;font-size:.83rem}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;justify-content:space-between;padding:7px 0}
+.tb-item{display:inline-flex;align-items:center;gap:7px}
+.tb-item:hover{text-decoration:underline}
+.pulse{width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.9);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.navbar .wrap{display:flex;align-items:center;gap:12px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.logo-mark{width:48px;height:48px;flex:0 0 auto;filter:drop-shadow(0 8px 16px rgba(142,124,255,.35))}
+.brand-name{display:block;font-size:1.2rem;font-weight:800;letter-spacing:-.03em;background:linear-gradient(95deg,var(--coral),var(--purple) 55%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.brand-sub{display:block;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;white-space:nowrap}
+nav.mainnav{display:flex;gap:2px;margin-left:auto;flex-wrap:nowrap}
+nav.mainnav a{padding:9px 10px;border-radius:999px;font-weight:600;font-size:.88rem;color:var(--ink-soft);white-space:nowrap;transition:.2s}
+nav.mainnav a:hover{background:#fff;color:var(--ink)}
+nav.mainnav a.on{background:#fff;color:var(--ink);box-shadow:0 8px 20px -16px rgba(43,27,77,.8)}
+.hdr-actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.member-chip{display:flex;align-items:center;gap:9px;background:#fff;border:1.6px solid var(--line);border-radius:999px;padding:6px 12px 6px 6px}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--purple));color:#fff;display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+.member-chip .avatar{width:32px;height:32px;font-size:.78rem}
+.member-chip b{display:block;font-size:.85rem;line-height:1.15}
+.member-chip small{color:var(--ink-soft);font-size:.72rem}
+.badge-admin{background:linear-gradient(100deg,#128c7e,#25d366);color:#fff;font-size:.68rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:999px}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:10px 18px;font-weight:700;font-size:.9rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center;transition:.18s;white-space:nowrap}
+.btn-ghost{background:#fff;color:var(--ink);border:1.6px solid var(--line)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-primary{background:linear-gradient(100deg,var(--coral),var(--pink) 45%,var(--purple));color:#fff;box-shadow:0 14px 28px -16px rgba(255,107,107,.85)}
+.btn-wa{background:linear-gradient(100deg,#25d366,#128c7e);color:#fff}
+.btn-teal{background:linear-gradient(100deg,var(--teal),#63d8ff);color:#093b37}
+.btn-sm{padding:7px 13px;font-size:.82rem}
+.btn-block{width:100%}
+.menutoggle{display:none;background:#fff;border:1.6px solid var(--line);border-radius:14px;padding:9px 11px;cursor:pointer}
+.menutoggle span{display:block;width:20px;height:2.4px;border-radius:3px;background:var(--ink);margin:4px 0}
+.mobnav{display:none;padding:6px 0 16px;border-top:1px dashed var(--line)}
+.mobnav.open{display:block}
+.mobnav a{display:block;padding:11px 6px;font-weight:600;border-bottom:1px dashed var(--line)}
+
+main{padding:22px 0 40px}
+.hi{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+.hi h1{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:850;letter-spacing:-.035em;margin:0}
+.hi h1 .hl{background:linear-gradient(100deg,#128c7e,#8e7cff 60%,var(--coral));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hi p{color:var(--ink-soft);margin:6px 0 0}
+.eyebrow{font-size:.74rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#128c7e}
+.sec{padding:18px 0}
+.grid{display:grid;gap:15px}
+.grid>*{min-width:0}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g2{grid-template-columns:1.2fr .8fr}
+.card{background:var(--card);border:1.6px solid var(--line);border-radius:var(--radius);padding:19px;box-shadow:0 16px 40px -34px rgba(43,27,77,.9);min-width:0}
+.card h3{font-size:1.02rem}
+.muted{color:var(--ink-soft);font-size:.89rem}
+.stat{display:flex;gap:12px;align-items:center}
+.stat .cic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;flex:0 0 auto;font-weight:800}
+.c-coral{background:#ffe7e7;color:#d94a43}.c-purple{background:#ece7ff;color:#5a45c9}
+.c-teal{background:#dffbf7;color:#0e7d72}.c-sun{background:#fff3cd;color:#8a6100}.c-wa{background:#e2f9e8;color:#128c7e}
+.stat b{display:block;font-size:1.24rem;letter-spacing:-.03em}
+.stat span{font-size:.73rem;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+
+.tabs{display:flex;gap:6px;padding:10px;background:linear-gradient(95deg,#f1fbf6,#f6f2ff 55%,#fff5f5);border:1.6px solid var(--line);border-radius:18px;flex-wrap:wrap;margin-bottom:16px}
+.tab{border:0;background:transparent;padding:10px 15px;border-radius:999px;font-weight:700;font-size:.88rem;color:var(--ink-soft);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.tab.active{background:#fff;color:var(--ink);box-shadow:0 10px 24px -18px rgba(43,27,77,.9)}
+.count{background:#ff6b6b;color:#fff;border-radius:999px;font-size:.7rem;font-weight:900;padding:1px 7px}
+.panel{display:none}
+.panel.active{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1.6px solid var(--line);border-radius:999px;padding:9px 14px;min-width:230px}
+.search input{border:0;outline:0;background:transparent;font-size:.9rem;width:100%;color:var(--ink);font-family:inherit}
+table{width:100%;border-collapse:collapse;background:#fff;border:1.6px solid var(--line);border-radius:16px;overflow:hidden;font-size:.89rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px dashed var(--line);vertical-align:middle}
+th{background:#f7f5ff;font-size:.71rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fdfbff}
+tbody tr.gone{opacity:.45;text-decoration:line-through}
+.pilltag{font-size:.71rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:5px 10px;border-radius:999px;white-space:nowrap;display:inline-block}
+.s-ok{background:#dffbf7;color:#0e7d72}.s-warn{background:#fff3cd;color:#8a6100}
+.s-done{background:#ece7ff;color:#5a45c9}.s-miss{background:#ffe7e7;color:#c3352f}
+.trow{display:flex;gap:8px;flex-wrap:wrap}
+.mini-av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.74rem;flex:0 0 auto}
+
+.timeline{list-style:none;padding:0;margin:0}
+.timeline li{position:relative;padding:0 0 20px 28px;border-left:2px dashed var(--line);margin-left:8px}
+.timeline li:last-child{border-left-color:transparent;padding-bottom:0}
+.timeline li:before{content:"";position:absolute;left:-8px;top:5px;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#25d366,#8e7cff);box-shadow:0 0 0 4px #fff}
+.slot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border:1.6px solid var(--line);border-radius:14px;padding:13px 15px;margin-bottom:10px;background:#fff}
+.slot time{font-weight:800;font-size:.95rem}
+.slot .who{font-size:.86rem;color:var(--ink-soft)}
+.switch{position:relative;display:inline-block;width:48px;height:27px;flex:0 0 auto}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:#e3ddf5;border-radius:999px;transition:.22s}
+.slider:before{content:"";position:absolute;height:21px;width:21px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.22s;box-shadow:0 3px 8px -3px rgba(43,27,77,.6)}
+.switch input:checked + .slider{background:linear-gradient(100deg,#25d366,#37c8bb)}
+.switch input:checked + .slider:before{transform:translateX(21px)}
+.msg{display:flex;gap:12px;padding:14px;border:1.6px solid var(--line);border-radius:16px;background:#fff;margin-bottom:10px;cursor:pointer;transition:.16s}
+.msg:hover{border-color:#25d366;background:#fafffb}
+.msg.unread{background:#f3fff6;border-color:#bff0cd}
+.msg b{display:block;font-size:.94rem}
+.msg p{font-size:.87rem;color:var(--ink-soft);margin:4px 0 0}
+.msg time{font-size:.75rem;color:var(--ink-soft);font-weight:700}
+.msg .dotu{width:9px;height:9px;border-radius:50%;background:#25d366;flex:0 0 auto;margin-top:6px}
+textarea,input[type=text],input[type=time]{font-family:inherit;font-size:.92rem;color:var(--ink)}
+textarea{width:100%;border:1.6px solid var(--line);border-radius:14px;padding:12px 14px;background:#fdfcff;outline:0;resize:vertical}
+textarea:focus{border-color:#25d366;background:#fff;box-shadow:0 0 0 4px rgba(37,211,102,.15)}
+input[type=time]{border:1.6px solid var(--line);border-radius:12px;padding:9px 11px;background:#fdfcff;outline:0}
+input[type=time]:focus{border-color:var(--purple)}
+.note{background:#fff;border:1.6px solid var(--line);border-left:6px solid #25d366;border-radius:14px;padding:14px 16px;font-size:.87rem;color:#4a3f6b}
+.bank{background:#fff;border:1.6px solid var(--line);border-radius:16px;padding:16px;margin-top:14px}
+.bank h4{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);font-weight:800}
+.bankrow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+.bankrow:last-of-type{border-bottom:0}
+.bankrow span{color:var(--ink-soft);font-weight:600}
+.acct{font-size:1.02rem;letter-spacing:.04em}
+.toast{position:fixed;left:50%;transform:translate(-50%,130%);bottom:24px;z-index:99;background:#12352b;color:#fff;padding:14px 22px;border-radius:999px;font-weight:700;font-size:.89rem;box-shadow:0 20px 40px -18px rgba(0,0,0,.6);transition:transform .3s ease;max-width:92vw;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+footer{background:#14263a;color:#c8d6e6;padding:34px 0 18px;margin-top:24px}
+footer .fh{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:24px}
+footer .fh>*{min-width:0}
+footer h5{color:#fff;font-size:.79rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px}
+footer a{display:block;padding:5px 0;font-size:.88rem;color:#c8d6e6}
+footer a:hover{color:#fff}
+.fbot{margin-top:20px;padding-top:14px;border-top:1px solid rgba(255,255,255,.14);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-size:.8rem}
+@media(max-width:1080px){ nav.mainnav{display:none} .menutoggle{display:block;margin-left:auto} }
+@media(max-width:900px){ .g2{grid-template-columns:1fr} footer .fh{grid-template-columns:1fr 1fr} }
+@media(max-width:640px){
+  .topbar{display:none} .brand-sub{display:none} .g4{grid-template-columns:1fr 1fr}
+  .member-chip,.hdr-actions .btn-ghost{display:none}   /* both live in the mobile menu instead */
+  .hide-sm{display:none}
+  footer .fh{grid-template-columns:1fr}
+  table{font-size:.8rem} th,td{padding:9px}
+  .hide-sm{display:none}
+}
+@media(max-width:400px){ .g4{grid-template-columns:1fr} }
+
+/* ================= WHATSAPP CLICK-TO-CHAT ================= */
+/* ================= WHATSAPP CLICK-TO-CHAT ================= */
+.wa-fab{position:fixed;left:20px;bottom:20px;z-index:75;width:60px;height:60px;border-radius:50%;
+  border:0;cursor:pointer;background:linear-gradient(145deg,#5be58a,#25d366 55%,#1eb257);color:#fff;
+  display:grid;place-items:center;box-shadow:0 16px 34px -12px rgba(37,211,102,.85);transition:transform .2s}
+.wa-fab:hover{transform:translateY(-3px) scale(1.04)}
+.wa-fab svg{width:32px;height:32px}
+.wa-fab:after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(37,211,102,.55);animation:wapulse 2.4s infinite}
+@keyframes wapulse{70%{box-shadow:0 0 0 17px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.wa-badge{position:absolute;top:-3px;right:-3px;width:15px;height:15px;border-radius:50%;background:#ff6b6b;border:2.5px solid #fff;display:none}
+.wa-fab.wa-unread .wa-badge{display:block}
+
+.wa-panel{position:fixed;left:20px;bottom:92px;z-index:96;width:min(340px,calc(100vw - 32px));
+  background:#fff;border:1.6px solid rgba(43,27,77,.1);border-radius:20px;overflow:hidden;
+  box-shadow:0 30px 60px -22px rgba(43,27,77,.5);transform:translateY(14px) scale(.97);opacity:0;visibility:hidden;
+  transition:transform .22s ease, opacity .22s ease, visibility .22s}
+.wa-panel.open{transform:none;opacity:1;visibility:visible}
+.wa-head{display:flex;align-items:center;gap:11px;padding:14px 16px;color:#fff;
+  background:linear-gradient(115deg,#128c7e,#25d366)}
+.wa-head .wa-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;flex:0 0 auto}
+.wa-head b{display:block;font-size:.95rem;line-height:1.2}
+.wa-head small{font-size:.76rem;opacity:.95}
+.wa-close{margin-left:auto;background:rgba(255,255,255,.2);border:0;color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.05rem;cursor:pointer;line-height:1}
+.wa-body{padding:14px 16px 16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2b1b4d}
+.wa-bubble{background:#e7fbe9;border-radius:14px 14px 14px 4px;padding:11px 14px;font-size:.88rem;margin-bottom:14px}
+.wa-bubble b{display:block;margin-bottom:3px}
+.wa-chips{display:grid;gap:8px;margin-bottom:12px}
+.wa-chip{display:flex;align-items:center;gap:9px;text-align:left;background:#f7f6ff;border:1.6px solid rgba(43,27,77,.09);
+  border-radius:13px;padding:11px 13px;font-size:.87rem;font-weight:650;color:#2b1b4d;cursor:pointer;font-family:inherit;transition:.16s}
+.wa-chip:hover{border-color:#25d366;background:#f0fff4;transform:translateY(-1px)}
+.wa-chip svg{width:17px;height:17px;flex:0 0 auto;color:#128c7e}
+.wa-num{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#6b5f8a;border-top:1px dashed rgba(43,27,77,.12);padding-top:11px}
+.wa-num a{color:#128c7e;font-weight:800;text-decoration:none}
+.wa-num a:hover{text-decoration:underline}
+@media(max-width:560px){
+  .wa-fab{width:54px;height:54px;left:16px;bottom:16px}
+  .wa-fab svg{width:28px;height:28px}
+  .wa-panel{left:16px;bottom:80px;width:calc(100vw - 32px)}
+  .fab{max-width:56vw}            /* keeps the call/booking buttons clear of the WhatsApp button */
+}
+
+/* ================= CSV / EXCEL EXPORT ================= */
+.btn-csv{background:#eef7ff;color:#1d5fa8;border:1.6px solid #cfe4fb}
+.btn-csv:hover{background:#e2f0ff;border-color:#1d5fa8;color:#134a86}
+.export-note{font-size:.78rem;color:#6b5f8a}
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grain"></div>
+</div>
+
+<!-- ===== STEP 1 — admin header ===== -->
+<header class="app-header">
+  <div class="topbar">
+    <div class="wrap">
+      <span class="tb-item"><span class="pulse"></span><strong>You are online</strong> — 4 members can reach you now</span>
+      <span class="tb-item"><a href="tel:07033828292">Front desk: 0703 382 8292</a></span>
+      <span class="tb-item"><a href="mailto:syl4luv@gmail.com">syl4luv@gmail.com</a></span>
+    </div>
+  </div>
+  <div class="navbar">
+    <div class="wrap">
+      <a class="brand" href="syl4luv-chat-app.html">
+        <svg class="logo-mark" viewBox="0 0 64 64" aria-label="Dr. Syl4luv logo">
+          <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+          </linearGradient></defs>
+          <rect x="5" y="7" width="54" height="40" rx="14" fill="url(#lg1)"/>
+          <path d="M19 44 L19 60 L34 44 Z" fill="url(#lg1)"/>
+          <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+        </svg>
+        <span><span class="brand-name">Dr. Syl4luv</span><span class="brand-sub">Therapist console</span></span>
+      </a>
+      <nav class="mainnav">
+        <a href="#today" class="on">Today</a>
+        <a href="#appointments">Appointments</a>
+        <a href="#payments">Payments</a>
+        <a href="#members">Members</a>
+        <a href="#messages">Messages</a>
+        <a href="#availability">Availability</a>
+        <a href="syl4luv-income-summary.html">Statement</a>
+      </nav>
+      <div class="hdr-actions">
+        <span class="badge-admin">Admin</span>
+        <span class="member-chip" title="Signed in as therapist">
+          <span class="avatar">DS</span>
+          <span><b>Dr. Syl4luv</b><small>Therapist &amp; owner</small></span>
+        </span>
+        <button class="btn btn-ghost btn-sm" id="logout">Log out</button>
+        <button class="menutoggle" id="menutoggle" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="mobnav" id="mobnav">
+        <a href="#today">Today</a><a href="#appointments">Appointments</a><a href="#payments">Payments</a>
+        <a href="#members">Members</a><a href="#messages">Messages</a><a href="#availability">Availability</a>
+        <a href="syl4luv-income-summary.html">Month income statement</a>
+        <a href="syl4luv-chat-app.html">Member app</a>
+        <a href="#" id="logout2">Log out</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="hi" id="today">
+      <div>
+        <div class="eyebrow">Therapist console</div>
+        <h1>Good evening, <span class="hl">Dr. Syl4luv</span></h1>
+        <p id="todayline">Saturday, 20 September 2026 · 4 sessions booked · 8 messages waiting</p>
+      </div>
+      <div class="trow">
+        <a class="btn btn-teal" href="syl4luv-chat-app.html#chat">Open member chat room</a>
+        <a class="btn btn-money" href="syl4luv-income-summary.html">📄 Month income statement</a>
+        <a class="btn btn-ghost" href="#availability">Set availability</a>
+      </div>
+    </div>
+
+    <!-- ===== STEP 2 — today's numbers ===== -->
+    <div class="grid g4">
+      <div class="card stat">
+        <div class="cic c-teal">4</div>
+        <div><b>Today's sessions</b><span>1 completed · 3 to go</span></div>
+      </div>
+      <div class="card stat">
+        <div class="cic c-sun" id="pendingmoney">₦15k</div>
+        <div><b id="pendingcount">3 payments</b><span>Awaiting confirmation</span></div>
+      </div>
+      <div class="card stat">
+        <div class="cic c-purple">12</div>
+        <div><b>New members</b><span>This week</span></div>
+      </div>
+      <div class="card stat">
+        <div class="cic c-wa" id="unreadtile">0</div>
+        <div><b>Waiting for a reply</b><span>conversations owed an answer</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="sec">
+    <div class="wrap">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="todayp" role="tab">📆 Today</button>
+        <button class="tab" data-tab="appointments" role="tab">🗂️ Appointments</button>
+        <button class="tab" data-tab="payments" role="tab">💳 Payments <span class="count" id="paycount">3</span></button>
+        <button class="tab" data-tab="members" role="tab">👥 Members</button>
+        <button class="tab" data-tab="messages" role="tab">💬 Messages <span class="count" id="msgcount">5</span></button>
+        <button class="tab" data-tab="availability" role="tab">🕒 Availability</button>
+      </div>
+
+      <!-- ================= TODAY ================= -->
+      <div class="panel active" id="panel-todayp">
+        <div class="grid g2">
+          <div class="card">
+            <div class="tools" style="margin-bottom:6px">
+              <div>
+                <div class="eyebrow">Today's schedule</div>
+                <h3 style="margin:0">Saturday, 20 September 2026</h3>
+              </div>
+              <button class="btn btn-csv btn-sm" id="csvToday">⬇ Export CSV (Excel)</button>
+            </div>
+            <div style="margin-top:14px">
+              <div class="slot">
+                <div><time>5:00 PM</time><div class="who">Amaka O. · Individual therapy · 45 min</div></div>
+                <div class="trow"><span class="pilltag s-ok">Completed</span></div>
+              </div>
+              <div class="slot">
+                <div><time>7:00 PM</time><div class="who">Amaka O. &amp; partner · Couples counselling · 60 min</div></div>
+                <div class="trow"><span class="pilltag s-done">Paid · SLV-4471</span>
+                  <button class="btn btn-wa btn-sm" data-wa="Amaka O." data-email="amaka.o@example.com" data-phone="2348031000001">WhatsApp</button>
+                  <button class="btn btn-ghost btn-sm js-start" data-name="Amaka O.">Start chat</button></div>
+              </div>
+              <div class="slot">
+                <div><time>7:45 PM</time><div class="who">Tunde K. · Mental health support · 45 min</div></div>
+                <div class="trow"><span class="pilltag s-warn">Awaiting payment</span>
+                  <button class="btn btn-wa btn-sm" data-wa="Tunde K." data-email="tunde.k@example.com" data-phone="2348031000002">WhatsApp</button>
+                  <button class="btn btn-ghost btn-sm js-start" data-name="Tunde K.">Start chat</button></div>
+              </div>
+              <div class="slot">
+                <div><time>8:30 PM</time><div class="who">Amina N. · Pre-marital guidance · 60 min</div></div>
+                <div class="trow"><span class="pilltag s-ok">Paid · SLV-4490</span>
+                  <button class="btn btn-wa btn-sm" data-wa="Amina N." data-email="amina.n@example.com" data-phone="2348031000003">WhatsApp</button>
+                  <button class="btn btn-ghost btn-sm js-start" data-name="Amina N.">Start chat</button></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="eyebrow">Needs you now</div>
+              <h3>Payment confirmations</h3>
+              <p class="muted">Members who say they have paid — confirm to unlock their private room.</p>
+              <div id="quickqueue"></div>
+              <button class="btn btn-primary btn-block" data-goto="payments" style="margin-top:6px">Open the payments queue</button>
+            </div>
+            <div class="note" style="margin-top:15px">
+              <strong>Gentle reminder:</strong> every member who writes in gets a reply the same day — even one line. That promise is what the center is known for.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= APPOINTMENTS ================= -->
+      <div class="panel" id="panel-appointments">
+        <div class="tools">
+          <label class="search">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+            <input type="search" id="apptsearch" placeholder="Search member, type or reference…">
+          </label>
+          <div class="trow">
+            <button class="btn btn-ghost btn-sm" data-filter="all">All</button>
+            <button class="btn btn-ghost btn-sm" data-filter="unpaid">Unpaid</button>
+            <button class="btn btn-ghost btn-sm" data-filter="today">Today</button>
+            <button class="btn btn-csv btn-sm" id="csvAppt">⬇ Export CSV (Excel)</button>
+          </div>
+        </div>
+        <div class="card" style="padding:14px">
+          <table id="appttable">
+            <thead><tr><th>When</th><th>Member</th><th class="hide-sm">Session type</th><th>Payment</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr data-paid="yes" data-day="today">
+                <td><b>Sat 20 Sept</b><br><small>7:00 PM</small></td>
+                <td>Amaka O.<br><small>SLV-1027</small></td>
+                <td class="hide-sm">Couples counselling</td>
+                <td><span class="pilltag s-ok">Paid</span></td>
+                <td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Amaka O." data-email="amaka.o@example.com" data-phone="2348031000001">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Amaka O.">Chat</button></div></td>
+              </tr>
+              <tr data-paid="no" data-day="today">
+                <td><b>Sat 20 Sept</b><br><small>7:45 PM</small></td>
+                <td>Tunde K.<br><small>SLV-1033</small></td>
+                <td class="hide-sm">Mental health support</td>
+                <td><span class="pilltag s-warn">Unpaid</span></td>
+                <td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Tunde K." data-email="tunde.k@example.com" data-phone="2348031000002">WhatsApp</button><button class="btn btn-ghost btn-sm js-remind" data-name="Tunde K.">Remind to pay</button></div></td>
+              </tr>
+              <tr data-paid="yes" data-day="today">
+                <td><b>Sat 20 Sept</b><br><small>8:30 PM</small></td>
+                <td>Amina N.<br><small>SLV-1041</small></td>
+                <td class="hide-sm">Pre-marital guidance</td>
+                <td><span class="pilltag s-ok">Paid</span></td>
+                <td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Amina N." data-email="amina.n@example.com" data-phone="2348031000003">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Amina N.">Chat</button></div></td>
+              </tr>
+              <tr data-paid="no" data-day="later">
+                <td><b>Sat 27 Sept</b><br><small>6:30 PM</small></td>
+                <td>Chidi M.<br><small>SLV-1052</small></td>
+                <td class="hide-sm">Individual therapy</td>
+                <td><span class="pilltag s-warn">Unpaid</span></td>
+                <td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Chidi M." data-email="chidi.m@example.com" data-phone="2348031000004">WhatsApp</button><button class="btn btn-ghost btn-sm js-remind" data-name="Chidi M.">Remind to pay</button></div></td>
+              </tr>
+              <tr data-paid="yes" data-day="later">
+                <td><b>Sat 3 Oct</b><br><small>7:00 PM</small></td>
+                <td>Grace A.<br><small>SLV-1060</small></td>
+                <td class="hide-sm">Motivation &amp; inspiration</td>
+                <td><span class="pilltag s-ok">Paid</span></td>
+                <td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Grace A." data-email="grace.a@example.com" data-phone="2348031000005">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Grace A.">Chat</button></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="muted" id="apptempty" style="display:none;margin:12px 0 0">No appointments match that search.</p>
+        </div>
+      </div>
+
+      <!-- ================= PAYMENTS ================= -->
+      <div class="panel" id="panel-payments">
+        <div class="grid g2">
+          <div class="card" style="padding:14px">
+            <div class="tools" style="margin:0 4px 6px">
+              <h3 style="margin:0">Queue — awaiting confirmation</h3>
+              <button class="btn btn-csv btn-sm" id="csvPay">⬇ Export CSV (Excel)</button>
+              <a class="btn btn-money btn-sm" href="syl4luv-income-summary.html">📄 Month statement</a>
+            </div>
+            <table id="paytable">
+              <thead><tr><th>Member</th><th>Amount</th><th class="hide-sm">Ref</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr data-amount="5000"><td>Tunde K.<br><small>SLV-1033</small></td><td>₦5,000</td><td class="hide-sm">SLV-PAY-8912</td>
+                  <td><div class="trow"><button class="btn btn-wa btn-sm js-confirm">Confirm</button><button class="btn btn-ghost btn-sm js-decline">Decline</button></div></td></tr>
+                <tr data-amount="5000"><td>Chidi M.<br><small>SLV-1052</small></td><td>₦5,000</td><td class="hide-sm">SLV-PAY-8916</td>
+                  <td><div class="trow"><button class="btn btn-wa btn-sm js-confirm">Confirm</button><button class="btn btn-ghost btn-sm js-decline">Decline</button></div></td></tr>
+                <tr data-amount="5000"><td>Blessing E.<br><small>SLV-1064</small></td><td>₦5,000</td><td class="hide-sm">SLV-PAY-8921</td>
+                  <td><div class="trow"><button class="btn btn-wa btn-sm js-confirm">Confirm</button><button class="btn btn-ghost btn-sm js-decline">Decline</button></div></td></tr>
+              </tbody>
+            </table>
+            <p class="muted" id="payempty" style="display:none;margin:12px 0 0">Queue is clear — nothing awaiting confirmation. 🎉</p>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="eyebrow">Money</div>
+              <h3>Confirmed today</h3>
+              <div class="stat" style="margin-top:8px">
+                <div class="cic c-teal" id="totaltile">₦45,000</div>
+                <div><b id="totalcount">9 payments</b><span>Confirmed by you today</span></div>
+              </div>
+            </div>
+            <div class="bank">
+              <h4>Where members pay</h4>
+              <div class="bankrow"><span>Bank</span><b>Access Bank</b></div>
+              <div class="bankrow"><span>Account number</span><b class="acct">0032601495</b></div>
+              <div class="bankrow"><span>Account name</span><b>Adidi Sylvanus Osigbemeh</b></div>
+              <div class="bankrow"><span>Consultation fee</span><b style="color:#c3352f">₦5,000</b></div>
+            </div>
+            <!-- ===== running costs (shown only when the database is connected) ===== -->
+            <div class="card" id="costcard" style="display:none;margin-top:14px">
+              <div class="eyebrow">Running costs</div>
+              <h3 style="margin-bottom:4px">Log a cost</h3>
+              <p class="muted" style="margin:0 0 10px">Rent, data &amp; airtime, SMS credits, printing — anything the centre spends. Each one appears in the income statement automatically.</p>
+              <form id="costform">
+                <label for="costitem" style="display:block;font-size:.82rem;font-weight:750;margin:10px 0 5px">What was it?</label>
+                <input id="costitem" required placeholder="e.g. Data &amp; airtime for member support"
+                       style="width:100%;padding:11px 13px;border:1.6px solid var(--line);border-radius:12px;font:inherit">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+                  <div style="flex:1;min-width:130px">
+                    <label for="costamt" style="display:block;font-size:.82rem;font-weight:750;margin:0 0 5px">Amount (₦)</label>
+                    <input id="costamt" type="number" min="1" step="1" inputmode="numeric" required placeholder="2000"
+                           style="width:100%;padding:11px 13px;border:1.6px solid var(--line);border-radius:12px;font:inherit">
+                  </div>
+                  <div style="flex:1;min-width:130px">
+                    <label for="costmonth" style="display:block;font-size:.82rem;font-weight:750;margin:0 0 5px">Month</label>
+                    <input id="costmonth" type="month" required
+                           style="width:100%;padding:11px 13px;border:1.6px solid var(--line);border-radius:12px;font:inherit">
+                  </div>
+                </div>
+                <label for="costnote" style="display:block;font-size:.82rem;font-weight:750;margin:10px 0 5px">Note (optional)</label>
+                <input id="costnote" placeholder="e.g. September MTN top-up"
+                       style="width:100%;padding:11px 13px;border:1.6px solid var(--line);border-radius:12px;font:inherit">
+                <button class="btn btn-primary btn-block" type="submit" style="margin-top:12px">Save this cost</button>
+              </form>
+              <div id="costlist" style="margin-top:14px"></div>
+            </div>
+
+            <div class="note" style="margin-top:15px">
+              Remind members to send the receipt to <strong>syl4luv@gmail.com</strong> or WhatsApp <strong>0703 382 8292</strong>, then confirm it here to unlock their private room.
+            </div>
+            <div class="note" style="margin-top:12px;border-left-color:#37c8bb">
+              <strong>Receipt delivery:</strong> confirming a payment reveals a <strong>✉ Send receipt</strong> button — it opens the printable receipt with the email / SMS / WhatsApp panel already filled in for that member.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= MEMBERS ================= -->
+      <div class="panel" id="panel-members">
+        <div class="tools">
+          <label class="search">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+            <input type="search" id="msearch" placeholder="Search member name, number or phone…">
+          </label>
+          <div class="trow">
+            <span class="muted" id="mcount">8 members</span>
+            <button class="btn btn-csv btn-sm" id="csvMembers">⬇ Export CSV (Excel)</button>
+          </div>
+        </div>
+        <div class="card" style="padding:14px">
+          <table id="mtable">
+            <thead><tr><th>Member</th><th class="hide-sm">Phone</th><th class="hide-sm">Sessions</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#ff6b6b,#8e7cff)">AO</span><span>Amaka O.<br><small>SLV-1027</small></span></div></td><td class="hide-sm">0803 100 0001</td><td class="hide-sm">6</td><td><span class="pilltag s-ok">Active · paid</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Amaka O." data-email="amaka.o@example.com" data-phone="2348031000001">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Amaka O.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#37c8bb,#63d8ff);color:#093b37">TK</span><span>Tunde K.<br><small>SLV-1033</small></span></div></td><td class="hide-sm">0803 100 0002</td><td class="hide-sm">3</td><td><span class="pilltag s-warn">Awaiting payment</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Tunde K." data-email="tunde.k@example.com" data-phone="2348031000002">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Tunde K.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#8e7cff,#cfc4ff)">AN</span><span>Amina N.<br><small>SLV-1041</small></span></div></td><td class="hide-sm">0803 100 0003</td><td class="hide-sm">2</td><td><span class="pilltag s-ok">Active · paid</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Amina N." data-email="amina.n@example.com" data-phone="2348031000003">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Amina N.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#ffd93d,#ffb03a);color:#4a3200">CM</span><span>Chidi M.<br><small>SLV-1052</small></span></div></td><td class="hide-sm">0803 100 0004</td><td class="hide-sm">1</td><td><span class="pilltag s-warn">Awaiting payment</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Chidi M." data-email="chidi.m@example.com" data-phone="2348031000004">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Chidi M.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#ff8fc7,#ff6b6b)">GA</span><span>Grace A.<br><small>SLV-1060</small></span></div></td><td class="hide-sm">0803 100 0005</td><td class="hide-sm">4</td><td><span class="pilltag s-ok">Active · paid</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Grace A." data-email="grace.a@example.com" data-phone="2348031000005">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Grace A.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#25d366,#128c7e)">BE</span><span>Blessing E.<br><small>SLV-1064</small></span></div></td><td class="hide-sm">0803 100 0006</td><td class="hide-sm">0</td><td><span class="pilltag s-done">New · verifying</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Blessing E." data-email="blessing.e@example.com" data-phone="2348031000006">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Blessing E.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#6a58e0,#37c8bb)">EM</span><span>Emeka U.<br><small>SLV-1071</small></span></div></td><td class="hide-sm">0803 100 0007</td><td class="hide-sm">5</td><td><span class="pilltag s-ok">Active · paid</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Emeka U." data-email="emeka.u@example.com" data-phone="2348031000007">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Emeka U.">Chat</button></div></td></tr>
+              <tr><td><div style="display:flex;gap:10px;align-items:center"><span class="mini-av" style="background:linear-gradient(135deg,#c2477f,#8e7cff)">FA</span><span>Fatima A.<br><small>SLV-1078</small></span></div></td><td class="hide-sm">0803 100 0008</td><td class="hide-sm">2</td><td><span class="pilltag s-ok">Active · paid</span></td><td><div class="trow"><button class="btn btn-wa btn-sm" data-wa="Fatima A." data-email="fatima.a@example.com" data-phone="2348031000008">WhatsApp</button><button class="btn btn-ghost btn-sm js-start" data-name="Fatima A.">Chat</button></div></td></tr>
+            </tbody>
+          </table>
+          <p class="muted" id="mempty" style="display:none;margin:12px 0 0">No member matches that search.</p>
+        </div>
+      </div>
+
+      <!-- ================= MESSAGES ================= -->
+      <div class="panel" id="panel-messages">
+        <!-- search + alerts live OUTSIDE the list wrapper: the console redraws
+             the list itself, and anything inside it gets replaced -->
+        <div class="card" style="padding:12px;margin-bottom:14px">
+          <input id="msgsearch" type="search" autocomplete="off" aria-label="Search conversations"
+                 placeholder="Search conversations — a name, or words they used…"
+                 style="width:100%;padding:10px 13px;border:1.6px solid var(--line);border-radius:12px;font:inherit">
+          <div class="trow" style="margin-top:9px;align-items:center">
+            <button class="btn btn-ghost btn-sm" id="alerttoggle" type="button">🔔 Alert me when a member writes</button>
+            <span class="muted" id="alertstate" style="font-size:.78rem"></span>
+          </div>
+        </div>
+        <!-- ===== start a conversation =====
+             A member does not have to write first. The doctor picks anyone from
+             the list, chooses one of her boxes or opens a new one, and sends —
+             it lands in her private boxes straight away. This is also what the
+             "Chat" button on the Members tab uses when she has never written. -->
+        <div class="card" id="newmsgcard" style="padding:14px;margin-bottom:14px">
+          <div class="eyebrow">Start a conversation</div>
+          <h3 style="margin:2px 0 6px;font-size:1.05rem">Write to a member first</h3>
+          <p class="muted" style="margin:0 0 10px;font-size:.88rem">
+            Nothing has to have been written to her. Choose who, choose the box (or open a new one),
+            type and send — it appears in her private boxes at once, and she can answer there.
+          </p>
+          <div class="trow" style="gap:14px;flex-wrap:wrap;align-items:flex-end">
+            <label class="muted" style="font-size:.78rem;display:block">To<br>
+              <select id="newmsgmember" aria-label="Choose a member"
+                style="padding:8px 10px;border:1.6px solid var(--line);border-radius:10px;font:inherit;background:#fff;min-width:210px;margin-top:4px"></select>
+            </label>
+            <label class="muted" style="font-size:.78rem;display:block">Box<br>
+              <select id="newmsgbox" aria-label="Choose which box"
+                style="padding:8px 10px;border:1.6px solid var(--line);border-radius:10px;font:inherit;background:#fff;min-width:210px;margin-top:4px"></select>
+            </label>
+            <label class="muted" id="newmsgtopicwrap" style="font-size:.78rem;display:none">Name for the new box<br>
+              <input id="newmsgboxtopic" placeholder="e.g. Check-in this week"
+                style="padding:8px 10px;border:1.6px solid var(--line);border-radius:10px;font:inherit;min-width:210px;margin-top:4px">
+            </label>
+          </div>
+          <textarea id="newmsgtext" rows="4" placeholder="Type the first message…" aria-label="First message to the member"
+            style="width:100%;margin-top:10px"></textarea>
+          <div class="trow" style="margin-top:10px;align-items:center">
+            <button class="btn btn-primary" id="newmsgsend" type="button">Send to this member</button>
+            <button class="btn btn-ghost btn-sm" id="newmsgopener" type="button">Insert a caring opener</button>
+            <span class="muted" id="newmsgstatus" style="font-size:.78rem"></span>
+          </div>
+        </div>
+
+        <div class="grid g2">
+          <div>
+            <div class="msg unread" data-msg>
+              <span class="dotu"></span>
+              <span class="mini-av" style="background:linear-gradient(135deg,#37c8bb,#63d8ff);color:#093b37">TK</span>
+              <div style="flex:1;min-width:0">
+                <b>Tunde K. — private room</b>
+                <p>“Good evening doctor. I have made the transfer just now. Please can we still meet at 7:45?”</p>
+                <time>6 minutes ago</time>
+              </div>
+            </div>
+            <div class="msg unread" data-msg>
+              <span class="dotu"></span>
+              <span class="mini-av" style="background:linear-gradient(135deg,#ffd93d,#ffb03a);color:#4a3200">CM</span>
+              <div style="flex:1;min-width:0">
+                <b>Chidi M. — new booking</b>
+                <p>“I registered for individual therapy on 27 Sept. Should I pay the ₦5,000 before or on that day?”</p>
+                <time>22 minutes ago</time>
+              </div>
+            </div>
+            <div class="msg unread" data-msg>
+              <span class="dotu"></span>
+              <span class="mini-av" style="background:linear-gradient(135deg,#25d366,#128c7e)">BE</span>
+              <div style="flex:1;min-width:0">
+                <b>Blessing E. — forum reply</b>
+                <p>“Thank you for the post on communication habits. It described my marriage exactly.”</p>
+                <time>1 hour ago</time>
+              </div>
+            </div>
+            <div class="msg unread" data-msg>
+              <span class="dotu"></span>
+              <span class="mini-av" style="background:linear-gradient(135deg,#ff8fc7,#ff6b6b)">GA</span>
+              <div style="flex:1;min-width:0">
+                <b>Grace A. — private room</b>
+                <p>“I did the 10-minute check-in every evening this week. It felt different. Thank you.”</p>
+                <time>2 hours ago</time>
+              </div>
+            </div>
+            <div class="msg unread" data-msg>
+              <span class="dotu"></span>
+              <span class="mini-av" style="background:linear-gradient(135deg,#6a58e0,#37c8bb)">EM</span>
+              <div style="flex:1;min-width:0">
+                <b>Emeka U. — WhatsApp</b>
+                <p>“Doctor, my wife agreed to come with me for the next session. Can we book two slots?”</p>
+                <time>3 hours ago</time>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="eyebrow">Reply</div>
+            <h3 id="replyto">Select a message to reply</h3>
+            <p class="muted" id="replyhint">Choose a conversation on the left — the member's name appears here.</p>
+            <textarea id="replybox" rows="6" placeholder="Type your reply…" aria-label="Reply to member"></textarea>
+            <div class="trow" style="margin-top:10px">
+              <button class="btn btn-wa" id="sendreply">Send reply</button>
+              <button class="btn btn-ghost" id="suggest">Insert a caring opener</button>
+            </div>
+            <div class="note" style="margin-top:15px">Replies here go to the member's private room. For WhatsApp, use the WhatsApp button on any member row.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= AVAILABILITY ================= -->
+      <div class="panel" id="panel-availability">
+        <div class="grid g2">
+          <div class="card">
+            <div class="eyebrow">Your week</div>
+            <h3>When members can book you</h3>
+            <p class="muted">Turn a day off and it disappears from the booking form immediately.</p>
+            <div style="margin-top:12px" id="days">
+              <div class="slot"><div><b>Monday</b></div><div class="trow"><input type="time" value="17:00"><span class="muted">to</span><input type="time" value="21:00"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
+              <div class="slot"><div><b>Tuesday</b></div><div class="trow"><input type="time" value="17:00"><span class="muted">to</span><input type="time" value="21:00"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
+              <div class="slot"><div><b>Wednesday</b></div><div class="trow"><input type="time" value="17:00"><span class="muted">to</span><input type="time" value="21:00"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
+              <div class="slot"><div><b>Thursday</b></div><div class="trow"><input type="time" value="17:00"><span class="muted">to</span><input type="time" value="21:00"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
+              <div class="slot"><div><b>Friday</b></div><div class="trow"><input type="time" value="16:00"><span class="muted">to</span><input type="time" value="20:00"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
+              <div class="slot"><div><b>Saturday</b></div><div class="trow"><input type="time" value="10:00"><span class="muted">to</span><input type="time" value="21:00"><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div></div>
+              <div class="slot"><div><b>Sunday</b></div><div class="trow"><input type="time" value="14:00"><span class="muted">to</span><input type="time" value="18:00"><label class="switch"><input type="checkbox"><span class="slider"></span></label></div></div>
+            </div>
+            <button class="btn btn-primary" id="savedays" style="margin-top:14px">Save schedule</button>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="eyebrow">Live now</div>
+              <h3>Session settings</h3>
+              <div class="slot" style="margin-top:10px"><div><b>Accept new bookings</b><div class="muted">Members can register for ₦5,000 consultations</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+              <div class="slot"><div><b>Show me as online</b><div class="muted">Displays the green “online now” dot to members</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+              <div class="slot"><div><b>Weekly group session</b><div class="muted">Saturdays, 7:00 PM — open to all members</div></div><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+            </div>
+            <div class="note" style="margin-top:15px">
+              <strong>Cost per session:</strong> ₦5,000 · <strong>Payment:</strong> Access Bank 0032601495 (Adidi Sylvanus Osigbemeh). Keep this consistent everywhere — the member pages, the dashboard and this console all show the same details.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fh">
+      <div>
+        <div style="display:flex;gap:11px;align-items:center;margin-bottom:10px">
+          <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="5" y="7" width="54" height="40" rx="14" fill="#8e7cff"/>
+            <path d="M19 44 L19 60 L34 44 Z" fill="#8e7cff"/>
+            <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+          </svg>
+          <span style="color:#fff;font-weight:800;font-size:1.1rem">Dr. Syl4luv</span>
+        </div>
+        <p style="font-size:.87rem;color:#b9c9dc;max-width:36ch">Therapist console — appointments, payments, members and messages in one place.</p>
+      </div>
+      <div>
+        <h5>Console</h5>
+        <a href="#today">Today</a><a href="#appointments">Appointments</a><a href="#payments">Payments</a>
+        <a href="#members">Members</a><a href="#messages">Messages</a>
+      </div>
+      <div>
+        <h5>Pages &amp; contact</h5>
+        <a href="syl4luv-chat-app.html">Member app</a>
+        <a href="syl4luv-chat-app-dark.html">Member app (dark)</a>
+        <a href="syl4luv-members-dashboard.html">Member dashboard</a>
+        <a href="tel:07033828292">📞 0703 382 8292</a>
+        <a href="mailto:syl4luv@gmail.com">✉ syl4luv@gmail.com</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>© <span id="yr">2026</span> Dr. Syl4luv Relationship Therapy Center · Admin console</span>
+      <span>Confidential • Compassionate • Always available</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== WHATSAPP CLICK-TO-CHAT BUTTON ===== -->
+<button class="wa-fab" id="waFab" type="button" aria-expanded="false" aria-controls="waPanel" aria-label="Chat with Dr. Syl4luv on WhatsApp">
+  <span class="wa-badge" aria-hidden="true"></span>
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+    <path d="M16 3.2C8.9 3.2 3.2 8.9 3.2 16c0 2.5.7 4.9 2 7L3 29l6.2-2.1c2 1.1 4.4 1.7 6.8 1.7 7.1 0 12.8-5.7 12.8-12.8S23.1 3.2 16 3.2zm0 23.1c-2.2 0-4.3-.6-6.1-1.7l-.4-.3-4.2 1.4 1.4-4.1-.3-.5c-1.3-1.9-2-4.1-2-6.5C4.4 9.6 9.6 4.4 16 4.4s11.6 5.2 11.6 11.6S22.4 26.3 16 26.3z"/>
+    <path d="M12.4 9.6c-.3-.6-.6-.6-.9-.6h-.7c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.3s1.4 3.8 1.6 4.1c.2.3 2.7 4.2 6.6 5.9 3.2 1.4 3.9 1.1 4.6 1 .7-.1 2.2-.9 2.5-1.8.3-.9.3-1.6.2-1.8-.1-.2-.4-.3-.8-.5-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.3.4-1 1.2-1.2 1.4-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-.9-.8-1.5-1.8-1.7-2.2-.2-.3 0-.5.1-.7.2-.2.5-.6.7-.9.2-.3.3-.5.4-.8.1-.3 0-.5-.1-.7-.1-.2-.9-2.1-1.2-2.8z"/>
+  </svg>
+</button>
+
+<div class="wa-panel" id="waPanel" role="region" aria-label="WhatsApp chat with Dr. Syl4luv">
+  <div class="wa-head">
+    <span class="wa-av">
+      <svg viewBox="0 0 32 32" width="24" height="24" fill="currentColor" aria-hidden="true">
+        <path d="M16 3.2C8.9 3.2 3.2 8.9 3.2 16c0 2.5.7 4.9 2 7L3 29l6.2-2.1c2 1.1 4.4 1.7 6.8 1.7 7.1 0 12.8-5.7 12.8-12.8S23.1 3.2 16 3.2zm0 23.1c-2.2 0-4.3-.6-6.1-1.7l-.4-.3-4.2 1.4 1.4-4.1-.3-.5c-1.3-1.9-2-4.1-2-6.5C4.4 9.6 9.6 4.4 16 4.4s11.6 5.2 11.6 11.6S22.4 26.3 16 26.3z"/>
+        <path d="M12.4 9.6c-.3-.6-.6-.6-.9-.6h-.7c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.3s1.4 3.8 1.6 4.1c.2.3 2.7 4.2 6.6 5.9 3.2 1.4 3.9 1.1 4.6 1 .7-.1 2.2-.9 2.5-1.8.3-.9.3-1.6.2-1.8-.1-.2-.4-.3-.8-.5-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.3.4-1 1.2-1.2 1.4-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-.9-.8-1.5-1.8-1.7-2.2-.2-.3 0-.5.1-.7.2-.2.5-.6.7-.9.2-.3.3-.5.4-.8.1-.3 0-.5-.1-.7-.1-.2-.9-2.1-1.2-2.8z"/>
+      </svg>
+    </span>
+    <span>
+      <b>Dr. Syl4luv</b>
+      <small>Relationship Therapy Center · replies fast</small>
+    </span>
+    <button class="wa-close" id="waClose" type="button" aria-label="Close chat panel">&times;</button>
+  </div>
+
+  <div class="wa-body">
+    <div class="wa-bubble">
+      <b>Hello 💜 you are welcome here.</b>
+      Pick what you need — WhatsApp opens with your message ready to send, so nothing gets lost or forgotten.
+    </div>
+
+    <div class="wa-chips">
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I would like to book a consultation (₦5,000). My name is ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9V6.5h18V9a2.5 2.5 0 0 0 0 5v2.5H3V14a2.5 2.5 0 0 0 0-5z"/><path d="M8.5 8v8" stroke-dasharray="2 2"/></svg>
+        Book consultation — ₦5,000
+      </button>
+
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I need to talk about my mental health. Please, can we chat? My name is ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z"/></svg>
+        I need to talk about my mental health
+      </button>
+
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I have a question about the relationship therapy sessions. My question is: ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.2 2.6c-.6.2-.9.7-.9 1.3v.4"/><path d="M12 17h.01"/></svg>
+        Ask a question first
+      </button>
+
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I have made the ₦5,000 payment to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh). Here is my receipt: ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 9.5V18M10 9.5V18M14 9.5V18M19 9.5V18"/><path d="M3 20.5h18"/></svg>
+        Send my payment receipt
+      </button>
+    </div>
+
+    <div class="wa-num">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg>
+      <span>WhatsApp or call <a href="https://wa.me/2347033828292" target="_blank" rel="noopener">0703 382 8292</a></span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Done ✅</div>
+
+<script>
+/* =====================================================================
+   CONSOLE BEHAVIOUR
+   ---------------------------------------------------------------
+   >>> REWIRE THIS BLOCK FOR REAL DATA. <<<
+   Replace the demo rows (rendered from the markup) with your API /
+   Supabase / Firebase queries, and keep the same confirm/decline/reply
+   handlers so the UI behaviour stays identical.
+   ===================================================================== */
+(function(){
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var toast = document.getElementById('toast'), tTimer;
+  function say(msg){
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(tTimer); tTimer = setTimeout(function(){ toast.classList.remove('show'); }, 3400);
+  }
+  var naira = function(n){ return '₦' + n.toLocaleString('en-NG'); };
+
+  /* ---------- mobile menu + logout ---------- */
+  document.getElementById('menutoggle').addEventListener('click', function(){
+    document.getElementById('mobnav').classList.toggle('open');
+  });
+  function logout(e){ if(e) e.preventDefault(); say('Signed out of the console.'); }
+  document.getElementById('logout').addEventListener('click', logout);
+  document.getElementById('logout2').addEventListener('click', logout);
+
+  /* ---------- tabs ---------- */
+  function goTab(name){
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.getAttribute('data-tab') === name); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    var panel = document.getElementById('panel-' + name);
+    if(panel) panel.classList.add('active');
+    goTab.scroll = true;
+  }
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){ goTab(t.getAttribute('data-tab')); });
+  });
+  document.querySelectorAll('[data-goto]').forEach(function(b){
+    b.addEventListener('click', function(){ goTab(b.getAttribute('data-goto')); });
+  });
+
+  /* ---------- WhatsApp links with a pre-typed message ---------- */
+  document.querySelectorAll('[data-wa]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var name  = b.getAttribute('data-wa');
+      var phone = b.getAttribute('data-phone') || '2347033828292';
+      var text  = 'Hello ' + name + ', this is Dr. Syl4luv from the Relationship Therapy Center. ';
+      window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    });
+  });
+
+  /* ---------- email + SMS buttons beside every WhatsApp button ---------- */
+  document.querySelectorAll('[data-wa][data-email]').forEach(function(b){
+    var trow = b.parentElement;
+    var name = b.getAttribute('data-wa');
+    var mail = b.getAttribute('data-email');
+    var phone= b.getAttribute('data-phone') || '2347033828292';
+    if(!trow || trow.querySelector('.js-email')) return;
+
+    var emailBody =
+      'Hello ' + name + ',\n\n' +
+      'This is Dr. Syl4luv from the Relationship Therapy Center.\n\n' +
+      'Your session is confirmed. The consultation fee is ₦5,000, payable to:\n' +
+      'Access Bank — 0032601495 — Adidi Sylvanus Osigbemeh\n\n' +
+      'Please send your payment receipt so we can confirm and unlock your private chat room.\n\n' +
+      'Call or WhatsApp 0703 382 8292 any time — you are not alone in this.\n' +
+      'Everything you share with us stays private.';
+    var smsBody = 'Dr Syl4luv Therapy: hello ' + name + ', your session is confirmed. Fee ₦5,000 to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh). Send receipt to confirm. Call 0703 382 8292.';
+
+    var e = document.createElement('a');
+    e.className = 'btn btn-ghost btn-sm js-email';
+    e.textContent = '✉ Email';
+    e.href = 'mailto:' + encodeURIComponent(mail) + '?subject=' +
+             encodeURIComponent('Your session with Dr. Syl4luv Relationship Therapy Center') +
+             '&body=' + encodeURIComponent(emailBody);
+    trow.appendChild(e);
+
+    var m = document.createElement('a');
+    m.className = 'btn btn-ghost btn-sm js-sms';
+    m.textContent = '📱 SMS';
+    m.href = 'sms:' + phone + '?body=' + encodeURIComponent(smsBody);
+    trow.appendChild(m);
+  });
+
+  /* ---------- start chat / remind ---------- */
+  document.querySelectorAll('.js-start').forEach(function(b){
+    b.addEventListener('click', function(){
+      say('Opening the private room with ' + b.getAttribute('data-name') + '…');
+    });
+  });
+  document.querySelectorAll('.js-remind').forEach(function(b){
+    b.addEventListener('click', function(){
+      var name = b.getAttribute('data-name');
+      var msg = 'Hello ' + name + ', gentle reminder from Dr. Syl4luv: kindly send the ₦5,000 consultation fee to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh) to confirm your session. Thank you 💜';
+      window.open('https://wa.me/2347033828292?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      say('Reminder ready for ' + name + ' on WhatsApp.');
+    });
+  });
+
+  /* ---------- payments: confirm / decline, with live totals ---------- */
+  var total = 45000, totalCount = 9, pending = 3;
+  function refreshMoney(){
+    document.getElementById('pendingmoney').textContent = naira(pending * 5000).replace('₦', '₦');
+    document.getElementById('pendingcount').textContent = pending + (pending === 1 ? ' payment' : ' payments');
+    document.getElementById('paycount').textContent = pending;
+    document.getElementById('totaltile').textContent = naira(total);
+    document.getElementById('totalcount').textContent = totalCount + ' payments';
+    if(pending === 0){
+      document.getElementById('payempty').style.display = 'block';
+    }
+  }
+  document.querySelectorAll('#paytable tbody tr').forEach(function(row){
+    var amount = parseInt(row.getAttribute('data-amount'), 10) || 5000;
+    var conf = row.querySelector('.js-confirm'), dec = row.querySelector('.js-decline');
+    if(conf) conf.addEventListener('click', function(){
+      var ref = (row.cells[2].innerText || '').trim();
+      total += amount; totalCount += 1; pending = Math.max(0, pending - 1);
+      row.cells[2].innerHTML = '<b>' + ref + '</b><br><span class="pilltag s-ok">Confirmed</span>';
+      /* keep the row visible and offer receipt delivery by email / SMS / WhatsApp */
+      if(row.cells[3]){
+        row.cells[3].innerHTML = '<div class="trow">' +
+          '<a class="btn btn-wa btn-sm" target="_blank" rel="noopener" href="syl4luv-receipt.html?ref=' + encodeURIComponent(ref) + '&send=1">✉ Send receipt</a>' +
+          '<a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="syl4luv-receipt.html?ref=' + encodeURIComponent(ref) + '">🧾 View</a>' +
+          '</div>';
+      }
+      refreshMoney();
+      say('Payment confirmed — ' + naira(amount) + '. Receipt ' + ref + ' is ready to send ✉');
+    });
+    if(dec) dec.addEventListener('click', function(){
+      row.classList.add('gone');
+      row.querySelectorAll('button').forEach(function(b){ b.disabled = true; b.style.opacity = '.5'; });
+      pending = Math.max(0, pending - 1);
+      row.cells[2].innerHTML = '<span class="pilltag s-miss">Declined</span>';
+      refreshMoney();
+      say('Payment marked as declined. The member will be asked to resend the receipt.');
+    });
+  });
+  /* build the small queue on the Today tab from the first two pending rows */
+  var quick = document.getElementById('quickqueue');
+  document.querySelectorAll('#paytable tbody tr').forEach(function(row, i){
+    if(i > 1) return;
+    var name = (row.cells[0].childNodes[0].textContent || '').trim();   /* first text node = member name */
+    var div = document.createElement('div');
+    div.className = 'slot';
+    div.innerHTML = '<div><b>' + name + '</b><div class="muted">' + (row.cells[2] ? row.cells[2].innerText : '') + ' · ₦5,000 claim</div></div>' +
+                    '<button class="btn btn-wa btn-sm">Confirm ₦5,000</button>';
+    div.querySelector('button').addEventListener('click', function(){
+      var r = row;
+      r.querySelector('.js-confirm') ? r.querySelector('.js-confirm').click() : null;
+    });
+    quick.appendChild(div);
+  });
+  refreshMoney();
+
+  /* ---------- appointment filters ---------- */
+  var apptSearch = document.getElementById('apptsearch');
+  function filterAppts(){
+    var q = (apptSearch.value || '').toLowerCase();
+    var only = filterAppts.mode || 'all';
+    var shown = 0;
+    document.querySelectorAll('#appttable tbody tr').forEach(function(tr){
+      var text = tr.innerText.toLowerCase();
+      var okText = !q || text.indexOf(q) > -1;
+      var okMode = only === 'all' || (only === 'unpaid' && tr.getAttribute('data-paid') === 'no') ||
+                   (only === 'today' && tr.getAttribute('data-day') === 'today');
+      var show = okText && okMode;
+      tr.style.display = show ? '' : 'none';
+      if(show) shown++;
+    });
+    document.getElementById('apptempty').style.display = shown ? 'none' : 'block';
+  }
+  if(apptSearch) apptSearch.addEventListener('input', filterAppts);
+  document.querySelectorAll('[data-filter]').forEach(function(b){
+    b.addEventListener('click', function(){
+      filterAppts.mode = b.getAttribute('data-filter');
+      filterAppts();
+    });
+  });
+
+  /* ---------- member search ---------- */
+  var mSearch = document.getElementById('msearch');
+  function filterMembers(){
+    var q = (mSearch.value || '').toLowerCase();
+    var shown = 0;
+    document.querySelectorAll('#mtable tbody tr').forEach(function(tr){
+      var show = !q || tr.innerText.toLowerCase().indexOf(q) > -1;
+      tr.style.display = show ? '' : 'none';
+      if(show) shown++;
+    });
+    document.getElementById('mcount').textContent = shown + (shown === 1 ? ' member' : ' members');
+    document.getElementById('mempty').style.display = shown ? 'none' : 'block';
+  }
+  if(mSearch) mSearch.addEventListener('input', filterMembers);
+
+  /* ---------- messages ---------- */
+  var unread = 5;
+  function refreshUnread(){
+    document.getElementById('msgcount').textContent = unread;
+    document.getElementById('unreadtile').textContent = unread;
+  }
+  document.querySelectorAll('[data-msg]').forEach(function(m){
+    m.addEventListener('click', function(){
+      var name = m.querySelector('b').innerText.split('—')[0].trim();
+      document.getElementById('replyto').textContent = 'Replying to ' + name;
+      document.getElementById('replyhint').textContent = m.querySelector('p').innerText;
+      if(m.classList.contains('unread')){
+        m.classList.remove('unread');
+        var dot = m.querySelector('.dotu'); if(dot) dot.remove();
+        unread = Math.max(0, unread - 1); refreshUnread();
+      }
+      document.getElementById('replybox').focus();
+    });
+  });
+  document.getElementById('suggest').addEventListener('click', function(){
+    document.getElementById('replybox').value =
+      'Thank you for reaching out — you did well to write. Nothing you share here leaves this room. ' +
+      'Let us look at it together, one step at a time. Would you like a session this week?';
+  });
+  document.getElementById('sendreply').addEventListener('click', function(){
+    var box = document.getElementById('replybox');
+    if(!box.value.trim()){ say('Type a reply first.'); return; }
+    box.value = '';
+    say('Reply sent to the member’s private room 💜');
+  });
+
+  /* ---------- availability ---------- */
+  document.getElementById('savedays').addEventListener('click', function(){
+    var on = document.querySelectorAll('#days .switch input:checked').length;
+    say('Schedule saved — members can book you on ' + on + ' day' + (on === 1 ? '' : 's') + '.');
+  });
+  document.querySelectorAll('.switch input').forEach(function(sw){
+    sw.addEventListener('change', function(){
+      var label = sw.closest('.slot');
+      var title = label ? label.querySelector('b') : null;
+      if(title){
+        say((sw.checked ? 'Enabled: ' : 'Disabled: ') + title.innerText);
+      }
+    });
+  });
+
+  filterAppts(); filterMembers(); refreshUnread();
+
+  /* ---------- CSV exports (respect the current filters/search) ---------- */
+  var dl = function(sel, name, sub){
+    if(exportTableToCSV(sel, name, {subtitle: sub})){
+      say('Downloaded ' + name + '.csv — open it in Excel or Google Sheets.');
+    } else { say('Nothing to export in that table right now.'); }
+  };
+  var b;
+  b = document.getElementById('csvAppt');    if(b) b.addEventListener('click', function(){ dl('#appttable',  'appointments', 'Appointments — filtered view'); });
+  b = document.getElementById('csvMembers'); if(b) b.addEventListener('click', function(){ dl('#mtable',     'member-list',  'Member register'); });
+  b = document.getElementById('csvPay');     if(b) b.addEventListener('click', function(){ dl('#paytable',   'payments',     'Payments queue'); });
+  b = document.getElementById('csvToday');   if(b) b.addEventListener('click', function(){
+    if(exportScheduleCSV()) say('Downloaded today-schedule.csv — open it in Excel or Google Sheets.');
+    else say('Nothing to export in that table right now.');
+  });
+})();
+</script>
+<script>
+/* WhatsApp click-to-chat: opens WhatsApp with the chosen message pre-typed. */
+(function(){
+  var NUM = '2347033828292';                       /* 0703 382 8292 in international form */
+  var fab  = document.getElementById('waFab');
+  var panel= document.getElementById('waPanel');
+  var close= document.getElementById('waClose');
+  if(!fab || !panel) return;
+
+  function open(){
+    panel.classList.add('open');
+    fab.setAttribute('aria-expanded','true');
+    fab.classList.remove('wa-unread');
+    try { sessionStorage.setItem('sylWaOpened','1'); } catch(e){}
+  }
+  function shut(){
+    panel.classList.remove('open');
+    fab.setAttribute('aria-expanded','false');
+    fab.focus();
+  }
+  fab.addEventListener('click', function(){ panel.classList.contains('open') ? shut() : open(); });
+  if(close) close.addEventListener('click', shut);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') shut(); });
+
+  /* each chip opens WhatsApp with its own pre-filled message */
+  panel.querySelectorAll('.wa-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var text = chip.getAttribute('data-text') || '';
+      window.open('https://wa.me/' + NUM + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    });
+  });
+
+  /* AUTO-PEEK — nudge the panel open once per visit after 12 seconds.
+     Delete this whole block if you would rather it never auto-opens.   */
+  var peeked = false;
+  try { peeked = sessionStorage.getItem('sylWaOpened') === '1'; } catch(e){}
+  if(!peeked){
+    setTimeout(function(){
+      if(panel.classList.contains('open')) return;
+      fab.classList.add('wa-unread');
+      setTimeout(function(){ if(!panel.classList.contains('open')) open(); }, 2500);
+    }, 12000);
+  }
+})();
+</script>
+<script>
+
+/* ================= EXPORT TABLE TO CSV (opens in Excel) ================= */
+function csvClean(clone){
+  /* line breaks become spaces, then strip avatars, buttons and icons so the
+     spreadsheet holds clean data only */
+  clone.querySelectorAll('br').forEach(function(br){ br.replaceWith(document.createTextNode(' ')); });
+  clone.querySelectorAll('button, .mini-av, .av-sm, .avatar, a.btn, .btn, .copybtn, svg').forEach(function(el){ el.remove(); });
+  return clone;
+}
+function csvCell(td){
+  var txt = (td.innerText || td.textContent || '').replace(/\s+/g, ' ').trim();
+  return (/[",]/.test(txt)) ? '"' + txt.replace(/"/g, '""') + '"' : txt;
+}
+function csvDownload(headerLines, rows, filenameBase){
+  var csv = headerLines.join('\r\n') + '\r\n' + rows.map(function(r){ return r.join(','); }).join('\r\n') + '\r\n';
+  var blob = new Blob(['\ufeff' + csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = filenameBase + '-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+}
+function exportTableToCSV(tableSelector, filenameBase, opts){
+  opts = opts || {};
+  var table = document.querySelector(tableSelector);
+  if(!table) return false;
+  var clone = csvClean(table.cloneNode(true));
+  var rows = Array.prototype.slice.call(clone.querySelectorAll('tr')).filter(function(tr){
+    /* honour any filters applied on the live table */
+    var live = table.querySelectorAll('tr')[Array.prototype.indexOf.call(clone.querySelectorAll('tr'), tr)];
+    return live ? (live.offsetParent !== null) : true;
+  });
+  if(!rows.length) return false;
+  var body = rows.map(function(tr){
+    return Array.prototype.map.call(tr.children, csvCell);
+  });
+  var head = ['Dr. Syl4luv Relationship Therapy Center'];
+  if(opts.subtitle) head.push(opts.subtitle);
+  head.push('Exported ' + new Date().toLocaleString('en-NG'));
+  head.push('Phone 0703 382 8292 | Email syl4luv@gmail.com | Access Bank 0032601495 (Adidi Sylvanus Osigbemeh) | Fee N5,000 per session');
+  head.push('');
+  csvDownload(head, body, filenameBase);
+  return true;
+}
+/* the Today panel is built from cards, not a table — export it directly */
+function exportScheduleCSV(){
+  var slots = document.querySelectorAll('#panel-todayp .slot');
+  if(!slots.length) return false;
+  var body = [];
+  slots.forEach(function(s){
+    var time = (s.querySelector('time') || {textContent:''}).textContent.trim();
+    var who  = (s.querySelector('.who')  || {textContent:''}).textContent.trim();
+    var parts = who.split('\u00b7').map(function(x){ return x.trim(); });
+    var pay  = (s.querySelector('.pilltag') || {textContent:''}).textContent.trim();
+    body.push([time, parts[0]||'', parts[1]||'', parts[2]||'', pay].map(function(v){
+      return /[",]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v;
+    }));
+  });
+  csvDownload([
+    'Dr. Syl4luv Relationship Therapy Center',
+    'Schedule for Saturday, 20 September 2026',
+    'Exported ' + new Date().toLocaleString('en-NG'),
+    'Phone 0703 382 8292 | Email syl4luv@gmail.com | Access Bank 0032601495 (Adidi Sylvanus Osigbemeh)',
+    '',
+    'TIME,MEMBER,SESSION TYPE,DURATION,PAYMENT STATUS'
+  ], body, 'today-schedule');
+  return true;
+}
+</script>
+<!-- ===== real data + staff login (does nothing until supabase-config.js has keys) ===== -->
+<script src="supabase/supabase-config.js"></script>
+<script src="supabase/syl4luv-db.js"></script>
+<script src="supabase/syl4luv-staff-live.js"></script>
+</body>
+</html>
