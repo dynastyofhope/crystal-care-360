@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr. Syl4luv Relationship Therapy Center — Chat App (Dark / WhatsApp style)</title>
+<link rel="icon" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/png/icon-180.png">
+<style>
+:root{
+  --coral:#ff6b6b;
+  --pink:#ff8fc7;
+  --sun:#ffd93d;
+  --teal:#37c8bb;
+  --purple:#8e7cff;
+  --ink:#efeaff;
+  --ink-soft:#a79ecb;
+  --cream:#0c0817;
+  --card:#16112a;
+  --line:rgba(255,255,255,.11);
+  --shadow:0 18px 45px -18px rgba(43,27,77,.35);
+  --radius:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0 0 .4em;line-height:1.15;letter-spacing:-.02em}
+p{margin:0 0 1em}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+.wrap{width:min(1180px,92vw);margin-inline:auto}
+
+/* ============ COLOURFUL FRIENDLY BACKGROUND ============ */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+   radial-gradient(1100px 700px at 8% -5%, #3a1236 0%, rgba(58,18,54,0) 60%),
+   radial-gradient(900px 650px at 95% 0%, #241046 0%, rgba(36,16,70,0) 62%),
+   radial-gradient(1000px 800px at 50% 110%, #062b2c 0%, rgba(6,43,44,0) 60%),
+   linear-gradient(180deg,#0c0817 0%,#120a22 45%,#070d18 100%);}
+.blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.26;animation:float 16s ease-in-out infinite}
+.b1{width:420px;height:420px;background:#e0457b;top:-90px;left:-80px}
+.b2{width:380px;height:380px;background:#12a396;top:120px;right:-110px;animation-delay:-3s}
+.b3{width:330px;height:330px;background:#c9921a;top:520px;left:-120px;animation-delay:-6s}
+.b4{width:400px;height:400px;background:#5b3df0;top:760px;right:-140px;animation-delay:-9s}
+.b5{width:300px;height:300px;background:#c9541f;bottom:-80px;left:35%;animation-delay:-12s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(28px,-32px) scale(1.07)}66%{transform:translate(-24px,22px) scale(.95)}}
+.spark{position:absolute;opacity:.5;animation:drift 22s linear infinite}
+@keyframes drift{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-26px) rotate(14deg)}100%{transform:translateY(0) rotate(0)}}
+.grain{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);background-size:22px 22px;opacity:.5}
+
+/* ============ HEADER ============ */
+header.app-header{position:sticky;top:0;z-index:60;backdrop-filter:blur(16px);background:rgba(16,11,30,.80);border-bottom:1px solid var(--line);box-shadow:0 10px 30px -22px rgba(43,27,77,.5)}
+.topbar{background:linear-gradient(95deg,var(--coral),var(--pink) 32%,var(--purple) 66%,var(--teal));color:#fff;font-size:.83rem}
+.topbar .wrap{display:flex;flex-wrap:wrap;gap:6px 20px;align-items:center;justify-content:space-between;padding:7px 0}
+.topbar strong{font-weight:700}
+.topbar .tb-set{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center}
+.tb-item{display:inline-flex;align-items:center;gap:7px;opacity:.97}
+.tb-item:hover{opacity:1;text-decoration:underline}
+.pulse{width:8px;height:8px;border-radius:50%;background:#baffdd;box-shadow:0 0 0 0 rgba(186,255,221,.9);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(186,255,221,0)}100%{box-shadow:0 0 0 0 rgba(186,255,221,0)}}
+
+.navbar .wrap{display:flex;align-items:center;gap:12px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:11px;min-width:0;flex:0 1 auto}
+.logo-mark{width:48px;height:48px;flex:0 0 auto;filter:drop-shadow(0 8px 16px rgba(142,124,255,.35))}
+.brand-text{min-width:0;overflow:hidden}
+.brand-name{display:block;font-size:1.22rem;font-weight:800;letter-spacing:-.03em;background:linear-gradient(95deg,var(--coral),var(--purple) 55%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.brand-sub{display:block;font-size:.68rem;letter-spacing:.11em;white-space:nowrap;text-transform:uppercase;color:var(--ink-soft);font-weight:700}
+
+nav.mainnav{display:flex;gap:2px;margin-left:auto;flex-wrap:nowrap;flex:0 0 auto}
+nav.mainnav a{padding:9px 9px;border-radius:999px;font-weight:600;font-size:.88rem;white-space:nowrap;color:var(--ink-soft);transition:.2s}
+nav.mainnav a:hover{background:rgba(255,255,255,.09);color:var(--ink);box-shadow:0 8px 20px -14px rgba(43,27,77,.6)}
+nav.mainnav a.hot{color:var(--coral)}
+
+.searchbox{display:flex;align-items:center;gap:8px;border:1.6px solid var(--line);border-radius:999px;padding:9px 14px;background:#fff;min-width:190px;box-shadow:0 8px 22px -18px rgba(43,27,77,.6)}
+.searchbox input{border:0;outline:0;background:transparent;font-size:.9rem;width:100%;min-width:130px;color:var(--ink)}
+.searchbox svg{width:16px;height:16px;flex:0 0 auto;color:var(--ink-soft)}
+
+.auth-btns{display:flex;gap:8px;align-items:center;flex:0 0 auto}
+.btn{border:0;cursor:pointer;border-radius:999px;padding:11px 20px;font-weight:700;font-size:.93rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center;transition:transform .16s, box-shadow .16s, background .2s}
+.auth-btns .btn{white-space:nowrap}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-ghost{background:#1c1633;color:var(--ink);border:1.6px solid var(--line);box-shadow:0 8px 20px -18px rgba(43,27,77,.8)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+.btn-primary{background:linear-gradient(100deg,var(--coral),var(--pink) 45%,var(--purple));color:#fff;box-shadow:0 14px 28px -14px rgba(255,107,107,.85)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 34px -14px rgba(142,124,255,.9)}
+.btn-teal{background:linear-gradient(100deg,var(--teal),#63d8ff);color:#093b37;box-shadow:0 14px 28px -16px rgba(55,200,187,.9)}
+.btn-sun{background:linear-gradient(100deg,var(--sun),#ffb03a);color:#4a3200;box-shadow:0 14px 28px -16px rgba(255,176,58,.95)}
+.btn-lg{padding:15px 28px;font-size:1rem}
+.btn-block{width:100%;justify-content:center}
+.btn-sm{padding:8px 14px;font-size:.84rem}
+.menutoggle{display:none;background:#1c1633;border:1.6px solid var(--line);border-radius:14px;padding:9px 11px;cursor:pointer}
+.menutoggle span{display:block;width:20px;height:2.4px;border-radius:3px;background:var(--ink);margin:4px 0}
+.mobnav{display:none;padding:6px 0 16px;border-top:1px dashed var(--line)}
+.mobnav.open{display:block}
+.mobnav a{display:block;padding:11px 6px;font-weight:600;border-bottom:1px dashed var(--line)}
+
+/* ============ HERO ============ */
+.hero{padding:56px 0 20px}
+.hero .wrap{display:grid;grid-template-columns:1.08fr .92fr;gap:44px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;background:#1c1633;border:1.6px solid var(--line);border-radius:999px;padding:7px 15px;font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#c3b9ff;margin-bottom:16px}
+.hero h1{font-size:clamp(2.1rem,4.4vw,3.5rem);font-weight:850;letter-spacing:-.035em}
+.hero h1 .hl{background:linear-gradient(100deg,var(--coral),var(--purple) 50%,var(--teal));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero .lede{font-size:1.06rem;color:var(--ink-soft);max-width:56ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin:22px 0 20px}
+.stat-row{display:flex;flex-wrap:wrap;gap:10px}
+.stat{background:rgba(28,22,51,.85);border:1.6px solid var(--line);border-radius:16px;padding:11px 16px;min-width:130px}
+.stat b{display:block;font-size:1.25rem;letter-spacing:-.03em}
+.stat span{font-size:.76rem;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+
+/* chat preview card */
+.preview{background:var(--card);border-radius:26px;padding:16px;box-shadow:var(--shadow);border:1.6px solid var(--line);transform:rotate(-1deg)}
+.preview-head{display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1.5px dashed var(--line)}
+.avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--coral),var(--purple));color:#fff;display:grid;place-items:center;font-weight:800;flex:0 0 auto;font-size:.95rem}
+.preview-head b{display:block;font-size:.98rem}
+.online{font-size:.76rem;color:#4ee0b3;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.online i{width:8px;height:8px;border-radius:50%;background:#25d0a6;display:inline-block}
+.chat-body{display:flex;flex-direction:column;gap:10px;padding:14px 2px}
+.bub{max-width:82%;padding:11px 15px;border-radius:18px;font-size:.9rem;box-shadow:0 10px 22px -20px rgba(43,27,77,.9)}
+.bub.them{background:#241d40;border-bottom-left-radius:6px;align-self:flex-start}
+.bub.me{background:linear-gradient(100deg,var(--coral),var(--purple));color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+.typing{display:inline-flex;gap:4px;align-items:center;align-self:flex-start;background:#241d40;padding:11px 15px;border-radius:18px;border-bottom-left-radius:6px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#b3a8e0;animation:bounce 1.3s infinite}
+.typing i:nth-child(2){animation-delay:.18s}
+.typing i:nth-child(3){animation-delay:.36s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.55}30%{transform:translateY(-5px);opacity:1}}
+
+/* ============ SECTION BLOCKS ============ */
+section{padding:52px 0}
+.section-head{max-width:64ch;margin-bottom:26px}
+.eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--coral)}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.3rem);font-weight:820;letter-spacing:-.03em;margin-top:8px}
+.section-head p{color:var(--ink-soft)}
+
+.grid{display:grid;gap:18px}
+.grid>*{min-width:0}
+.g5{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.g2{grid-template-columns:1.05fr .95fr}
+.card{background:var(--card);border:1.6px solid var(--line);border-radius:var(--radius);padding:22px;transition:transform .2s, box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.card .ico{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;font-size:1.35rem;margin-bottom:12px}
+.i-coral{background:rgba(255,107,107,.16)}.i-purple{background:rgba(142,124,255,.18)}.i-teal{background:rgba(55,200,187,.16)}.i-sun{background:rgba(255,217,61,.16)}.i-pink{background:rgba(255,143,199,.18)}
+.card h3{font-size:1.06rem}
+.card p{color:var(--ink-soft);font-size:.92rem;margin-bottom:14px}
+.card .go{font-weight:750;color:var(--purple);font-size:.9rem;display:inline-flex;gap:6px;align-items:center;background:none;border:0;padding:0;cursor:pointer}
+.card .go:hover{gap:10px}
+.tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tag{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:999px}
+.t-coral{background:rgba(255,107,107,.18);color:#ff9e9e}.t-purple{background:rgba(142,124,255,.20);color:#c3b9ff}
+.t-teal{background:rgba(55,200,187,.18);color:#7fe6da}.t-sun{background:rgba(255,217,61,.18);color:#ffdf7a}
+
+/* price / registration */
+.reg-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start}
+.reg-grid>*{min-width:0}
+.pricecard{background:linear-gradient(150deg,#1d1136,#38236f 55%,#6f5ce0);color:#fff;border-radius:26px;padding:26px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.pricecard:before{content:"";position:absolute;width:230px;height:230px;border-radius:50%;background:rgba(255,255,255,.13);top:-90px;right:-60px}
+.pricecard h3{font-size:1.15rem;position:relative}
+.price{font-size:clamp(2.4rem,5vw,3.4rem);font-weight:850;letter-spacing:-.04em;position:relative;line-height:1}
+.price small{font-size:.95rem;font-weight:600;opacity:.85;letter-spacing:0}
+.perks{list-style:none;padding:0;margin:18px 0 0;position:relative}
+.perks li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:.93rem;opacity:.96;border-top:1px solid rgba(255,255,255,.14)}
+.perks li:first-child{border-top:0}
+.tick{color:#baffdd;font-weight:900}
+
+.bank{background:var(--card);border:1.6px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 16px 40px -30px rgba(43,27,77,.9);margin-top:18px}
+.bank h4{font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--coral);font-weight:800}
+.bankrow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 0;border-bottom:1px dashed var(--line);font-size:.93rem}
+.bankrow:last-of-type{border-bottom:0}
+.bankrow span{color:var(--ink-soft);font-weight:600}
+.bankrow b{font-weight:800;letter-spacing:.01em;text-align:right}
+.acct{font-size:1.12rem;letter-spacing:.06em}
+.copybtn{background:rgba(142,124,255,.18);color:#c3b9ff;border:0;border-radius:10px;padding:6px 12px;font-size:.76rem;font-weight:800;cursor:pointer;margin-left:8px}
+.copybtn:hover{background:rgba(142,124,255,.32)}
+
+form.regform{background:var(--card);border:1.6px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:0 16px 40px -30px rgba(43,27,77,.9)}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.82rem;font-weight:750;margin-bottom:6px;color:var(--ink)}
+.field input,.field select,.field textarea{width:100%;max-width:100%;min-width:0;padding:12px 14px;border:1.6px solid var(--line);border-radius:13px;font-size:.94rem;font-family:inherit;background:#1b1531;color:var(--ink);outline:0;transition:.18s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--purple);background:#221a3d;box-shadow:0 0 0 4px rgba(142,124,255,.20)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{font-size:.79rem;color:var(--ink-soft);margin-top:10px}
+
+/* ============ CHAT APP / FORUM ============ */
+.app-shell{background:var(--card);border:1.6px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.tabs{display:flex;gap:6px;padding:12px;background:linear-gradient(95deg,#1a1030,#201738 50%,#0e1f22);border-bottom:1.6px solid var(--line);flex-wrap:wrap}
+.tab{border:0;background:transparent;padding:11px 18px;border-radius:999px;font-weight:750;font-size:.92rem;color:var(--ink-soft);cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.tab.active{background:#2a2148;color:var(--ink)}
+.tab .dot{width:8px;height:8px;border-radius:50%;background:#25d0a6}
+.panel{display:none}
+.panel.active{display:block}
+.chatwrap{display:grid;grid-template-columns:275px 1fr}
+.chatwrap>*{min-width:0}
+.side{border-right:1.6px solid var(--line);padding:14px;background:#14102a;max-height:520px;overflow:auto;min-width:0}
+.side h4{font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);margin:6px 0 10px}
+.chatitem{display:flex;gap:11px;align-items:center;padding:10px;border-radius:14px;cursor:pointer;transition:.18s}
+.convsearch{margin:0 0 9px}
+.convsearch input{width:100%;padding:8px 12px;border:1.5px solid rgba(255,255,255,.18);border-radius:999px;font:inherit;font-size:.82rem;background:rgba(255,255,255,.06);color:inherit}
+.convlist{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.convitem{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:13px;cursor:pointer;border:1.5px solid transparent;transition:.16s}
+.convitem:hover{background:rgba(255,255,255,.06)}
+.convitem.on{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.28)}
+.convitem b{font-size:.86rem;display:block}
+.convitem small{display:block;opacity:.72;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:148px}
+.convitem time{font-size:.68rem;opacity:.6}
+.convdot{width:10px;height:10px;border-radius:50%;background:#25d366;flex:0 0 auto}
+.convnew{display:flex;gap:7px;align-items:center;margin-bottom:8px}
+.convnew input{flex:1;min-width:0;padding:8px 12px;border:1.5px solid rgba(255,255,255,.18);border-radius:999px;font:inherit;font-size:.8rem;background:rgba(255,255,255,.06);color:inherit}
+.convnote{font-size:.74rem;opacity:.72;margin:0 0 6px;line-height:1.45}
+.modenote{margin:0 0 14px;padding:12px 15px;border-radius:14px;background:rgba(255,217,61,.12);border:1.5px solid rgba(255,217,61,.35);font-size:.86rem;line-height:1.5}
+.chatitem:hover{background:rgba(255,255,255,.06)}
+.chatitem.on{background:linear-gradient(100deg,rgba(255,107,107,.16),rgba(142,124,255,.16))}
+.chatitem b{font-size:.88rem;display:block}
+.chatitem small{color:var(--ink-soft);font-size:.76rem;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.av-sm{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:.76rem;flex:0 0 auto}
+.chatmain{display:flex;flex-direction:column;max-height:520px;min-width:0}
+.chatroom-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1.6px solid var(--line)}
+.chatroom-head b{font-size:.98rem}
+.chatroom-head .badge{margin-left:auto;font-size:.72rem;font-weight:800;background:rgba(55,200,187,.18);color:#7fe6da;padding:6px 12px;border-radius:999px}
+.msgs{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:
+  linear-gradient(180deg,#0b141a,#0a1217)}
+.day{text-align:center;font-size:.74rem;font-weight:750;color:var(--ink-soft);background:#241d40;border:1px solid var(--line);border-radius:999px;padding:4px 14px;align-self:center}
+.composer{display:flex;gap:10px;padding:12px;border-top:1.6px solid var(--line);background:#111b21}
+.composer input{flex:1;min-width:0;background:#202c33;color:var(--ink);border:1.6px solid var(--line);border-radius:999px;padding:12px 18px;font-size:.93rem;outline:0;font-family:inherit}
+.composer input:focus{border-color:var(--purple);box-shadow:0 0 0 4px rgba(142,124,255,.14)}
+.sendbtn{border:0;border-radius:999px;padding:12px 22px;background:linear-gradient(100deg,var(--coral),var(--purple));color:#fff;font-weight:800;cursor:pointer}
+.sendbtn:hover{filter:brightness(1.06)}
+.forum{padding:20px}
+.post{display:flex;gap:14px;padding:16px;border:1.6px solid var(--line);border-radius:16px;margin-bottom:12px;background:var(--card);transition:.18s}
+.post:hover{border-color:#6a58e0;background:#1c1636}
+.post h4{font-size:1rem;margin-bottom:5px}
+.post p{font-size:.89rem;color:var(--ink-soft);margin:0 0 10px}
+.postmeta{display:flex;flex-wrap:wrap;gap:10px;font-size:.76rem;color:var(--ink-soft);font-weight:650;align-items:center}
+.badge-pill{background:rgba(142,124,255,.20);color:#c3b9ff;border-radius:999px;padding:4px 10px;font-weight:800;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase}
+.badge-pill.live{background:rgba(255,107,107,.20);color:#ff9e9e}
+
+/* ============ CONTACT / FOOTER ============ */
+.contactcard{background:linear-gradient(120deg,#1a1030,#181233 45%,#0d1f22);border:1.6px solid var(--line);border-radius:24px;padding:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;box-shadow:0 16px 40px -30px rgba(43,27,77,.9)}
+.citem{display:flex;gap:12px;align-items:flex-start}
+.citem .cic{width:42px;height:42px;border-radius:13px;background:#221a3d;display:grid;place-items:center;font-size:1.1rem;flex:0 0 auto;box-shadow:0 10px 22px -20px rgba(43,27,77,.9)}
+.citem b{display:block;font-size:.95rem}
+.citem span,.citem a{color:var(--ink-soft);font-size:.88rem;word-break:break-word}
+footer{background:#100b1f;color:#bdb3dd;padding:44px 0 22px;margin-top:20px}
+footer .fh{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:26px}
+footer .fh>*{min-width:0}
+footer h5{color:#fff;font-size:.83rem;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px}
+footer a{display:block;padding:5px 0;font-size:.9rem;color:#bdb3dd}
+footer a:hover{color:#fff}
+.flogo{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.flogo .brand-name{-webkit-text-fill-color:#fff;background:none;color:#fff}
+.flogo .brand-sub{color:#b6a9dd}
+.fbot{margin-top:26px;padding-top:16px;border-top:1px solid rgba(255,255,255,.14);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-size:.82rem}
+
+/* floating call */
+.fab{position:fixed;right:20px;bottom:20px;z-index:70;display:flex;flex-direction:column;gap:10px;align-items:flex-end;max-width:calc(100vw - 40px)}
+.fab a{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(100deg,var(--coral),var(--pink));color:#fff;font-weight:800;padding:13px 20px;border-radius:999px;box-shadow:0 18px 34px -14px rgba(255,107,107,.95);font-size:.9rem}
+.fab a.two{background:linear-gradient(100deg,var(--teal),#63d8ff);color:#093b37;box-shadow:0 18px 34px -16px rgba(55,200,187,.95)}
+.fab a:hover{transform:translateY(-2px)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(5,3,12,.75);backdrop-filter:blur(6px)}
+.modal.open{display:flex}
+.modal-card{background:var(--card);border-radius:26px;width:min(460px,100%);padding:28px;box-shadow:0 40px 80px -30px rgba(0,0,0,.5);max-height:92vh;overflow:auto;animation:pop .22s ease}
+@keyframes pop{from{transform:translateY(14px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal-card h3{font-size:1.5rem;font-weight:830}
+.modal-card .sub{color:var(--ink-soft);font-size:.9rem;margin-bottom:18px}
+.x{position:absolute;top:14px;right:14px;border:0;background:rgba(142,124,255,.18);color:#c3b9ff;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;font-weight:800}
+.modal-card{position:relative}
+.switcher{text-align:center;font-size:.88rem;color:var(--ink-soft);margin-top:14px}
+.switcher button{background:none;border:0;color:var(--purple);font-weight:800;cursor:pointer;font-size:.88rem}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.83rem;color:var(--ink-soft);margin:6px 0 14px}
+.check input{width:auto;margin-top:3px}
+.toast{position:fixed;left:50%;transform:translate(-50%,120%);bottom:26px;z-index:99;background:#2c2158;color:#fff;padding:14px 22px;border-radius:999px;font-weight:700;font-size:.9rem;box-shadow:0 20px 40px -18px rgba(0,0,0,.6);transition:transform .3s ease}
+.toast.show{transform:translate(-50%,0)}
+
+/* responsive */
+@media(max-width:1080px){
+  nav.mainnav,.searchbox{display:none}
+  .menutoggle{display:block;margin-left:auto}
+  .auth-btns .btn-ghost{display:none}
+}
+@media(max-width:900px){
+  .hero .wrap,.g2,.reg-grid,.chatwrap{grid-template-columns:1fr}
+  .side{border-right:0;border-bottom:1.6px solid var(--line);max-height:none}
+  footer .fh{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .topbar .tb-set.tb-right{display:none}
+  .brand-sub{display:none}
+  .chatroom-head{flex-wrap:wrap}
+  .chatroom-head .badge{margin-left:0}
+  .fab a{font-size:.8rem;padding:11px 16px}
+  .auth-btns .btn-primary{padding:10px 15px;font-size:.86rem}
+  .brand-sub{font-size:.62rem;letter-spacing:.1em}
+  .logo-mark{width:44px;height:44px}
+  .two{grid-template-columns:1fr}
+  footer .fh{grid-template-columns:1fr}
+  section{padding:38px 0}
+  .auth-btns .btn{padding:10px 14px;font-size:.85rem}
+}
+</style>
+
+<style>
+/* ================= WHATSAPP-STYLE DARK CHAT SURFACES ================= */
+:root{color-scheme:dark;--wa-accent:#25d366;--wa-out:#005c4b;--wa-in:#202c33;--wa-pane:#111b21}
+.chatwrap .side{background:#0f1a20;border-color:#1f2c33}
+.chatwrap .side h4{color:#8696a0}
+.chatitem:hover{background:#17252c}
+.chatitem.on{background:linear-gradient(100deg,rgba(37,211,102,.16),rgba(0,168,132,.12))}
+.chatwrap .av-sm{box-shadow:0 0 0 2px rgba(37,211,102,.25)}
+.chatroom-head{background:var(--wa-pane);border-color:#1f2c33}
+.chatroom-head .badge{background:rgba(37,211,102,.16);color:#7ef0b0}
+.msgs{background:
+  radial-gradient(rgba(255,255,255,.035) 1.4px, transparent 1.4px) 0 0/26px 26px,
+}
+.bub{box-shadow:none;font-size:.9rem}
+.msgs .bub.them{background:var(--wa-in);color:#e9edef;border-radius:16px;border-bottom-left-radius:5px}
+.msgs .bub.me{background:var(--wa-out);color:#e9edef;border-radius:16px;border-bottom-right-radius:5px;background-image:none}
+.typing{background:var(--wa-in)!important}
+.typing i{background:#8696a0}
+.day{background:#182229!important;color:#8696a0;border-color:transparent}
+.composer{background:var(--wa-pane)!important;border-color:#1f2c33}
+.composer input{background:var(--wa-in)!important;border-color:transparent;color:#e9edef}
+.composer input::placeholder{color:#8696a0}
+.sendbtn{background:var(--wa-accent);color:#04241b;box-shadow:0 10px 24px -14px rgba(37,211,102,.8)}
+.tab .dot{background:var(--wa-accent)}
+.tab.active{box-shadow:0 8px 22px -16px rgba(37,211,102,.9)}
+.brand-name{background:linear-gradient(95deg,#ff8f8f,#c3b9ff 55%,#5fe6d8);-webkit-background-clip:text;background-clip:text}
+.fab a{box-shadow:0 18px 34px -14px rgba(255,107,107,.7)}
+
+/* ============ TRILINGUAL WELCOME BANNER ============ */
+/* ============ TRILINGUAL WELCOME BANNER ============ */
+.langbanner{position:relative;overflow:hidden;border-radius:22px;padding:20px 22px;color:#fff;
+  background:linear-gradient(115deg,#ff6b6b,#ff8fc7 34%,#8e7cff 70%,#37c8bb);
+  box-shadow:0 18px 45px -18px rgba(43,27,77,.45);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.langbanner:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.16);top:-120px;right:-60px}
+.langbanner .inner{position:relative;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.langbanner h3{font-size:clamp(1.2rem,2.6vw,1.65rem);margin:0 0 4px;line-height:1.15;letter-spacing:-.02em;color:#fff}
+.langbanner p{margin:0;font-size:.93rem;max-width:64ch;opacity:.97;color:#fff}
+.langbanner .cta{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.langbanner .cta a{background:rgba(255,255,255,.95);color:#2b1b4d;border-radius:999px;padding:9px 16px;font-size:.85rem;font-weight:800;text-decoration:none;transition:.18s}
+.langbanner .cta a.alt{background:rgba(255,255,255,.18);color:#fff;border:1.6px solid rgba(255,255,255,.55)}
+.langbanner .cta a:hover{transform:translateY(-2px)}
+.langpills{display:flex;gap:7px;flex:0 0 auto;flex-wrap:wrap}
+.langpills button{border:1.6px solid rgba(255,255,255,.6);background:rgba(255,255,255,.14);color:#fff;
+  border-radius:999px;padding:8px 14px;font-weight:800;font-size:.82rem;cursor:pointer;transition:.18s;font-family:inherit}
+.langpills button:hover{background:rgba(255,255,255,.28)}
+.langpills button[aria-pressed="true"]{background:#fff;color:#2b1b4d;border-color:#fff}
+.langbanner .lang{display:none}
+.langbanner .lang.on{display:block;animation:langfade .45s ease}
+@keyframes langfade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:600px){
+  .langbanner .cta a{width:100%;text-align:center}
+  .langpills{width:100%}
+}
+
+/* ================= WHATSAPP CLICK-TO-CHAT ================= */
+/* ================= WHATSAPP CLICK-TO-CHAT ================= */
+.wa-fab{position:fixed;left:20px;bottom:20px;z-index:75;width:60px;height:60px;border-radius:50%;
+  border:0;cursor:pointer;background:linear-gradient(145deg,#5be58a,#25d366 55%,#1eb257);color:#fff;
+  display:grid;place-items:center;box-shadow:0 16px 34px -12px rgba(37,211,102,.85);transition:transform .2s}
+.wa-fab:hover{transform:translateY(-3px) scale(1.04)}
+.wa-fab svg{width:32px;height:32px}
+.wa-fab:after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(37,211,102,.55);animation:wapulse 2.4s infinite}
+@keyframes wapulse{70%{box-shadow:0 0 0 17px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.wa-badge{position:absolute;top:-3px;right:-3px;width:15px;height:15px;border-radius:50%;background:#ff6b6b;border:2.5px solid #fff;display:none}
+.wa-fab.wa-unread .wa-badge{display:block}
+
+.wa-panel{position:fixed;left:20px;bottom:92px;z-index:96;width:min(340px,calc(100vw - 32px));
+  background:#fff;border:1.6px solid rgba(43,27,77,.1);border-radius:20px;overflow:hidden;
+  box-shadow:0 30px 60px -22px rgba(43,27,77,.5);transform:translateY(14px) scale(.97);opacity:0;visibility:hidden;
+  transition:transform .22s ease, opacity .22s ease, visibility .22s}
+.wa-panel.open{transform:none;opacity:1;visibility:visible}
+.wa-head{display:flex;align-items:center;gap:11px;padding:14px 16px;color:#fff;
+  background:linear-gradient(115deg,#128c7e,#25d366)}
+.wa-head .wa-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;flex:0 0 auto}
+.wa-head b{display:block;font-size:.95rem;line-height:1.2}
+.wa-head small{font-size:.76rem;opacity:.95}
+.wa-close{margin-left:auto;background:rgba(255,255,255,.2);border:0;color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.05rem;cursor:pointer;line-height:1}
+.wa-body{padding:14px 16px 16px;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#2b1b4d}
+.wa-bubble{background:#e7fbe9;border-radius:14px 14px 14px 4px;padding:11px 14px;font-size:.88rem;margin-bottom:14px}
+.wa-bubble b{display:block;margin-bottom:3px}
+.wa-chips{display:grid;gap:8px;margin-bottom:12px}
+.wa-chip{display:flex;align-items:center;gap:9px;text-align:left;background:#f7f6ff;border:1.6px solid rgba(43,27,77,.09);
+  border-radius:13px;padding:11px 13px;font-size:.87rem;font-weight:650;color:#2b1b4d;cursor:pointer;font-family:inherit;transition:.16s}
+.wa-chip:hover{border-color:#25d366;background:#f0fff4;transform:translateY(-1px)}
+.wa-chip svg{width:17px;height:17px;flex:0 0 auto;color:#128c7e}
+.wa-num{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#6b5f8a;border-top:1px dashed rgba(43,27,77,.12);padding-top:11px}
+.wa-num a{color:#128c7e;font-weight:800;text-decoration:none}
+.wa-num a:hover{text-decoration:underline}
+@media(max-width:560px){
+  .wa-fab{width:54px;height:54px;left:16px;bottom:16px}
+  .wa-fab svg{width:28px;height:28px}
+  .wa-panel{left:16px;bottom:80px;width:calc(100vw - 32px)}
+  .fab{max-width:56vw}            /* keeps the call/booking buttons clear of the WhatsApp button */
+}
+</style>
+</head>
+<body>
+
+<!-- ========== COLOURFUL, WELCOMING, FRIENDLY BACKGROUND ========== -->
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="blob b4"></div><div class="blob b5"></div>
+  <svg class="spark" style="top:14%;left:12%;width:38px" viewBox="0 0 24 24" fill="#c85a95"><path d="M12 21s-7.5-4.7-9.4-9A5.5 5.5 0 0 1 12 6.5 5.5 5.5 0 0 1 21.4 12c-1.9 4.3-9.4 9-9.4 9z"/></svg>
+  <svg class="spark" style="top:58%;right:9%;width:44px;animation-delay:-6s" viewBox="0 0 24 24" fill="#6a58e0"><path d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2z"/></svg>
+  <svg class="spark" style="top:38%;left:5%;width:30px;animation-delay:-11s" viewBox="0 0 24 24" fill="#1f9a90"><circle cx="12" cy="12" r="9"/></svg>
+  <svg class="spark" style="top:78%;left:22%;width:34px;animation-delay:-3s" viewBox="0 0 24 24" fill="#c9a51f"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg>
+  <div class="grain"></div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header class="app-header">
+  <!-- top strip: live contacts -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="tb-set">
+        <span class="tb-item"><span class="pulse"></span><strong>Dr. Syl4luv</strong> is online now</span>
+      </div>
+      <div class="tb-set tb-right">
+        <a class="tb-item" href="tel:07033828292"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg> <strong>0703 382 8292</strong></a>
+        <a class="tb-item" href="mailto:syl4luv@gmail.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7.5 8 5.5 8-5.5"/></svg> syl4luv@gmail.com</a>
+        <span class="tb-item"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px"><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/></svg> <span id="onlineLine">Usually online 8am \u2013 9pm</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- main nav row -->
+  <div class="navbar">
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <svg class="logo-mark" viewBox="0 0 64 64" role="img" aria-label="Dr. Syl4luv logo">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff6b6b"/><stop offset=".5" stop-color="#ff8fc7"/><stop offset="1" stop-color="#8e7cff"/>
+            </linearGradient>
+          </defs>
+          <rect x="5" y="7" width="54" height="40" rx="14" fill="url(#lg1)"/>
+          <path d="M19 44 L19 60 L34 44 Z" fill="url(#lg1)"/>
+          <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+        </svg>
+        <span class="brand-text">
+          <span class="brand-name">Dr. Syl4luv</span>
+          <span class="brand-sub">Relationship Therapy Center</span>
+        </span>
+      </a>
+
+      <nav class="mainnav">
+        <a href="#top">Home</a>
+        <a href="#services">Services</a>
+        <a href="#consult">Consultation</a>
+        <a href="#chat" class="hot">Chat Room</a>
+        <a href="#chat">Forum</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="auth-btns">
+        <button class="btn btn-ghost" data-open="login">Log in</button>
+        <button class="btn btn-primary" data-open="signup">Sign up free</button>
+      </div>
+      <button class="menutoggle" id="menutoggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+
+    <div class="wrap">
+      <div class="mobnav" id="mobnav">
+        <a href="#top">Home</a>
+        <a href="#services">Services</a>
+        <a href="#consult">Consultation — ₦5,000</a>
+        <a href="#chat">Private Chat Room &amp; Forum</a>
+        <a href="#contact">Contact &amp; Payment Details</a>
+        <a href="#" data-open="signup">Sign up free</a>
+        <a href="#" data-open="login">Member log in</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===== TRILINGUAL WELCOME BANNER (English / Pidgin / Hausa) ===== -->
+<div class="wrap" style="padding-top:22px">
+<div class="langbanner" role="region" aria-label="Welcome message">
+  <div class="inner">
+    <div>
+      <!-- ENGLISH -->
+      <div class="lang on" lang="en">
+        <h3>Welcome — you are not alone 💜</h3>
+        <p>Dr. Syl4luv Relationship Therapy Center. Call in for your mental health, counselling, motivation and inspiration. Everything you share stays private.</p>
+      </div>
+
+      <!-- NIGERIAN PIDGIN -->
+      <div class="lang" lang="pcm">
+        <h3>You welcome o — you no dey alone 💜</h3>
+        <p>Na Dr. Syl4luv Relationship Therapy Center be this. Call us for your mental health, counselling, motivation and inspiration — anything you talk, e dey between you and Dr. Syl4luv. Your secret safe.</p>
+      </div>
+
+      <!-- HAUSA -->
+      <div class="lang" lang="ha">
+        <h3>Barka da zuwa — ba ka kaɗai ba 💜</h3>
+        <p>Cibiyar Kula da Dangantaka ta Dr. Syl4luv. Kira mu don lafiyar kwakwalwa, shawarwari, ƙarfafa gwiwa da bege. Duk abin da ka faɗa sirri ne tsakaninka da Dr. Syl4luv.</p>
+      </div>
+
+      <div class="cta">
+        <a href="#consult">Book consultation — ₦5,000</a>
+        <a class="alt" href="tel:07033828292">Call 0703 382 8292</a>
+      </div>
+    </div>
+
+    <div class="langpills" role="group" aria-label="Choose language">
+      <button type="button" data-lang="en" aria-pressed="true">English</button>
+      <button type="button" data-lang="pcm" aria-pressed="false">Pidgin</button>
+      <button type="button" data-lang="ha" aria-pressed="false">Hausa</button>
+    </div>
+  </div>
+</div>
+  </div>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="pill">💜 Counselling • Mental health • Motivation • Inspiration</span>
+      <h1>You don't have to carry it <span class="hl">alone</span>.</h1>
+      <p class="lede">Welcome to the Dr. Syl4luv Relationship Therapy Center chat app — a warm, safe and judgement-free space for couples, singles, families and anyone who needs to talk. Call in for your mental health, counselling, motivation and inspiration.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary btn-lg" href="#consult">Book consultation — ₦5,000</a>
+        <a class="btn btn-teal btn-lg" href="tel:07033828292"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg> Call 0703 382 8292</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><b>8am–9pm</b><span>Live replies daily</span></div>
+        <div class="stat"><b>100%</b><span>Confidential</span></div>
+        <div class="stat"><b>1-on-1</b><span>With Dr. Syl4luv</span></div>
+        <div class="stat"><b>₦5,000</b><span>Per consultation</span></div>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="preview-head">
+        <div class="avatar">DS</div>
+        <div>
+          <b>Dr. Syl4luv</b>
+          <span class="online"><i></i> Online — relationship therapist</span>
+        </div>
+        <span class="badge" style="margin-left:auto;font-size:.72rem;font-weight:800;background:rgba(55,200,187,.18);color:#7fe6da;padding:6px 11px;border-radius:999px">Private</span>
+      </div>
+      <div class="chat-body">
+        <div class="bub them">Hello, and welcome. Whatever you're going through today, you are safe here. 💜</div>
+        <div class="bub me">My partner and I argue every single evening. I'm exhausted.</div>
+        <div class="bub them">Thank you for trusting me with that. Let's start with what happens right before the argument. Tell me more…</div>
+        <div class="typing"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUICK ACCESS ================= -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Everything in one place</div>
+      <h2>Members log in, sign up, book and chat — all from the header.</h2>
+      <p>One friendly dashboard for therapy sessions, private chats and community information.</p>
+    </div>
+
+    <div class="grid g5">
+      <div class="card">
+        <div class="ico i-coral" style="color:#e05555"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><rect x="4" y="10.5" width="16" height="10.5" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg></div>
+        <h3>Member log in</h3>
+        <p>Returning members sign in to reach their private chat room, session history and bookings.</p>
+        <button class="go" data-open="login">Log in now →</button>
+      </div>
+      <div class="card">
+        <div class="ico i-purple" style="color:#6c56e8"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20h4L20.5 7.5 16.5 3.5 4 16v4z"/><path d="m14.5 5.5 4 4"/></svg></div>
+        <h3>Sign up</h3>
+        <p>Create your free member account in seconds. No fee — only consultations are paid.</p>
+        <button class="go" data-open="signup">Create account →</button>
+      </div>
+      <div class="card">
+        <div class="ico i-teal" style="color:#12a396"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z"/></svg></div>
+        <h3>Private chat room</h3>
+        <p>An encrypted one-on-one room with Dr. Syl4luv. Nothing you say leaves the room.</p>
+        <a class="go" href="#chat">Enter chat room →</a>
+      </div>
+      <div class="card">
+        <div class="ico i-sun" style="color:#b8860b"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11.5v3L17 20V6L3 11.5z"/><path d="M17 9.2a3 3 0 0 1 0 5.6"/><path d="M6.5 13.5V18h3v-3.4"/></svg></div>
+        <h3>General forum</h3>
+        <p>Open discussions, announcements and information dissemination for the whole community.</p>
+        <a class="go" href="#chat">Open forum →</a>
+      </div>
+      <div class="card">
+        <div class="ico i-pink" style="color:#d6558f"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9V6.5h18V9a2.5 2.5 0 0 0 0 5v2.5H3V14a2.5 2.5 0 0 0 0-5z"/><path d="M8.5 8v8" stroke-dasharray="2 2"/></svg></div>
+        <h3>Consultation — ₦5,000</h3>
+        <p>Register and reserve a session with Dr. Syl4luv. Payment confirmed within minutes.</p>
+        <a class="go" href="#consult">Book a session →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONSULTATION REGISTRATION ================= -->
+<section class="reg" id="consult">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Consultation registration</div>
+      <h2>Reserve your session with Dr. Syl4luv — ₦5,000</h2>
+      <p>Complete the form, transfer ₦5,000 to the center's account below, then send your payment receipt on WhatsApp or by email. Your private chat room opens immediately after confirmation.</p>
+    </div>
+
+    <div class="reg-grid">
+        <!-- left: price + bank -->
+        <div>
+          <div class="pricecard">
+            <h3>Full consultation package</h3>
+            <div class="price">₦5,000<small> / session</small></div>
+            <ul class="perks">
+              <li><span class="tick">✔</span> 1-on-1 private session with Dr. Syl4luv</li>
+              <li><span class="tick">✔</span> Unlocked private chat room access</li>
+              <li><span class="tick">✔</span> Relationship &amp; mental-health assessment</li>
+              <li><span class="tick">✔</span> Motivation, inspiration &amp; follow-up plan</li>
+              <li><span class="tick">✔</span> Full access to the general forum</li>
+              <li><span class="tick">✔</span> Strictly confidential — always</li>
+            </ul>
+          </div>
+
+          <div class="bank">
+            <h4>Payment details</h4>
+            <div class="bankrow"><span>Account name</span><b>Adidi Sylvanus Osigbemeh</b></div>
+            <div class="bankrow"><span>Account number</span><b class="acct">0032601495
+              <button class="copybtn" id="copyacct">Copy</button></b></div>
+            <div class="bankrow"><span>Bank</span><b>Access Bank</b></div>
+            <div class="bankrow"><span>Amount</span><b style="color:#ff9e9e">₦5,000</b></div>
+            <div class="note">Use your full name as the transfer narration/narration reference, then send the receipt to <strong>syl4luv@gmail.com</strong> or call <strong>0703 382 8292</strong> for instant confirmation.</div>
+          </div>
+        </div>
+
+        <!-- right: registration form -->
+        <form class="regform" id="consultform">
+          <h3 style="margin-bottom:4px">Consultation registration form</h3>
+          <p style="color:var(--ink-soft);font-size:.88rem">Fields marked * are required.</p>
+          <div class="two">
+            <div class="field"><label for="cn">Full name *</label><input id="cn" required placeholder="e.g. Adidi Sylvanus"></div>
+            <div class="field"><label for="cp">Phone number *</label><input id="cp" required type="tel" placeholder="080…"></div>
+          </div>
+          <div class="field"><label for="ce">Email address *</label><input id="ce" required type="email" placeholder="you@example.com"></div>
+          <div class="two">
+            <div class="field">
+              <label for="ct">Session type *</label>
+              <select id="ct">
+                <option>Relationship / marriage counselling</option>
+                <option>Mental health support</option>
+                <option>Motivation &amp; inspiration coaching</option>
+                <option>Pre-marital guidance</option>
+                <option>Family &amp; parenting</option>
+                <option>Individual therapy</option>
+              </select>
+            </div>
+            <div class="field"><label for="cd">Preferred date</label><input id="cd" type="date"></div>
+          </div>
+          <div class="field"><label for="cm">Tell Dr. Syl4luv briefly what you need help with</label><textarea id="cm" rows="3" placeholder="You can keep it short — everything shared is confidential."></textarea></div>
+          <label class="check"><input type="checkbox" id="cagree" required> <span>I agree to pay the ₦5,000 consultation fee to Access Bank account <strong>0032601495</strong> (Adidi Sylvanus Osigbemeh) and I consent to being contacted by the center.</span></label>
+          <button class="btn btn-primary btn-block btn-lg" type="submit">Register &amp; proceed to pay ₦5,000</button>
+          <div class="note">Already a member? <button type="button" class="go" data-open="login" style="color:var(--purple);font-weight:800;background:none;border:0;cursor:pointer">Log in to continue →</button></div>
+        </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHAT ROOM + FORUM ================= -->
+<section id="chat">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Members area</div>
+      <h2>Private chat room with Dr. Syl4luv &amp; general forum</h2>
+      <p>Switch between a confidential one-on-one room and the open community forum for information dissemination.</p>
+    </div>
+
+    <div id="sylmodenote" class="modenote" hidden></div>
+        <div class="app-shell">
+      <div class="tabs">
+        <button class="tab active" data-tab="private"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px"><rect x="4" y="10.5" width="16" height="10.5" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg> Private chat room — Dr. Syl4luv <span class="dot"></span></button>
+        <button class="tab" data-tab="forum">🌍 General forum</button>
+        <button class="tab" data-tab="info">📢 Announcements</button>
+      </div>
+
+      <!-- PRIVATE CHAT -->
+      <div class="panel active" id="panel-private">
+        <div class="chatwrap">
+          <aside class="side">
+            <h4>Your private boxes</h4>
+            <!-- drawn live from the database by supabase/syl4luv-ui.js — see
+                 the same block in syl4luv-chat-app.html -->
+            <div class="convsearch">
+              <input id="convsearch" type="search" autocomplete="off" aria-label="Search your conversations"
+                     placeholder="Search your conversations…">
+            </div>
+            <div id="convlist" class="convlist" aria-live="polite">
+              <p class="convnote" id="convlistnote">Log in to see your private boxes.</p>
+            </div>
+            <div class="convnew">
+              <input id="newtopic" type="text" maxlength="60" autocomplete="off"
+                     aria-label="Name a new private conversation" placeholder="Start a new private box…">
+              <button class="btn btn-primary btn-sm" type="button" id="newconv">＋ New</button>
+            </div>
+            <p class="convnote">Each box is separate and private — only you and Dr. Syl4luv can read it.</p>
+            <h4 style="margin-top:16px">Room rules</h4>
+            <p style="font-size:.82rem;color:var(--ink-soft);margin:0">Be kind. Be honest. What is shared here stays here — confidentiality is sacred.</p>
+          </aside>
+
+          <div class="chatmain">
+            <div class="chatroom-head">
+              <div class="avatar" style="width:42px;height:42px">DS</div>
+              <div><b id="threadtopic">Private room with Dr. Syl4luv</b><br><span class="online"><i></i> Online now</span></div>
+              <span class="badge"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" style="vertical-align:-2px"><rect x="4" y="10.5" width="16" height="10.5" rx="3"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg> End-to-end private</span>
+            </div>
+            <div class="msgs" id="msgs">
+              <div class="day">Today</div>
+              <div class="bub them">Welcome to your private room. 🙏 This space is only between you and me — no one else can read it.</div>
+              <div class="bub me">Thank you. I feel like I've been carrying this for months.</div>
+              <div class="bub them">Then let's put it down together, gently. Tell me what has been heaviest this week.</div>
+            </div>
+            <form class="composer" id="composer">
+              <input id="msginput" placeholder="Type a private message to Dr. Syl4luv…" autocomplete="off">
+              <button class="sendbtn" type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORUM -->
+      <div class="panel" id="panel-forum">
+        <div class="forum">
+          <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div><strong>General Forum</strong> — open discussions &amp; information dissemination</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <label class="searchbox" title="Search the forum">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+                <input type="search" placeholder="Search forum…">
+              </label>
+              <button class="btn btn-teal btn-sm" data-open="signup">＋ New topic</button>
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#ff6b6b,#ff8fc7)">DS</div>
+            <div>
+              <h4>Welcome thread: introduce yourself 💜</h4>
+              <p>A new member joins us every day. Drop a short hello and tell us one thing you'd like to improve in your relationship this month.</p>
+              <div class="postmeta"><span class="badge-pill live">Pinned</span><span>Dr. Syl4luv</span><span>· 128 replies</span><span>· 1,904 views</span></div>
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#8e7cff,#cfc4ff)">AN</div>
+            <div>
+              <h4>Communication habits that quietly break relationships</h4>
+              <p>Silent treatment, score-keeping, and answering a feeling with a fact. Let's talk about what to do instead.</p>
+              <div class="postmeta"><span class="badge-pill">Relationships</span><span>Amina N.</span><span>· 46 replies</span><span>· 612 views</span></div>
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#37c8bb,#63d8ff);color:#093b37">TK</div>
+            <div>
+              <h4>Mental health check-in: how are you really doing?</h4>
+              <p>No filters here. Share a number from 1–10 and one thing that helped you this week.</p>
+              <div class="postmeta"><span class="badge-pill">Mental health</span><span>Tunde K.</span><span>· 73 replies</span><span>· 986 views</span></div>
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#ffd93d,#ffb03a);color:#4a3200">SY</div>
+            <div>
+              <h4>How do I book a session with Dr. Syl4luv?</h4>
+              <p>Register with the consultation form, pay ₦5,000 to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh), send your receipt, and your private room opens.</p>
+              <div class="postmeta"><span class="badge-pill">Guidelines</span><span>Pinned by Support</span><span>· 21 replies</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div class="panel" id="panel-info">
+        <div class="forum">
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#ff6b6b,#8e7cff)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11.5v3L17 20V6L3 11.5z"/><path d="M17 9.2a3 3 0 0 1 0 5.6"/><path d="M6.5 13.5V18h3v-3.4"/></svg></div>
+            <div><h4>Weekly live group session — every Saturday, 7:00 PM</h4>
+              <p>Join the group room for open counselling, questions and motivation. Members only.</p>
+              <div class="postmeta"><span class="badge-pill live">Upcoming</span><span>Posted by Dr. Syl4luv</span></div></div>
+          </div>
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#37c8bb,#63d8ff);color:#093b37"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 9.5V18M10 9.5V18M14 9.5V18M19 9.5V18"/><path d="M3 20.5h18"/></svg></div>
+            <div><h4>Consultation fee reminder — ₦5,000</h4>
+              <p>Access Bank • 0032601495 • Adidi Sylvanus Osigbemeh. Please send your receipt to syl4luv@gmail.com for confirmation.</p>
+              <div class="postmeta"><span class="badge-pill">Payment</span><span>Support Team</span></div></div>
+          </div>
+          <div class="post">
+            <div class="av-sm" style="width:44px;height:44px;background:linear-gradient(135deg,#ffd93d,#ffb03a);color:#4a3200"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg></div>
+            <div><h4>Call in for your mental health, motivation &amp; inspiration</h4>
+              <p>Reach the center any time on <strong>0703 382 8292</strong>. If you are in crisis, call immediately — someone will answer.</p>
+              <div class="postmeta"><span class="badge-pill">Support</span><span>Dr. Syl4luv</span></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Talk to us</div>
+      <h2>Call in for your mental health, counselling, motivation &amp; inspiration</h2>
+    </div>
+    <div class="contactcard">
+      <div class="citem">
+        <div class="cic" style="color:#e05555"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg></div>
+        <div><b>Call or WhatsApp</b><a href="tel:07033828292">0703 382 8292</a></div>
+      </div>
+      <div class="citem">
+        <div class="cic" style="color:#6c56e8"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7.5 8 5.5 8-5.5"/></svg></div>
+        <div><b>Email</b><a href="mailto:syl4luv@gmail.com">syl4luv@gmail.com</a></div>
+      </div>
+      <div class="citem">
+        <div class="cic" style="color:#12a396"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8.2" r="3.7"/><path d="M5 20.5a7 7 0 0 1 14 0"/></svg></div>
+        <div><b>Therapist</b><span>Dr. Syl4luv — Relationship Therapy Center</span></div>
+      </div>
+      <div class="citem">
+        <div class="cic" style="color:#b8860b"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 9.5V18M10 9.5V18M14 9.5V18M19 9.5V18"/><path d="M3 20.5h18"/></svg></div>
+        <div><b>Consultation payment</b><span>Access Bank • 0032601495<br>Adidi Sylvanus Osigbemeh • ₦5,000</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="fh">
+      <div>
+        <div class="flogo">
+          <svg class="logo-mark" viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="5" y="7" width="54" height="40" rx="14" fill="#6a58e0"/>
+            <path d="M19 44 L19 60 L34 44 Z" fill="#6a58e0"/>
+            <path d="M32 38c-9.4-7.4-13-11.2-13-15.4 0-3.8 2.9-6.3 6.2-6.3 2.8 0 5.3 1.7 6.8 4 1.5-2.3 4-4 6.8-4 3.3 0 6.2 2.5 6.2 6.3 0 4.2-3.6 8-13 15.4z" fill="#fff"/>
+          </svg>
+          <span class="brand-text"><span class="brand-name">Dr. Syl4luv</span><span class="brand-sub">Relationship Therapy Center</span></span>
+        </div>
+        <p style="font-size:.9rem;color:#c3b9e2;max-width:34ch">A warm, confidential space for counselling, mental health support, motivation and inspiration. You are welcome here. 💜</p>
+      </div>
+      <div>
+        <h5>Members</h5>
+        <a href="#" data-open="login">Member log in</a>
+        <a href="#" data-open="signup">Sign up free</a>
+        <a href="#chat">Private chat room</a>
+        <a href="#chat">General forum</a>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <a href="#consult">Consultation — ₦5,000</a>
+        <a href="#consult">Couples counselling</a>
+        <a href="#consult">Mental health support</a>
+        <a href="#consult">Motivation coaching</a>
+      </div>
+      <div>
+        <h5>Contact &amp; payment</h5>
+        <a href="tel:07033828292"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg> 0703 382 8292</a>
+        <a href="mailto:syl4luv@gmail.com"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7.5 8 5.5 8-5.5"/></svg> syl4luv@gmail.com</a>
+        <span style="display:block;padding:5px 0;font-size:.9rem"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 9.5V18M10 9.5V18M14 9.5V18M19 9.5V18"/><path d="M3 20.5h18"/></svg> Access Bank — 0032601495</span>
+        <span style="display:block;font-size:.9rem">Adidi Sylvanus Osigbemeh</span>
+      </div>
+    </div>
+    <!-- follow & share (dark page: the plug-in borrows these colours) -->
+    <div class="sylsocial" data-sylsocial></div>
+
+<style>
+/* everything below is self-contained — no external stylesheet, no fonts */
+.sylsocial{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  display:flex;flex-direction:column;gap:14px;color:inherit}
+.sylsocial .ss-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.sylsocial .ss-label{font-size:.74rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.72}
+.sylsocial a.ss-icon,.sylsocial button.ss-icon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  background:var(--ss-bg,rgba(255,255,255,.10));border:1.5px solid var(--ss-line,rgba(255,255,255,.25));
+  color:var(--ss-fg,currentColor);cursor:pointer;transition:transform .16s,background .16s,border-color .16s;text-decoration:none}
+.sylsocial a.ss-icon:hover,.sylsocial button.ss-icon:hover{transform:translateY(-2px);
+  background:var(--ss-hover,var(--coral,#c1121f));border-color:var(--ss-hover,var(--coral,#c1121f));color:#fff}
+.sylsocial a.ss-icon svg,.sylsocial button.ss-icon svg{width:19px;height:19px;display:block}
+.sylsocial a.ss-share,.sylsocial button.ss-share{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 15px;
+  font-size:.85rem;font-family:inherit;font-weight:800;text-decoration:none;cursor:pointer;appearance:none;-webkit-appearance:none;
+  border:1.5px solid var(--ss-line,rgba(255,255,255,.25));background:var(--ss-bg,rgba(255,255,255,.10));
+  color:var(--ss-fg,currentColor);transition:transform .16s,filter .16s}
+.sylsocial .ss-share:focus-visible,.sylsocial .ss-icon:focus-visible{outline:3px solid var(--ss-hover,var(--coral,#c1121f));outline-offset:2px}
+.sylsocial a.ss-share:hover,button.ss-share:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.sylsocial a.ss-share svg,button.ss-share svg{width:17px;height:17px}
+.sylsocial .ss-wa{background:#25d366;border-color:#25d366;color:#fff}       /* WhatsApp keeps its own green */
+.sylsocial .ss-copy{background:transparent}
+/* every other button borrows the host page's colours, so this plug-in never
+   injects a colour the page did not choose. Want Facebook blue and X black
+   instead? Add: .ss-fb{background:#1877f2;border-color:#1877f2;color:#fff}
+                .ss-x{background:#111;border-color:#111;color:#fff}            */
+.sylsocial .ss-note{font-size:.8rem;opacity:.8;margin:0}
+</style>
+
+<script>
+(function () {
+  /* ------------------------------------------------------------------ EDIT ME */
+  var SOCIAL = {
+    whatsapp:  '2347033828292',                 /* 0703 382 8292 without the leading 0 */
+    facebook:  'https://facebook.com/drsyl4luv',
+    instagram: 'https://instagram.com/drsyl4luv',
+    x:         'https://x.com/drsyl4luv',
+    tiktok:    'https://tiktok.com/@drsyl4luv',
+    youtube:   '',                              /* not created yet — no icon shows */
+    linkedin:  ''
+  };
+  var SHARE_TEXT = 'Dr. Syl4luv Relationship Therapy Center — counselling, mental health support and a confidential private chat room.';
+  /* --------------------------------------------------------------------------- */
+
+  var host = document.querySelector('[data-sylsocial]');
+  if (!host) return;
+
+  var ICONS = {
+    whatsapp: '<path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3z"/><path d="M8.7 8.4c.2-.5.9-.5 1.1-.1l.6 1.2c.1.3 0 .5-.2.7l-.5.4c.5 1 1.3 1.8 2.3 2.3l.4-.5c.2-.2.4-.3.7-.2l1.2.6c.4.2.4.9-.1 1.1-1.6.7-3.4-.2-4.6-1.4-1.2-1.2-2.1-3-1.4-4.6z"/>',
+    facebook: '<path d="M14.5 8.5H17V5.3h-2.6c-2.2 0-3.6 1.5-3.6 3.8v1.6H8.5v3.2h2.3V21h3.3v-7.1h2.4l.4-3.2h-2.8V9.4c0-.6.3-.9.9-.9z"/>',
+    instagram: '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor"/>',
+    x: '<path d="M4 4l7.2 9.3L4.4 20h2.3l5.6-5.6L16.6 20H20l-7.4-9.6L19.4 4h-2.3l-5.1 5.1L8 4H4z"/>',
+    tiktok: '<path d="M14 4v9.2a3.2 3.2 0 1 1-3.2-3.2c.3 0 .6 0 .9.1V7.8a6 6 0 1 0 5.6 6V9.4c1 .7 2.2 1.1 3.5 1.1V8.2c-1.8 0-3.2-1.4-3.2-3.2H14z"/>',
+    youtube: '<rect x="3" y="6" width="18" height="12" rx="4"/><path d="M11 9.8l4 2.2-4 2.2V9.8z" fill="currentColor"/>',
+    linkedin: '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M7.5 10v7M7.5 7.4v.1M11.5 17v-4a2 2 0 0 1 4 0v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+    copy: '<rect x="9" y="9" width="11" height="11" rx="3"/><path d="M6 15H5.5A1.5 1.5 0 0 1 4 13.5V5.5A1.5 1.5 0 0 1 5.5 4h8A1.5 1.5 0 0 1 15 5.5V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>'
+  };
+  var NAMES = { whatsapp: 'WhatsApp', facebook: 'Facebook', instagram: 'Instagram', x: 'X (Twitter)',
+                tiktok: 'TikTok', youtube: 'YouTube', linkedin: 'LinkedIn' };
+
+  function svg(name, solid) {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" ' +
+      (solid ? 'fill="currentColor"' : 'fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"') +
+      '>' + ICONS[name] + '</svg>';
+  }
+  function href(name) {
+    var v = SOCIAL[name];
+    if (!v) return '';
+    if (name === 'whatsapp') return 'https://wa.me/' + v;
+    return v;
+  }
+
+  var url = location.href.split('#')[0];
+  var text = encodeURIComponent(SHARE_TEXT) + ' ' + encodeURIComponent(url);
+
+  var follow = '';
+  Object.keys(NAMES).forEach(function (k) {
+    var h = href(k);
+    if (!h) return;
+    var solid = (k === 'whatsapp' || k === 'facebook' || k === 'x' || k === 'tiktok');
+    follow += '<a class="ss-icon ss-' + k + '" href="' + h + '" target="_blank" rel="noopener" ' +
+      'title="' + NAMES[k] + '" aria-label="' + NAMES[k] + '">' + svg(k, solid) + '</a>';
+  });
+
+  host.innerHTML =
+    '<div><span class="ss-label">Follow the centre</span>' +
+      '<div class="ss-row" style="margin-top:8px">' + follow + '</div></div>' +
+    '<div><span class="ss-label">Share this page</span>' +
+      '<div class="ss-row" style="margin-top:8px">' +
+        '<a class="ss-share ss-wa" href="https://wa.me/?text=' + text + '" target="_blank" rel="noopener">' + svg('whatsapp', true) + 'WhatsApp</a>' +
+        '<a class="ss-share ss-fb" href="https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) + '" target="_blank" rel="noopener">' + svg('facebook', true) + 'Facebook</a>' +
+        '<a class="ss-share ss-x" href="https://twitter.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + encodeURIComponent(url) + '" target="_blank" rel="noopener">' + svg('x', true) + 'X</a>' +
+        '<button class="ss-share ss-copy" type="button" data-ss-copy>' + svg('copy', false) + '<span>Copy link</span></button>' +
+      '</div>' +
+      '<p class="ss-note" data-ss-note></p></div>';
+
+  var copy = host.querySelector('[data-ss-copy]');
+  var note = host.querySelector('[data-ss-note]');
+  if (copy) {
+    copy.addEventListener('click', function () {
+      var done = function () { if (note) { note.textContent = 'Link copied — paste it anywhere.'; setTimeout(function () { note.textContent = ''; }, 4000); } };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(done, function () { if (note) note.textContent = url; });
+      } else if (note) { note.textContent = url; }
+    });
+  }
+})();
+</script>
+
+    <div class="fbot">
+      <span>© <span id="yr">2026</span> Dr. Syl4luv Relationship Therapy Center. All rights reserved.</span>
+      <span>Confidential • Compassionate • Answered every day</span>
+    </div>
+  </div>
+</footer>
+
+<!-- floating actions -->
+<div class="fab">
+  <a href="tel:07033828292"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg> Call Dr. Syl4luv — 0703 382 8292</a>
+  <a class="two" href="#consult"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9V6.5h18V9a2.5 2.5 0 0 0 0 5v2.5H3V14a2.5 2.5 0 0 0 0-5z"/><path d="M8.5 8v8" stroke-dasharray="2 2"/></svg> Book consultation ₦5,000</a>
+</div>
+
+<!-- ================= LOGIN MODAL ================= -->
+<div class="modal" id="modal-login">
+  <div class="modal-card">
+    <button class="x" data-close>&times;</button>
+    <h3>Member log in</h3>
+    <p class="sub">Welcome back. Your private chat room and bookings are waiting.</p>
+    <form id="loginform">
+      <div class="field"><label for="li">Email or phone</label><input id="li" required placeholder="syl4luv@gmail.com"></div>
+      <div class="field"><label for="lp">Password</label><input id="lp" required type="password" placeholder="••••••••"></div>
+      <div class="check"><input type="checkbox" id="lrem" checked> <span>Keep me signed in on this device</span></div>
+      <button class="btn btn-primary btn-block" type="submit">Log in to members area</button>
+    </form>
+    <div class="switcher">New here? <button data-open="signup">Create a free account</button></div>
+  </div>
+</div>
+
+<!-- ================= SIGNUP MODAL ================= -->
+<div class="modal" id="modal-signup">
+  <div class="modal-card">
+    <button class="x" data-close>&times;</button>
+    <h3>Create your member account</h3>
+    <p class="sub">Free to join. Only consultations cost ₦5,000.</p>
+    <form id="signupform">
+      <div class="field"><label for="sf">Full name</label><input id="sf" required placeholder="Your full name"></div>
+      <div class="field"><label for="se">Email address</label><input id="se" required type="email" placeholder="you@example.com"></div>
+      <div class="field"><label for="sp">Phone number</label><input id="sp" required type="tel" placeholder="0703 382 8292"></div>
+      <div class="field"><label for="spw">Create password</label><input id="spw" required type="password" placeholder="At least 6 characters"></div>
+      <label class="check"><input type="checkbox" required> <span>I agree to keep the forum respectful and to respect the confidentiality of other members.</span></label>
+      <button class="btn btn-primary btn-block" type="submit">Sign up &amp; enter the forum</button>
+    </form>
+    <div class="switcher">Already a member? <button data-open="login">Log in instead</button></div>
+  </div>
+</div>
+
+<!-- ===== WHATSAPP CLICK-TO-CHAT BUTTON ===== -->
+<button class="wa-fab" id="waFab" type="button" aria-expanded="false" aria-controls="waPanel" aria-label="Chat with Dr. Syl4luv on WhatsApp">
+  <span class="wa-badge" aria-hidden="true"></span>
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+    <path d="M16 3.2C8.9 3.2 3.2 8.9 3.2 16c0 2.5.7 4.9 2 7L3 29l6.2-2.1c2 1.1 4.4 1.7 6.8 1.7 7.1 0 12.8-5.7 12.8-12.8S23.1 3.2 16 3.2zm0 23.1c-2.2 0-4.3-.6-6.1-1.7l-.4-.3-4.2 1.4 1.4-4.1-.3-.5c-1.3-1.9-2-4.1-2-6.5C4.4 9.6 9.6 4.4 16 4.4s11.6 5.2 11.6 11.6S22.4 26.3 16 26.3z"/>
+    <path d="M12.4 9.6c-.3-.6-.6-.6-.9-.6h-.7c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.3s1.4 3.8 1.6 4.1c.2.3 2.7 4.2 6.6 5.9 3.2 1.4 3.9 1.1 4.6 1 .7-.1 2.2-.9 2.5-1.8.3-.9.3-1.6.2-1.8-.1-.2-.4-.3-.8-.5-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.3.4-1 1.2-1.2 1.4-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-.9-.8-1.5-1.8-1.7-2.2-.2-.3 0-.5.1-.7.2-.2.5-.6.7-.9.2-.3.3-.5.4-.8.1-.3 0-.5-.1-.7-.1-.2-.9-2.1-1.2-2.8z"/>
+  </svg>
+</button>
+
+<div class="wa-panel" id="waPanel" role="region" aria-label="WhatsApp chat with Dr. Syl4luv">
+  <div class="wa-head">
+    <span class="wa-av">
+      <svg viewBox="0 0 32 32" width="24" height="24" fill="currentColor" aria-hidden="true">
+        <path d="M16 3.2C8.9 3.2 3.2 8.9 3.2 16c0 2.5.7 4.9 2 7L3 29l6.2-2.1c2 1.1 4.4 1.7 6.8 1.7 7.1 0 12.8-5.7 12.8-12.8S23.1 3.2 16 3.2zm0 23.1c-2.2 0-4.3-.6-6.1-1.7l-.4-.3-4.2 1.4 1.4-4.1-.3-.5c-1.3-1.9-2-4.1-2-6.5C4.4 9.6 9.6 4.4 16 4.4s11.6 5.2 11.6 11.6S22.4 26.3 16 26.3z"/>
+        <path d="M12.4 9.6c-.3-.6-.6-.6-.9-.6h-.7c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.3s1.4 3.8 1.6 4.1c.2.3 2.7 4.2 6.6 5.9 3.2 1.4 3.9 1.1 4.6 1 .7-.1 2.2-.9 2.5-1.8.3-.9.3-1.6.2-1.8-.1-.2-.4-.3-.8-.5-.4-.2-2.2-1.1-2.5-1.2-.3-.1-.6-.2-.8.2-.3.4-1 1.2-1.2 1.4-.2.2-.4.3-.8.1-.4-.2-1.7-.6-3.2-2-.9-.8-1.5-1.8-1.7-2.2-.2-.3 0-.5.1-.7.2-.2.5-.6.7-.9.2-.3.3-.5.4-.8.1-.3 0-.5-.1-.7-.1-.2-.9-2.1-1.2-2.8z"/>
+      </svg>
+    </span>
+    <span>
+      <b>Dr. Syl4luv</b>
+      <small>Relationship Therapy Center · replies fast</small>
+    </span>
+    <button class="wa-close" id="waClose" type="button" aria-label="Close chat panel">&times;</button>
+  </div>
+
+  <div class="wa-body">
+    <div class="wa-bubble">
+      <b>Hello 💜 you are welcome here.</b>
+      Pick what you need — WhatsApp opens with your message ready to send, so nothing gets lost or forgotten.
+    </div>
+
+    <div class="wa-chips">
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I would like to book a consultation (₦5,000). My name is ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9V6.5h18V9a2.5 2.5 0 0 0 0 5v2.5H3V14a2.5 2.5 0 0 0 0-5z"/><path d="M8.5 8v8" stroke-dasharray="2 2"/></svg>
+        Book consultation — ₦5,000
+      </button>
+
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I need to talk about my mental health. Please, can we chat? My name is ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z"/></svg>
+        I need to talk about my mental health
+      </button>
+
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I have a question about the relationship therapy sessions. My question is: ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.2 2.6c-.6.2-.9.7-.9 1.3v.4"/><path d="M12 17h.01"/></svg>
+        Ask a question first
+      </button>
+
+      <button class="wa-chip" type="button"
+        data-text="Hello Dr. Syl4luv, I have made the ₦5,000 payment to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh). Here is my receipt: ">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 9.5V18M10 9.5V18M14 9.5V18M19 9.5V18"/><path d="M3 20.5h18"/></svg>
+        Send my payment receipt
+      </button>
+    </div>
+
+    <div class="wa-num">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><path d="M5 3h3l2 4-2.5 1.6a12.5 12.5 0 0 0 5 5L14 11l4 2v3a2 2 0 0 1-2.2 2A16 16 0 0 1 3 5.2 2 2 0 0 1 5 3z"/></svg>
+      <span>WhatsApp or call <a href="https://wa.me/2347033828292" target="_blank" rel="noopener">0703 382 8292</a></span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Done ✅</div>
+
+<script>
+(function(){
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ---- toast ---- */
+  var toast = document.getElementById('toast'), tTimer;
+  function say(msg, ms){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ toast.classList.remove('show'); }, ms || 3200);
+  }
+
+  /* ---- modals ---- */
+  function openModal(name){
+    var m = document.getElementById('modal-' + name);
+    if(!m) return;
+    document.querySelectorAll('.modal.open').forEach(function(o){ o.classList.remove('open'); });
+    m.classList.add('open');
+    document.getElementById('mobnav').classList.remove('open');
+  }
+  function closeModals(){ document.querySelectorAll('.modal.open').forEach(function(o){ o.classList.remove('open'); }); }
+
+  document.addEventListener('click', function(e){
+    var op = e.target.closest('[data-open]');
+    if(op){ e.preventDefault(); openModal(op.getAttribute('data-open')); return; }
+    if(e.target.closest('[data-close]')){ closeModals(); return; }
+    if(e.target.classList && e.target.classList.contains('modal')){ closeModals(); }
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeModals(); });
+
+  /* ---- mobile menu ---- */
+  document.getElementById('menutoggle').addEventListener('click', function(){
+    document.getElementById('mobnav').classList.toggle('open');
+  });
+
+  /* ---- tabs ---- */
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+      t.classList.add('active');
+      document.getElementById('panel-' + t.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+
+  /* ---- chat: sending is handled by supabase/syl4luv-ui.js ----
+     One stored box per member per topic; the page keeps no copy and there is no
+     pretend reply. Without a database the member is told, not fooled. */
+  document.getElementById('composer').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(window.SYL4LUV_UI && SYL4LUV_UI.sendNow){ SYL4LUV_UI.sendNow(); return; }
+    var input = document.getElementById('msginput');
+    if(!input.value.trim()) return;
+    say('This is the demo — nothing is stored yet. Connect a database to collect real chats: see CHAT-SETUP.md.', 8000);
+  });
+
+  /* ---- copy account number ---- */
+  document.getElementById('copyacct').addEventListener('click', function(){
+    var num = '0032601495';
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(num).then(function(){ say('Account number 0032601495 copied ✅'); }, function(){ say('Account number: 0032601495'); });
+      } else { say('Account number: 0032601495'); }
+    } catch(err){ say('Account number: 0032601495'); }
+  });
+
+  /* ---- forms ---- */
+  document.getElementById('consultform').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(window.SYL4LUV_UI && SYL4LUV_UI.booking){          /* real registration (Supabase configured) */
+      var btn = e.target.querySelector('button[type="submit"]');
+      if(btn){ btn.disabled = true; }
+      SYL4LUV_UI.booking({
+        fullName: document.getElementById('cn').value.trim(),
+        phone: document.getElementById('cp').value.trim(),
+        email: document.getElementById('ce').value.trim(),
+        service: document.getElementById('ct').value,
+        date: document.getElementById('cd').value || null,
+        notes: document.getElementById('cm').value.trim()
+      }).then(function(){ if(btn){ btn.disabled = false; } },
+               function(err){ if(btn){ btn.disabled = false; } say(err.message, 7000); });
+      return;
+    }
+    say('✅ Registration received! Transfer ₦5,000 to Access Bank 0032601495 (Adidi Sylvanus Osigbemeh), then send your receipt to syl4luv@gmail.com or call 0703 382 8292.');
+  });
+  document.getElementById('loginform').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(window.SYL4LUV_UI && SYL4LUV_UI.signedIn && SYL4LUV_UI.login){          /* real accounts (Supabase configured) */
+      var em = document.getElementById('li').value.trim();
+      if(em.indexOf('@') === -1){ say('Please log in with the email address you signed up with.'); return; }
+      say('Checking your details…');
+      SYL4LUV_UI.login(em, document.getElementById('lp').value).then(function(){
+        closeModals();
+        setTimeout(function(){ document.getElementById('chat').scrollIntoView({behavior:'smooth'}); }, 500);
+      }, function(err){ say(err.message, 7000); });
+      return;
+    }
+    closeModals();
+    say('Welcome back! Opening your private chat room… 💜');
+    setTimeout(function(){ document.getElementById('chat').scrollIntoView({behavior:'smooth'}); }, 500);
+  });
+  document.getElementById('signupform').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(window.SYL4LUV_UI && SYL4LUV_UI.signedIn){          /* real accounts (Supabase configured) */
+      say('Creating your account…');
+      SYL4LUV_UI.signup({
+        fullName: document.getElementById('sf').value.trim(),
+        email: document.getElementById('se').value.trim(),
+        phone: document.getElementById('sp').value.trim(),
+        password: document.getElementById('spw').value
+      }).then(function(){
+        closeModals();
+        setTimeout(function(){ document.getElementById('chat').scrollIntoView({behavior:'smooth'}); }, 500);
+      }, function(err){ say(err.message, 7000); });
+      return;
+    }
+    closeModals();
+    say('Account created 🎉 Welcome to the Dr. Syl4luv family!');
+    setTimeout(function(){ document.getElementById('chat').scrollIntoView({behavior:'smooth'}); }, 500);
+  });
+})();
+</script>
+<script>
+/* Language switcher: tap to choose, or auto-rotate every 8 seconds. */
+(function(){
+  var banner = document.querySelector('.langbanner'); if(!banner) return;
+  var btns = banner.querySelectorAll('.langpills button');
+  var langs = banner.querySelectorAll('.lang');
+  var order = ['en','pcm','ha'], current = 0, timer;
+
+  function show(code){
+    langs.forEach(function(l){ l.classList.toggle('on', l.getAttribute('lang') === code); });
+    btns.forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-lang') === code ? 'true' : 'false'); });
+    current = Math.max(0, order.indexOf(code));
+  }
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      show(b.getAttribute('data-lang'));
+      clearInterval(timer);          /* visitor chose — stop rotating */
+    });
+  });
+  timer = setInterval(function(){ show(order[(current + 1) % order.length]); }, 8000);
+})();
+</script>
+<script>
+/* WhatsApp click-to-chat: opens WhatsApp with the chosen message pre-typed. */
+(function(){
+  var NUM = '2347033828292';                       /* 0703 382 8292 in international form */
+  var fab  = document.getElementById('waFab');
+  var panel= document.getElementById('waPanel');
+  var close= document.getElementById('waClose');
+  if(!fab || !panel) return;
+
+  function open(){
+    panel.classList.add('open');
+    fab.setAttribute('aria-expanded','true');
+    fab.classList.remove('wa-unread');
+    try { sessionStorage.setItem('sylWaOpened','1'); } catch(e){}
+  }
+  function shut(){
+    panel.classList.remove('open');
+    fab.setAttribute('aria-expanded','false');
+    fab.focus();
+  }
+  fab.addEventListener('click', function(){ panel.classList.contains('open') ? shut() : open(); });
+  if(close) close.addEventListener('click', shut);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') shut(); });
+
+  /* each chip opens WhatsApp with its own pre-filled message */
+  panel.querySelectorAll('.wa-chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      var text = chip.getAttribute('data-text') || '';
+      window.open('https://wa.me/' + NUM + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    });
+  });
+
+  /* AUTO-PEEK — nudge the panel open once per visit after 12 seconds.
+     Delete this whole block if you would rather it never auto-opens.   */
+  var peeked = false;
+  try { peeked = sessionStorage.getItem('sylWaOpened') === '1'; } catch(e){}
+  if(!peeked){
+    setTimeout(function(){
+      if(panel.classList.contains('open')) return;
+      fab.classList.add('wa-unread');
+      setTimeout(function(){ if(!panel.classList.contains('open')) open(); }, 2500);
+    }, 12000);
+  }
+})();
+</script>
+<!-- ===== database (Supabase) — leave config empty to keep demo mode ===== -->
+<script src="supabase/supabase-config.js"></script>
+<script src="supabase/syl4luv-db.js"></script>
+<script src="supabase/syl4luv-ui.js"></script>
+<!-- ===== the honest online line — it tells the truth at 2am by itself =====
+     Dr. Syl4luv is usually online 8am to 9pm. Outside those hours the line
+     changes to say what really happens, so the site never promises a reply
+     nobody is there to give. Self-contained: no network, no library. -->
+<script>
+(function () {
+  var el = document.getElementById('onlineLine');
+  if (!el) return;
+  var OPEN = 8, CLOSE = 21;                     /* 8am to 9pm, local time */
+  function paint() {
+    var h = new Date().getHours(), open = h >= OPEN && h < CLOSE;
+    el.textContent = open ? 'Usually online now \u2014 8am to 9pm'
+                          : 'It is late now \u2014 messages are read from 8am';
+    el.title = open
+      ? 'Dr. Syl4luv usually answers between 8am and 9pm. If it cannot wait, call 0703 382 8292.'
+      : 'Anything written now is stored safely and read from 8am. If it cannot wait, call 0703 382 8292.';
+  }
+  paint();
+  setInterval(paint, 60000);
+})();
+</script>
+
+</body>
+</html>
